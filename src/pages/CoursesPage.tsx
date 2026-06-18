@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { BookOpen, Plus, X } from 'lucide-react'
+import { BookOpen, Plus } from 'lucide-react'
 import { fetchTable, insertRow } from '../lib/supabase'
 
 export function CoursesPage() {

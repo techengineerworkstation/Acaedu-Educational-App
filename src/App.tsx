@@ -1,20 +1,13 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { supabase } from './lib/supabase'
-import { Layout } from './components/Layout'
+import { RoleLayout } from './components/RoleLayout'
 import { LandingPage } from './pages/LandingPage'
 import { LoginPage } from './pages/LoginPage'
 import { RegisterPage } from './pages/RegisterPage'
 import { DashboardPage } from './pages/DashboardPage'
 import { CoursesPage } from './pages/CoursesPage'
-import { ExamsPage } from './pages/ExamsPage'
-import { GradesPage } from './pages/GradesPage'
-import { AssignmentsPage } from './pages/AssignmentsPage'
-import { NotificationsPage } from './pages/NotificationsPage'
-import { VenuesPage } from './pages/VenuesPage'
-import { EventsPage } from './pages/EventsPage'
-import { SchedulePage } from './pages/SchedulePage'
-import { SettingsPage } from './pages/SettingsPage'
+import { ExamsPage, GradesPage, AssignmentsPage, NotificationsPage, VenuesPage, EventsPage, SchedulePage, SettingsPage } from './pages/CrudPages'
 import { FractalBackground } from './components/FractalBackground'
 import type { User } from './types'
 
@@ -62,16 +55,16 @@ export default function App() {
         <Route path="/" element={user ? <Navigate to="/dashboard"/> : <LandingPage/>} />
         <Route path="/login" element={user ? <Navigate to="/dashboard"/> : <LoginPage/>} />
         <Route path="/register" element={user ? <Navigate to="/dashboard"/> : <RegisterPage/>} />
-        <Route path="/dashboard" element={user ? <Layout user={user}><DashboardPage user={user}/></Layout> : <Navigate to="/login"/>} />
-        <Route path="/courses" element={user ? <Layout user={user}><CoursesPage/></Layout> : <Navigate to="/login"/>} />
-        <Route path="/exams" element={user ? <Layout user={user}><ExamsPage/></Layout> : <Navigate to="/login"/>} />
-        <Route path="/grades" element={user ? <Layout user={user}><GradesPage/></Layout> : <Navigate to="/login"/>} />
-        <Route path="/assignments" element={user ? <Layout user={user}><AssignmentsPage/></Layout> : <Navigate to="/login"/>} />
-        <Route path="/notifications" element={user ? <Layout user={user}><NotificationsPage/></Layout> : <Navigate to="/login"/>} />
-        <Route path="/venues" element={user ? <Layout user={user}><VenuesPage/></Layout> : <Navigate to="/login"/>} />
-        <Route path="/events" element={user ? <Layout user={user}><EventsPage/></Layout> : <Navigate to="/login"/>} />
-        <Route path="/schedule" element={user ? <Layout user={user}><SchedulePage/></Layout> : <Navigate to="/login"/>} />
-        <Route path="/settings" element={user ? <Layout user={user}><SettingsPage/></Layout> : <Navigate to="/login"/>} />
+        <Route path="/dashboard" element={user ? <RoleLayout user={user}><DashboardPage user={user}/></RoleLayout> : <Navigate to="/login"/>} />
+        <Route path="/courses" element={user ? <RoleLayout user={user}><CoursesPage/></RoleLayout> : <Navigate to="/login"/>} />
+        <Route path="/exams" element={user ? <RoleLayout user={user}><ExamsPage/></RoleLayout> : <Navigate to="/login"/>} />
+        <Route path="/grades" element={user ? <RoleLayout user={user}><GradesPage/></RoleLayout> : <Navigate to="/login"/>} />
+        <Route path="/assignments" element={user ? <RoleLayout user={user}><AssignmentsPage/></RoleLayout> : <Navigate to="/login"/>} />
+        <Route path="/notifications" element={user ? <RoleLayout user={user}><NotificationsPage/></RoleLayout> : <Navigate to="/login"/>} />
+        <Route path="/venues" element={user ? <RoleLayout user={user}><VenuesPage/></RoleLayout> : <Navigate to="/login"/>} />
+        <Route path="/events" element={user ? <RoleLayout user={user}><EventsPage/></RoleLayout> : <Navigate to="/login"/>} />
+        <Route path="/schedule" element={user ? <RoleLayout user={user}><SchedulePage/></RoleLayout> : <Navigate to="/login"/>} />
+        <Route path="/settings" element={user ? <RoleLayout user={user}><SettingsPage/></RoleLayout> : <Navigate to="/login"/>} />
         <Route path="*" element={<Navigate to="/"/>} />
       </Routes>
     </BrowserRouter>

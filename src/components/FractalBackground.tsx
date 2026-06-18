@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 export function FractalBackground() {
   const [orbs] = useState(() => Array.from({ length: 5 }, (_, i) => ({

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { BookOpen, FileText, GraduationCap, ClipboardList, Bell, MapPin, Calendar, Video, BarChart3, TrendingUp } from 'lucide-react'
+import { BookOpen, FileText, GraduationCap, ClipboardList, Bell, Calendar, Video, TrendingUp } from 'lucide-react'
 import { fetchTable } from '../lib/supabase'
 import type { User } from '../types'
 
@@ -22,21 +22,28 @@ export function DashboardPage({ user }: { user: User }) {
   useEffect(() => {
     async function load() {
       try {
-        const [courses, exams, assignments, notifications] = await Promise.all([
+        const [courses, exams, assignments, notifications, grades, schedules] = await Promise.all([
           fetchTable('courses'),
           fetchTable('exams'),
           fetchTable('assignments'),
           fetchTable('notifications'),
+          fetchTable('grades'),
+          fetchTable('schedules'),
         ])
+        const gradeAvg = grades.length > 0
+          ? grades.reduce((sum: number, g: any) => sum + (g.score || 0), 0) / grades.length
+          : 0
+        const completed = grades.filter((g: any) => g.score >= 50).length
+        const liveSessions = schedules.length
         setStats({
           subjects: courses.length,
           exams: exams.length,
-          lectures: 5,
+          lectures: liveSessions,
           notifications: notifications.length,
           assignments: assignments.length,
-          completed: 2,
-          grade: 85.5,
-          sessions: 3,
+          completed,
+          grade: gradeAvg,
+          sessions: liveSessions,
         })
       } catch { }
       setLoading(false)
@@ -56,6 +63,7 @@ export function DashboardPage({ user }: { user: User }) {
       <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} className="mb-8">
         <div className="text-xs text-text-muted uppercase tracking-wider mb-1">WELCOME</div>
         <h1 className="text-2xl font-bold">{greeting()}, {user.full_name}</h1>
+        <p className="text-sm text-text-muted mt-1 capitalize">{user.role} Dashboard</p>
       </motion.div>
 
       {loading ? (
@@ -79,7 +87,7 @@ export function DashboardPage({ user }: { user: User }) {
                 </div>
               </div>
               <div className="text-2xl font-extrabold font-mono" style={{background:card.gradient,WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}}>
-                {typeof stats[card.key] === 'number' && stats[card.key] % 1 !== 0 ? stats[card.key].toFixed(1) + '%' : stats[card.key]}
+                {typeof stats[card.key] === 'number' && stats[card.key] % 1 !== 0 ? stats[card.key].toFixed(1) + '%' : stats[card.key] || 0}
               </div>
               <div className="text-xs text-text-muted mt-1 uppercase tracking-wider">{card.label}</div>
             </motion.div>

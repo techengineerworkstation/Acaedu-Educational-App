@@ -11,7 +11,7 @@ export function ExamsPage() {
   const [courseId, setCourseId] = useState('')
   const [examType, setExamType] = useState('midterm')
   const [date, setDate] = useState('')
-  const [duration, setDuration] = useState('60')
+  const [duration, _setDuration] = useState('60')
 
   useEffect(() => { fetchTable('exams').then(setExams).finally(() => setLoading(false)) }, [])
 
