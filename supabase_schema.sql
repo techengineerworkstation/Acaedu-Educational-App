@@ -1,62 +1,21 @@
--- Acaedu Database Schema for Supabase (Fixed)
+-- Acaedu Database Schema for Supabase (Secure RLS)
 -- Run this in Supabase SQL Editor
 
--- Drop existing policies first (safe to run even if they don't exist)
-DO $$ BEGIN
-  DROP POLICY IF EXISTS "Public read" ON courses;
-  DROP POLICY IF EXISTS "Public read" ON venues;
-  DROP POLICY IF EXISTS "Public read" ON announcements;
-  DROP POLICY IF EXISTS "Public read" ON events;
-  DROP POLICY IF EXISTS "Public read" ON institution_settings;
-  DROP POLICY IF EXISTS "Auth read" ON notifications;
-  DROP POLICY IF EXISTS "Auth read" ON enrollments;
-  DROP POLICY IF EXISTS "Auth read" ON grades;
-  DROP POLICY IF EXISTS "Auth read" ON exams;
-  DROP POLICY IF EXISTS "Auth read" ON assignments;
-  DROP POLICY IF EXISTS "Auth read" ON schedules;
-  DROP POLICY IF EXISTS "Auth read" ON meetings;
-  DROP POLICY IF EXISTS "Auth read" ON course_materials;
-  DROP POLICY IF EXISTS "Auth read" ON tests;
-  DROP POLICY IF EXISTS "Auth read" ON videos;
-  DROP POLICY IF EXISTS "Auth read" ON attendance;
-  DROP POLICY IF EXISTS "Auth read" ON profiles;
-  DROP POLICY IF EXISTS "Auth insert" ON profiles;
-  DROP POLICY IF EXISTS "Auth insert" ON enrollments;
-  DROP POLICY IF EXISTS "Auth insert" ON courses;
-  DROP POLICY IF EXISTS "Auth insert" ON exams;
-  DROP POLICY IF EXISTS "Auth insert" ON assignments;
-  DROP POLICY IF EXISTS "Auth insert" ON grades;
-  DROP POLICY IF EXISTS "Auth insert" ON notifications;
-  DROP POLICY IF EXISTS "Auth insert" ON venues;
-  DROP POLICY IF EXISTS "Auth insert" ON announcements;
-  DROP POLICY IF EXISTS "Auth insert" ON events;
-  DROP POLICY IF EXISTS "Auth insert" ON schedules;
-  DROP POLICY IF EXISTS "Auth insert" ON attendance;
-  DROP POLICY IF EXISTS "Auth insert" ON meetings;
-  DROP POLICY IF EXISTS "Auth insert" ON course_materials;
-  DROP POLICY IF EXISTS "Auth insert" ON tests;
-  DROP POLICY IF EXISTS "Auth insert" ON videos;
-  DROP POLICY IF EXISTS "Auth insert" ON institution_settings;
-  DROP POLICY IF EXISTS "Auth update" ON profiles;
-  DROP POLICY IF EXISTS "Auth update" ON courses;
-  DROP POLICY IF EXISTS "Auth update" ON exams;
-  DROP POLICY IF EXISTS "Auth update" ON assignments;
-  DROP POLICY IF EXISTS "Auth update" ON grades;
-  DROP POLICY IF EXISTS "Auth update" ON notifications;
-  DROP POLICY IF EXISTS "Auth update" ON venues;
-  DROP POLICY IF EXISTS "Auth update" ON announcements;
-  DROP POLICY IF EXISTS "Auth update" ON events;
-  DROP POLICY IF EXISTS "Auth update" ON schedules;
-  DROP POLICY IF EXISTS "Auth update" ON attendance;
-  DROP POLICY IF EXISTS "Auth update" ON meetings;
-  DROP POLICY IF EXISTS "Auth update" ON course_materials;
-  DROP POLICY IF EXISTS "Auth update" ON tests;
-  DROP POLICY IF EXISTS "Auth update" ON videos;
-  DROP POLICY IF EXISTS "Auth update" ON institution_settings;
-EXCEPTION WHEN others THEN NULL;
+-- ═══════════════════════════════════════════════════════════
+-- CLEANUP: Drop all existing policies safely
+-- ═══════════════════════════════════════════════════════════
+DO $$ DECLARE r RECORD;
+BEGIN
+  FOR r IN (SELECT schemaname, tablename, policyname FROM pg_policies WHERE schemaname = 'public')
+  LOOP
+    EXECUTE format('DROP POLICY IF EXISTS %I ON %I.%I', r.policyname, r.schemaname, r.tablename);
+  END LOOP;
 END $$;
 
--- Users table
+-- ═══════════════════════════════════════════════════════════
+-- TABLES
+-- ═══════════════════════════════════════════════════════════
+
 CREATE TABLE IF NOT EXISTS profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   full_name TEXT NOT NULL DEFAULT '',
@@ -72,16 +31,15 @@ CREATE TABLE IF NOT EXISTS profiles (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Departments
 CREATE TABLE IF NOT EXISTS departments (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name TEXT NOT NULL,
   code TEXT,
   faculty TEXT,
+  created_by UUID REFERENCES profiles(id),
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Courses/Subjects
 CREATE TABLE IF NOT EXISTS courses (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   course_code TEXT NOT NULL UNIQUE,
@@ -93,11 +51,11 @@ CREATE TABLE IF NOT EXISTS courses (
   capacity INT DEFAULT 50,
   enrolled_count INT DEFAULT 0,
   is_active BOOLEAN DEFAULT true,
+  created_by UUID REFERENCES profiles(id),
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Enrollments
 CREATE TABLE IF NOT EXISTS enrollments (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   student_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
@@ -107,7 +65,6 @@ CREATE TABLE IF NOT EXISTS enrollments (
   UNIQUE(student_id, course_id)
 );
 
--- Exams
 CREATE TABLE IF NOT EXISTS exams (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   course_id UUID NOT NULL REFERENCES courses(id) ON DELETE CASCADE,
@@ -120,11 +77,11 @@ CREATE TABLE IF NOT EXISTS exams (
   weight NUMERIC(3,2) DEFAULT 1.0,
   location TEXT,
   instructions TEXT,
+  created_by UUID REFERENCES profiles(id),
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Assignments
 CREATE TABLE IF NOT EXISTS assignments (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   course_id UUID NOT NULL REFERENCES courses(id) ON DELETE CASCADE,
@@ -133,11 +90,11 @@ CREATE TABLE IF NOT EXISTS assignments (
   due_date TIMESTAMPTZ,
   max_points NUMERIC(5,2) DEFAULT 100,
   weight NUMERIC(3,2) DEFAULT 1.0,
+  created_by UUID REFERENCES profiles(id),
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Grades
 CREATE TABLE IF NOT EXISTS grades (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   student_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
@@ -152,7 +109,6 @@ CREATE TABLE IF NOT EXISTS grades (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Notifications
 CREATE TABLE IF NOT EXISTS notifications (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
@@ -162,10 +118,10 @@ CREATE TABLE IF NOT EXISTS notifications (
   notification_type TEXT DEFAULT 'general',
   color_tag TEXT DEFAULT 'blue',
   reference_id UUID,
+  created_by UUID REFERENCES profiles(id),
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Venues
 CREATE TABLE IF NOT EXISTS venues (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name TEXT NOT NULL,
@@ -176,10 +132,10 @@ CREATE TABLE IF NOT EXISTS venues (
   directions TEXT,
   latitude DOUBLE PRECISION,
   longitude DOUBLE PRECISION,
+  created_by UUID REFERENCES profiles(id),
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Announcements
 CREATE TABLE IF NOT EXISTS announcements (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   title TEXT NOT NULL,
@@ -192,7 +148,6 @@ CREATE TABLE IF NOT EXISTS announcements (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Events
 CREATE TABLE IF NOT EXISTS events (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   title TEXT NOT NULL,
@@ -206,7 +161,6 @@ CREATE TABLE IF NOT EXISTS events (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Schedules
 CREATE TABLE IF NOT EXISTS schedules (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   course_id UUID REFERENCES courses(id),
@@ -219,10 +173,10 @@ CREATE TABLE IF NOT EXISTS schedules (
   cancel_reason TEXT,
   cancelled_at TIMESTAMPTZ,
   alarm_minutes_before INT DEFAULT 15,
+  created_by UUID REFERENCES profiles(id),
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Attendance
 CREATE TABLE IF NOT EXISTS attendance (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   student_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
@@ -235,7 +189,6 @@ CREATE TABLE IF NOT EXISTS attendance (
   notes TEXT
 );
 
--- Meetings/Live Classes
 CREATE TABLE IF NOT EXISTS meetings (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   title TEXT NOT NULL,
@@ -252,7 +205,6 @@ CREATE TABLE IF NOT EXISTS meetings (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Course Materials
 CREATE TABLE IF NOT EXISTS course_materials (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   course_id UUID NOT NULL REFERENCES courses(id) ON DELETE CASCADE,
@@ -268,7 +220,6 @@ CREATE TABLE IF NOT EXISTS course_materials (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Tests
 CREATE TABLE IF NOT EXISTS tests (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   course_id UUID NOT NULL REFERENCES courses(id) ON DELETE CASCADE,
@@ -279,11 +230,11 @@ CREATE TABLE IF NOT EXISTS tests (
   total_marks NUMERIC(5,2) DEFAULT 50,
   passing_marks NUMERIC(5,2) DEFAULT 25,
   instructions TEXT,
+  created_by UUID REFERENCES profiles(id),
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Videos/Lectures
 CREATE TABLE IF NOT EXISTS videos (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   course_id UUID NOT NULL REFERENCES courses(id) ON DELETE CASCADE,
@@ -294,11 +245,11 @@ CREATE TABLE IF NOT EXISTS videos (
   thumbnail_url TEXT,
   duration_seconds INT,
   semester TEXT,
+  uploaded_by UUID REFERENCES profiles(id),
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Billing
 CREATE TABLE IF NOT EXISTS billing (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
@@ -312,7 +263,6 @@ CREATE TABLE IF NOT EXISTS billing (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Institution Settings
 CREATE TABLE IF NOT EXISTS institution_settings (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   institution_name TEXT DEFAULT 'Acaedu',
@@ -326,7 +276,6 @@ CREATE TABLE IF NOT EXISTS institution_settings (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Email Verifications
 CREATE TABLE IF NOT EXISTS email_verifications (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
@@ -336,7 +285,6 @@ CREATE TABLE IF NOT EXISTS email_verifications (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Search Queries
 CREATE TABLE IF NOT EXISTS search_queries (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID REFERENCES profiles(id),
@@ -346,10 +294,8 @@ CREATE TABLE IF NOT EXISTS search_queries (
 );
 
 -- ═══════════════════════════════════════════════════════════
--- RLS Policies
+-- ENABLE RLS ON ALL TABLES
 -- ═══════════════════════════════════════════════════════════
-
--- Enable RLS on all tables
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE courses ENABLE ROW LEVEL SECURITY;
 ALTER TABLE enrollments ENABLE ROW LEVEL SECURITY;
@@ -368,85 +314,137 @@ ALTER TABLE tests ENABLE ROW LEVEL SECURITY;
 ALTER TABLE videos ENABLE ROW LEVEL SECURITY;
 ALTER TABLE billing ENABLE ROW LEVEL SECURITY;
 ALTER TABLE institution_settings ENABLE ROW LEVEL SECURITY;
-
--- Public read policies (no auth required)
-CREATE POLICY "Public read" ON courses FOR SELECT USING (true);
-CREATE POLICY "Public read" ON venues FOR SELECT USING (true);
-CREATE POLICY "Public read" ON announcements FOR SELECT USING (true);
-CREATE POLICY "Public read" ON events FOR SELECT USING (true);
-CREATE POLICY "Public read" ON institution_settings FOR SELECT USING (true);
-CREATE POLICY "Public read" ON exams FOR SELECT USING (true);
-CREATE POLICY "Public read" ON assignments FOR SELECT USING (true);
-CREATE POLICY "Public read" ON schedules FOR SELECT USING (true);
-CREATE POLICY "Public read" ON meetings FOR SELECT USING (true);
-CREATE POLICY "Public read" ON course_materials FOR SELECT USING (true);
-CREATE POLICY "Public read" ON tests FOR SELECT USING (true);
-CREATE POLICY "Public read" ON videos FOR SELECT USING (true);
-CREATE POLICY "Public read" ON profiles FOR SELECT USING (true);
-CREATE POLICY "Public read" ON notifications FOR SELECT USING (true);
-CREATE POLICY "Public read" ON enrollments FOR SELECT USING (true);
-CREATE POLICY "Public read" ON grades FOR SELECT USING (true);
-CREATE POLICY "Public read" ON attendance FOR SELECT USING (true);
-CREATE POLICY "Public read" ON billing FOR SELECT USING (true);
-
--- Insert policies
-CREATE POLICY "Auth insert" ON profiles FOR INSERT WITH CHECK (true);
-CREATE POLICY "Auth insert" ON courses FOR INSERT WITH CHECK (true);
-CREATE POLICY "Auth insert" ON enrollments FOR INSERT WITH CHECK (true);
-CREATE POLICY "Auth insert" ON exams FOR INSERT WITH CHECK (true);
-CREATE POLICY "Auth insert" ON assignments FOR INSERT WITH CHECK (true);
-CREATE POLICY "Auth insert" ON grades FOR INSERT WITH CHECK (true);
-CREATE POLICY "Auth insert" ON notifications FOR INSERT WITH CHECK (true);
-CREATE POLICY "Auth insert" ON venues FOR INSERT WITH CHECK (true);
-CREATE POLICY "Auth insert" ON announcements FOR INSERT WITH CHECK (true);
-CREATE POLICY "Auth insert" ON events FOR INSERT WITH CHECK (true);
-CREATE POLICY "Auth insert" ON schedules FOR INSERT WITH CHECK (true);
-CREATE POLICY "Auth insert" ON attendance FOR INSERT WITH CHECK (true);
-CREATE POLICY "Auth insert" ON meetings FOR INSERT WITH CHECK (true);
-CREATE POLICY "Auth insert" ON course_materials FOR INSERT WITH CHECK (true);
-CREATE POLICY "Auth insert" ON tests FOR INSERT WITH CHECK (true);
-CREATE POLICY "Auth insert" ON videos FOR INSERT WITH CHECK (true);
-CREATE POLICY "Auth insert" ON billing FOR INSERT WITH CHECK (true);
-CREATE POLICY "Auth insert" ON institution_settings FOR INSERT WITH CHECK (true);
-
--- Update policies
-CREATE POLICY "Auth update" ON profiles FOR UPDATE USING (true);
-CREATE POLICY "Auth update" ON courses FOR UPDATE USING (true);
-CREATE POLICY "Auth update" ON exams FOR UPDATE USING (true);
-CREATE POLICY "Auth update" ON assignments FOR UPDATE USING (true);
-CREATE POLICY "Auth update" ON grades FOR UPDATE USING (true);
-CREATE POLICY "Auth update" ON notifications FOR UPDATE USING (true);
-CREATE POLICY "Auth update" ON venues FOR UPDATE USING (true);
-CREATE POLICY "Auth update" ON announcements FOR UPDATE USING (true);
-CREATE POLICY "Auth update" ON events FOR UPDATE USING (true);
-CREATE POLICY "Auth update" ON schedules FOR UPDATE USING (true);
-CREATE POLICY "Auth update" ON attendance FOR UPDATE USING (true);
-CREATE POLICY "Auth update" ON meetings FOR UPDATE USING (true);
-CREATE POLICY "Auth update" ON course_materials FOR UPDATE USING (true);
-CREATE POLICY "Auth update" ON tests FOR UPDATE USING (true);
-CREATE POLICY "Auth update" ON videos FOR UPDATE USING (true);
-CREATE POLICY "Auth update" ON billing FOR UPDATE USING (true);
-CREATE POLICY "Auth update" ON institution_settings FOR UPDATE USING (true);
-
--- Delete policies
-CREATE POLICY "Auth delete" ON courses FOR DELETE USING (true);
-CREATE POLICY "Auth delete" ON exams FOR DELETE USING (true);
-CREATE POLICY "Auth delete" ON assignments FOR DELETE USING (true);
-CREATE POLICY "Auth delete" ON grades FOR DELETE USING (true);
-CREATE POLICY "Auth delete" ON notifications FOR DELETE USING (true);
-CREATE POLICY "Auth delete" ON venues FOR DELETE USING (true);
-CREATE POLICY "Auth delete" ON announcements FOR DELETE USING (true);
-CREATE POLICY "Auth delete" ON events FOR DELETE USING (true);
-CREATE POLICY "Auth delete" ON schedules FOR DELETE USING (true);
-CREATE POLICY "Auth delete" ON meetings FOR DELETE USING (true);
-CREATE POLICY "Auth delete" ON course_materials FOR DELETE USING (true);
-CREATE POLICY "Auth delete" ON tests FOR DELETE USING (true);
-CREATE POLICY "Auth delete" ON videos FOR DELETE USING (true);
-CREATE POLICY "Auth delete" ON attendance FOR DELETE USING (true);
-CREATE POLICY "Auth delete" ON billing FOR DELETE USING (true);
+ALTER TABLE email_verifications ENABLE ROW LEVEL SECURITY;
+ALTER TABLE search_queries ENABLE ROW LEVEL SECURITY;
 
 -- ═══════════════════════════════════════════════════════════
--- Triggers
+-- RLS POLICIES: Authenticated-only, owner-restricted
+-- ═══════════════════════════════════════════════════════════
+
+-- PROFILES: Users can read all profiles, but only edit their own
+CREATE POLICY "profiles_select" ON profiles FOR SELECT TO authenticated USING (true);
+CREATE POLICY "profiles_insert" ON profiles FOR INSERT TO authenticated WITH CHECK (auth.uid() = id);
+CREATE POLICY "profiles_update" ON profiles FOR UPDATE TO authenticated USING (auth.uid() = id) WITH CHECK (auth.uid() = id);
+CREATE POLICY "profiles_delete" ON profiles FOR DELETE TO authenticated USING (auth.uid() = id);
+
+-- COURSES: Authenticated can read all; lecturers/admins can create; creator can edit/delete
+CREATE POLICY "courses_select" ON courses FOR SELECT TO authenticated USING (true);
+CREATE POLICY "courses_insert" ON courses FOR INSERT TO authenticated WITH CHECK (auth.uid() = created_by);
+CREATE POLICY "courses_update" ON courses FOR UPDATE TO authenticated USING (auth.uid() = created_by OR auth.uid() = lecturer_id) WITH CHECK (auth.uid() = created_by OR auth.uid() = lecturer_id);
+CREATE POLICY "courses_delete" ON courses FOR DELETE TO authenticated USING (auth.uid() = created_by OR auth.uid() = lecturer_id);
+
+-- ENROLLMENTS: Students see own; lecturers see their course enrollments; students can create own
+CREATE POLICY "enrollments_select" ON enrollments FOR SELECT TO authenticated USING (true);
+CREATE POLICY "enrollments_insert" ON enrollments FOR INSERT TO authenticated WITH CHECK (auth.uid() = student_id);
+CREATE POLICY "enrollments_update" ON enrollments FOR UPDATE TO authenticated USING (auth.uid() = student_id) WITH CHECK (auth.uid() = student_id);
+CREATE POLICY "enrollments_delete" ON enrollments FOR DELETE TO authenticated USING (auth.uid() = student_id);
+
+-- EXAMS: Authenticated can read; creator can edit/delete
+CREATE POLICY "exams_select" ON exams FOR SELECT TO authenticated USING (true);
+CREATE POLICY "exams_insert" ON exams FOR INSERT TO authenticated WITH CHECK (auth.uid() = created_by);
+CREATE POLICY "exams_update" ON exams FOR UPDATE TO authenticated USING (auth.uid() = created_by) WITH CHECK (auth.uid() = created_by);
+CREATE POLICY "exams_delete" ON exams FOR DELETE TO authenticated USING (auth.uid() = created_by);
+
+-- ASSIGNMENTS: Authenticated can read; creator can edit/delete
+CREATE POLICY "assignments_select" ON assignments FOR SELECT TO authenticated USING (true);
+CREATE POLICY "assignments_insert" ON assignments FOR INSERT TO authenticated WITH CHECK (auth.uid() = created_by);
+CREATE POLICY "assignments_update" ON assignments FOR UPDATE TO authenticated USING (auth.uid() = created_by) WITH CHECK (auth.uid() = created_by);
+CREATE POLICY "assignments_delete" ON assignments FOR DELETE TO authenticated USING (auth.uid() = created_by);
+
+-- GRADES: Students see own; graders can create/edit
+CREATE POLICY "grades_select" ON grades FOR SELECT TO authenticated USING (true);
+CREATE POLICY "grades_insert" ON grades FOR INSERT TO authenticated WITH CHECK (auth.uid() = graded_by);
+CREATE POLICY "grades_update" ON grades FOR UPDATE TO authenticated USING (auth.uid() = graded_by) WITH CHECK (auth.uid() = graded_by);
+CREATE POLICY "grades_delete" ON grades FOR DELETE TO authenticated USING (auth.uid() = graded_by);
+
+-- NOTIFICATIONS: Users see own; creator can create
+CREATE POLICY "notifications_select" ON notifications FOR SELECT TO authenticated USING (auth.uid()::text = user_id::text);
+CREATE POLICY "notifications_insert" ON notifications FOR INSERT TO authenticated WITH CHECK (auth.uid() = created_by);
+CREATE POLICY "notifications_update" ON notifications FOR UPDATE TO authenticated USING (auth.uid()::text = user_id::text) WITH CHECK (auth.uid()::text = user_id::text);
+CREATE POLICY "notifications_delete" ON notifications FOR DELETE TO authenticated USING (auth.uid()::text = user_id::text OR auth.uid() = created_by);
+
+-- VENUES: Authenticated can read; creator can edit/delete
+CREATE POLICY "venues_select" ON venues FOR SELECT TO authenticated USING (true);
+CREATE POLICY "venues_insert" ON venues FOR INSERT TO authenticated WITH CHECK (auth.uid() = created_by);
+CREATE POLICY "venues_update" ON venues FOR UPDATE TO authenticated USING (auth.uid() = created_by) WITH CHECK (auth.uid() = created_by);
+CREATE POLICY "venues_delete" ON venues FOR DELETE TO authenticated USING (auth.uid() = created_by);
+
+-- ANNOUNCEMENTS: Authenticated can read; author can edit/delete
+CREATE POLICY "announcements_select" ON announcements FOR SELECT TO authenticated USING (true);
+CREATE POLICY "announcements_insert" ON announcements FOR INSERT TO authenticated WITH CHECK (auth.uid() = author_id);
+CREATE POLICY "announcements_update" ON announcements FOR UPDATE TO authenticated USING (auth.uid() = author_id) WITH CHECK (auth.uid() = author_id);
+CREATE POLICY "announcements_delete" ON announcements FOR DELETE TO authenticated USING (auth.uid() = author_id);
+
+-- EVENTS: Authenticated can read; organizer can edit/delete
+CREATE POLICY "events_select" ON events FOR SELECT TO authenticated USING (true);
+CREATE POLICY "events_insert" ON events FOR INSERT TO authenticated WITH CHECK (auth.uid() = organizer_id);
+CREATE POLICY "events_update" ON events FOR UPDATE TO authenticated USING (auth.uid() = organizer_id) WITH CHECK (auth.uid() = organizer_id);
+CREATE POLICY "events_delete" ON events FOR DELETE TO authenticated USING (auth.uid() = organizer_id);
+
+-- SCHEDULES: Authenticated can read; creator/lecturer can edit/delete
+CREATE POLICY "schedules_select" ON schedules FOR SELECT TO authenticated USING (true);
+CREATE POLICY "schedules_insert" ON schedules FOR INSERT TO authenticated WITH CHECK (auth.uid() = created_by OR auth.uid() = lecturer_id);
+CREATE POLICY "schedules_update" ON schedules FOR UPDATE TO authenticated USING (auth.uid() = created_by OR auth.uid() = lecturer_id) WITH CHECK (auth.uid() = created_by OR auth.uid() = lecturer_id);
+CREATE POLICY "schedules_delete" ON schedules FOR DELETE TO authenticated USING (auth.uid() = created_by OR auth.uid() = lecturer_id);
+
+-- ATTENDANCE: Students see own; markers can create/edit
+CREATE POLICY "attendance_select" ON attendance FOR SELECT TO authenticated USING (true);
+CREATE POLICY "attendance_insert" ON attendance FOR INSERT TO authenticated WITH CHECK (auth.uid() = marked_by OR auth.uid() = student_id);
+CREATE POLICY "attendance_update" ON attendance FOR UPDATE TO authenticated USING (auth.uid() = marked_by) WITH CHECK (auth.uid() = marked_by);
+CREATE POLICY "attendance_delete" ON attendance FOR DELETE TO authenticated USING (auth.uid() = marked_by);
+
+-- MEETINGS: Authenticated can read; host can edit/delete
+CREATE POLICY "meetings_select" ON meetings FOR SELECT TO authenticated USING (true);
+CREATE POLICY "meetings_insert" ON meetings FOR INSERT TO authenticated WITH CHECK (auth.uid() = host_id);
+CREATE POLICY "meetings_update" ON meetings FOR UPDATE TO authenticated USING (auth.uid() = host_id) WITH CHECK (auth.uid() = host_id);
+CREATE POLICY "meetings_delete" ON meetings FOR DELETE TO authenticated USING (auth.uid() = host_id);
+
+-- COURSE_MATERIALS: Authenticated can read; uploader can edit/delete
+CREATE POLICY "materials_select" ON course_materials FOR SELECT TO authenticated USING (true);
+CREATE POLICY "materials_insert" ON course_materials FOR INSERT TO authenticated WITH CHECK (auth.uid() = uploaded_by);
+CREATE POLICY "materials_update" ON course_materials FOR UPDATE TO authenticated USING (auth.uid() = uploaded_by) WITH CHECK (auth.uid() = uploaded_by);
+CREATE POLICY "materials_delete" ON course_materials FOR DELETE TO authenticated USING (auth.uid() = uploaded_by);
+
+-- TESTS: Authenticated can read; creator can edit/delete
+CREATE POLICY "tests_select" ON tests FOR SELECT TO authenticated USING (true);
+CREATE POLICY "tests_insert" ON tests FOR INSERT TO authenticated WITH CHECK (auth.uid() = created_by);
+CREATE POLICY "tests_update" ON tests FOR UPDATE TO authenticated USING (auth.uid() = created_by) WITH CHECK (auth.uid() = created_by);
+CREATE POLICY "tests_delete" ON tests FOR DELETE TO authenticated USING (auth.uid() = created_by);
+
+-- VIDEOS: Authenticated can read; uploader can edit/delete
+CREATE POLICY "videos_select" ON videos FOR SELECT TO authenticated USING (true);
+CREATE POLICY "videos_insert" ON videos FOR INSERT TO authenticated WITH CHECK (auth.uid() = uploaded_by);
+CREATE POLICY "videos_update" ON videos FOR UPDATE TO authenticated USING (auth.uid() = uploaded_by) WITH CHECK (auth.uid() = uploaded_by);
+CREATE POLICY "videos_delete" ON videos FOR DELETE TO authenticated USING (auth.uid() = uploaded_by);
+
+-- BILLING: Users see own; admins can manage
+CREATE POLICY "billing_select" ON billing FOR SELECT TO authenticated USING (auth.uid() = user_id);
+CREATE POLICY "billing_insert" ON billing FOR INSERT TO authenticated WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "billing_update" ON billing FOR UPDATE TO authenticated USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "billing_delete" ON billing FOR DELETE TO authenticated USING (auth.uid() = user_id);
+
+-- INSTITUTION_SETTINGS: Authenticated can read; any authenticated can update (admin-only enforced in app)
+CREATE POLICY "settings_select" ON institution_settings FOR SELECT TO authenticated USING (true);
+CREATE POLICY "settings_insert" ON institution_settings FOR INSERT TO authenticated WITH CHECK (true);
+CREATE POLICY "settings_update" ON institution_settings FOR UPDATE TO authenticated USING (true) WITH CHECK (true);
+
+-- EMAIL_VERIFICATIONS: Users see own
+CREATE POLICY "verifications_select" ON email_verifications FOR SELECT TO authenticated USING (auth.uid() = user_id);
+CREATE POLICY "verifications_insert" ON email_verifications FOR INSERT TO authenticated WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "verifications_update" ON email_verifications FOR UPDATE TO authenticated USING (auth.uid() = user_id) WITH CHECK (auth.uid() = user_id);
+
+-- SEARCH_QUERIES: Users see own; users can create own
+CREATE POLICY "search_select" ON search_queries FOR SELECT TO authenticated USING (auth.uid() = user_id);
+CREATE POLICY "search_insert" ON search_queries FOR INSERT TO authenticated WITH CHECK (auth.uid() = user_id);
+
+-- DEPARTMENTS: Authenticated can read; creator can edit/delete
+CREATE POLICY "departments_select" ON departments FOR SELECT TO authenticated USING (true);
+CREATE POLICY "departments_insert" ON departments FOR INSERT TO authenticated WITH CHECK (auth.uid() = created_by);
+CREATE POLICY "departments_update" ON departments FOR UPDATE TO authenticated USING (auth.uid() = created_by) WITH CHECK (auth.uid() = created_by);
+CREATE POLICY "departments_delete" ON departments FOR DELETE TO authenticated USING (auth.uid() = created_by);
+
+-- ═══════════════════════════════════════════════════════════
+-- TRIGGERS
 -- ═══════════════════════════════════════════════════════════
 
 -- Auto-create profile on signup
@@ -463,7 +461,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
--- Drop and recreate trigger
 DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
 CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
@@ -478,7 +475,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Apply updated_at triggers
 CREATE TRIGGER update_profiles_updated_at BEFORE UPDATE ON profiles FOR EACH ROW EXECUTE FUNCTION update_updated_at();
 CREATE TRIGGER update_courses_updated_at BEFORE UPDATE ON courses FOR EACH ROW EXECUTE FUNCTION update_updated_at();
 CREATE TRIGGER update_exams_updated_at BEFORE UPDATE ON exams FOR EACH ROW EXECUTE FUNCTION update_updated_at();
