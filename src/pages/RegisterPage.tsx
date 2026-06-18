@@ -5,7 +5,7 @@ import { signUp, signInWithGoogle, signInWithApple } from '../lib/supabase'
 import { GraduationCap, BookOpen, Shield } from 'lucide-react'
 
 const roles = [
-  { value: 'student', label: 'Student', icon: GraduationCap, desc: 'Access courses, grades, schedule' },
+  { value: 'student', label: 'Student', icon: GraduationCap, desc: 'Access subjects, grades, schedule' },
   { value: 'lecturer', label: 'Lecturer', icon: BookOpen, desc: 'Manage classes, attendance, grades' },
   { value: 'admin', label: 'Administrator', icon: Shield, desc: 'Full system management' },
 ]

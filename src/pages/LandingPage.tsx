@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { GraduationCap, BookOpen, BarChart3, Bell, Shield, Sparkles } from 'lucide-react'
 
 const features = [
-  { icon: BookOpen, title: 'Subject Management', desc: 'Organize courses, materials, and schedules.' },
+  { icon: BookOpen, title: 'Subject Management', desc: 'Organize subjects, materials, and schedules.' },
   { icon: GraduationCap, title: 'Exam & Grades', desc: 'Track exams, tests, assignments, and grades.' },
   { icon: Bell, title: 'Smart Notifications', desc: 'Real-time alerts for deadlines and announcements.' },
   { icon: BarChart3, title: 'Analytics Dashboard', desc: 'Visual charts for academic performance.' },
@@ -43,7 +43,7 @@ export function LandingPage() {
 
       <section className="py-16 px-6 bg-bg-secondary/50">
         <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-          {[['10K+','Students'],['500+','Courses'],['50+','Institutions'],['99.9%','Uptime']].map(([num,label],i) => (
+          {[['10K+','Students'],['500+','Subjects'],['50+','Institutions'],['99.9%','Uptime']].map(([num,label],i) => (
             <motion.div key={i} initial={{opacity:0,y:20}} whileInView={{opacity:1,y:0}} viewport={{once:true}} transition={{delay:i*0.1}}>
               <div className="text-3xl font-extrabold" style={{background:'var(--gradient-mixed)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}}>{num}</div>
               <div className="text-xs text-text-muted mt-1 uppercase tracking-wider">{label}</div>

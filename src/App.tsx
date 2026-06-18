@@ -6,7 +6,7 @@ import { LandingPage } from './pages/LandingPage'
 import { LoginPage } from './pages/LoginPage'
 import { RegisterPage } from './pages/RegisterPage'
 import { DashboardPage } from './pages/DashboardPage'
-import { CoursesPage } from './pages/CoursesPage'
+import { SubjectsPage } from './pages/CoursesPage'
 import { ExamsPage, GradesPage, AssignmentsPage, NotificationsPage, VenuesPage, EventsPage, SchedulePage, SettingsPage } from './pages/CrudPages'
 import { AttendancePage } from './pages/AttendancePage'
 import { AnnouncementsPage } from './pages/AnnouncementsPage'
@@ -68,7 +68,7 @@ export default function App() {
         <Route path="/admin" element={user?.role === 'admin' ? <RoleLayout user={user}><AdminDashboard/></RoleLayout> : <Navigate to="/dashboard"/>} />
         <Route path="/users" element={user?.role === 'admin' ? <RoleLayout user={user}><UserManagementPage/></RoleLayout> : <Navigate to="/dashboard"/>} />
         <Route path="/census" element={user?.role === 'admin' ? <RoleLayout user={user}><PopulationCensusPage/></RoleLayout> : <Navigate to="/dashboard"/>} />
-        <Route path="/courses" element={user ? <RoleLayout user={user}><CoursesPage/></RoleLayout> : <Navigate to="/login"/>} />
+        <Route path="/courses" element={user ? <RoleLayout user={user}><SubjectsPage/></RoleLayout> : <Navigate to="/login"/>} />
         <Route path="/exams" element={user ? <RoleLayout user={user}><ExamsPage/></RoleLayout> : <Navigate to="/login"/>} />
         <Route path="/tests" element={user ? <RoleLayout user={user}><TestsPage/></RoleLayout> : <Navigate to="/login"/>} />
         <Route path="/grades" element={user ? <RoleLayout user={user}><GradesPage/></RoleLayout> : <Navigate to="/login"/>} />
