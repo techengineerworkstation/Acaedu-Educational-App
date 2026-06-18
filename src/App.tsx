@@ -12,6 +12,7 @@ import { AttendancePage } from './pages/AttendancePage'
 import { AnnouncementsPage } from './pages/AnnouncementsPage'
 import { LectureVideosPage, MaterialsPage } from './pages/ContentPages'
 import { AdminDashboard, UserManagementPage, PopulationCensusPage } from './pages/AdminPages'
+import { TermsPage, PrivacyPage, ContactPage } from './pages/StaticPages'
 import { FractalBackground } from './components/FractalBackground'
 import type { User } from './types'
 
@@ -59,6 +60,9 @@ export default function App() {
         <Route path="/" element={user ? <Navigate to="/dashboard"/> : <LandingPage/>} />
         <Route path="/login" element={user ? <Navigate to="/dashboard"/> : <LoginPage/>} />
         <Route path="/register" element={user ? <Navigate to="/dashboard"/> : <RegisterPage/>} />
+        <Route path="/terms" element={<TermsPage/>} />
+        <Route path="/privacy" element={<PrivacyPage/>} />
+        <Route path="/contact" element={<ContactPage/>} />
         <Route path="/dashboard" element={user ? <RoleLayout user={user}><DashboardPage user={user}/></RoleLayout> : <Navigate to="/login"/>} />
         <Route path="/admin" element={user?.role === 'admin' ? <RoleLayout user={user}><AdminDashboard/></RoleLayout> : <Navigate to="/dashboard"/>} />
         <Route path="/users" element={user?.role === 'admin' ? <RoleLayout user={user}><UserManagementPage/></RoleLayout> : <Navigate to="/dashboard"/>} />
