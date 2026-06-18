@@ -13,6 +13,7 @@ import { AnnouncementsPage } from './pages/AnnouncementsPage'
 import { LectureVideosPage, MaterialsPage } from './pages/ContentPages'
 import { AdminDashboard, UserManagementPage, PopulationCensusPage } from './pages/AdminPages'
 import { TermsPage, PrivacyPage, ContactPage } from './pages/StaticPages'
+import { LiveClassesPage, TestsPage, ClassRecordsPage, ProfilePage } from './pages/AdditionalPages'
 import { FractalBackground } from './components/FractalBackground'
 import type { User } from './types'
 
@@ -69,6 +70,7 @@ export default function App() {
         <Route path="/census" element={user?.role === 'admin' ? <RoleLayout user={user}><PopulationCensusPage/></RoleLayout> : <Navigate to="/dashboard"/>} />
         <Route path="/courses" element={user ? <RoleLayout user={user}><CoursesPage/></RoleLayout> : <Navigate to="/login"/>} />
         <Route path="/exams" element={user ? <RoleLayout user={user}><ExamsPage/></RoleLayout> : <Navigate to="/login"/>} />
+        <Route path="/tests" element={user ? <RoleLayout user={user}><TestsPage/></RoleLayout> : <Navigate to="/login"/>} />
         <Route path="/grades" element={user ? <RoleLayout user={user}><GradesPage/></RoleLayout> : <Navigate to="/login"/>} />
         <Route path="/assignments" element={user ? <RoleLayout user={user}><AssignmentsPage/></RoleLayout> : <Navigate to="/login"/>} />
         <Route path="/notifications" element={user ? <RoleLayout user={user}><NotificationsPage/></RoleLayout> : <Navigate to="/login"/>} />
@@ -77,8 +79,11 @@ export default function App() {
         <Route path="/schedule" element={user ? <RoleLayout user={user}><SchedulePage/></RoleLayout> : <Navigate to="/login"/>} />
         <Route path="/attendance" element={user ? <RoleLayout user={user}><AttendancePage/></RoleLayout> : <Navigate to="/login"/>} />
         <Route path="/announcements" element={user ? <RoleLayout user={user}><AnnouncementsPage/></RoleLayout> : <Navigate to="/login"/>} />
-        <Route path="/videos" element={user ? <RoleLayout user={user}><LectureVideosPage/></RoleLayout> : <Navigate to="/login"/>} />
+        <Route path="/live-classes" element={user ? <RoleLayout user={user}><LiveClassesPage/></RoleLayout> : <Navigate to="/login"/>} />
+        <Route path="/class-records" element={user ? <RoleLayout user={user}><ClassRecordsPage/></RoleLayout> : <Navigate to="/login"/>} />
         <Route path="/materials" element={user ? <RoleLayout user={user}><MaterialsPage/></RoleLayout> : <Navigate to="/login"/>} />
+        <Route path="/profile" element={user ? <RoleLayout user={user}><ProfilePage user={user}/></RoleLayout> : <Navigate to="/login"/>} />
+        <Route path="/videos" element={user ? <RoleLayout user={user}><LectureVideosPage/></RoleLayout> : <Navigate to="/login"/>} />
         <Route path="/settings" element={user ? <RoleLayout user={user}><SettingsPage/></RoleLayout> : <Navigate to="/login"/>} />
         <Route path="*" element={<Navigate to="/"/>} />
       </Routes>
