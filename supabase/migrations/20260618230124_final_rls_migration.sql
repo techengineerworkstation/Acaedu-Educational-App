@@ -1,75 +1,107 @@
--- Acaedu: Safe RLS policies with column existence checks
--- This migration safely adds columns and applies RLS policies
+-- Acaedu: Final safe migration with explicit column adds
+-- This migration adds ALL missing columns and then creates RLS policies
 
 -- ═══════════════════════════════════════════════════════════
--- STEP 1: Add missing columns safely
+-- STEP 1: Add missing columns to enrollments
 -- ═══════════════════════════════════════════════════════════
+DO $$ BEGIN
+  ALTER TABLE enrollments ADD COLUMN student_id UUID REFERENCES profiles(id) ON DELETE CASCADE;
+EXCEPTION WHEN duplicate_column THEN NULL;
+END $$;
 
--- Helper function to add column if not exists
-CREATE OR REPLACE FUNCTION add_column_if_not_exists(
-  p_table TEXT, p_column TEXT, p_type TEXT, p_references TEXT DEFAULT NULL
-) RETURNS void AS $$
-BEGIN
-  IF NOT EXISTS (
-    SELECT 1 FROM information_schema.columns 
-    WHERE table_schema = 'public' AND table_name = p_table AND column_name = p_column
-  ) THEN
-    IF p_references IS NOT NULL THEN
-      EXECUTE format('ALTER TABLE %I ADD COLUMN %I %s REFERENCES %s', p_table, p_column, p_type, p_references);
-    ELSE
-      EXECUTE format('ALTER TABLE %I ADD COLUMN %I %s', p_table, p_column, p_type);
-    END IF;
-  END IF;
-END;
-$$ LANGUAGE plpgsql;
+DO $$ BEGIN
+  ALTER TABLE enrollments ADD COLUMN status TEXT DEFAULT 'active';
+EXCEPTION WHEN duplicate_column THEN NULL;
+END $$;
 
--- Add created_by columns
-SELECT add_column_if_not_exists('courses', 'created_by', 'UUID', 'profiles(id)');
-SELECT add_column_if_not_exists('exams', 'created_by', 'UUID', 'profiles(id)');
-SELECT add_column_if_not_exists('assignments', 'created_by', 'UUID', 'profiles(id)');
-SELECT add_column_if_not_exists('venues', 'created_by', 'UUID', 'profiles(id)');
-SELECT add_column_if_not_exists('schedules', 'created_by', 'UUID', 'profiles(id)');
-SELECT add_column_if_not_exists('tests', 'created_by', 'UUID', 'profiles(id)');
-SELECT add_column_if_not_exists('departments', 'created_by', 'UUID', 'profiles(id)');
-SELECT add_column_if_not_exists('notifications', 'created_by', 'UUID', 'profiles(id)');
+-- Add created_by to courses
+DO $$ BEGIN
+  ALTER TABLE courses ADD COLUMN created_by UUID REFERENCES profiles(id);
+EXCEPTION WHEN duplicate_column THEN NULL;
+END $$;
+
+-- Add created_by to exams
+DO $$ BEGIN
+  ALTER TABLE exams ADD COLUMN created_by UUID REFERENCES profiles(id);
+EXCEPTION WHEN duplicate_column THEN NULL;
+END $$;
+
+-- Add created_by to assignments
+DO $$ BEGIN
+  ALTER TABLE assignments ADD COLUMN created_by UUID REFERENCES profiles(id);
+EXCEPTION WHEN duplicate_column THEN NULL;
+END $$;
+
+-- Add created_by to venues
+DO $$ BEGIN
+  ALTER TABLE venues ADD COLUMN created_by UUID REFERENCES profiles(id);
+EXCEPTION WHEN duplicate_column THEN NULL;
+END $$;
+
+-- Add created_by to schedules
+DO $$ BEGIN
+  ALTER TABLE schedules ADD COLUMN created_by UUID REFERENCES profiles(id);
+EXCEPTION WHEN duplicate_column THEN NULL;
+END $$;
+
+-- Add created_by to tests
+DO $$ BEGIN
+  ALTER TABLE tests ADD COLUMN created_by UUID REFERENCES profiles(id);
+EXCEPTION WHEN duplicate_column THEN NULL;
+END $$;
+
+-- Add created_by to departments
+DO $$ BEGIN
+  ALTER TABLE departments ADD COLUMN created_by UUID REFERENCES profiles(id);
+EXCEPTION WHEN duplicate_column THEN NULL;
+END $$;
+
+-- Add created_by to notifications
+DO $$ BEGIN
+  ALTER TABLE notifications ADD COLUMN created_by UUID REFERENCES profiles(id);
+EXCEPTION WHEN duplicate_column THEN NULL;
+END $$;
 
 -- Add uploaded_by to videos
-SELECT add_column_if_not_exists('videos', 'uploaded_by', 'UUID', 'profiles(id)');
+DO $$ BEGIN
+  ALTER TABLE videos ADD COLUMN uploaded_by UUID REFERENCES profiles(id);
+EXCEPTION WHEN duplicate_column THEN NULL;
+END $$;
 
 -- Add profile fields
-SELECT add_column_if_not_exists('profiles', 'department', 'TEXT', NULL);
-SELECT add_column_if_not_exists('profiles', 'faculty', 'TEXT', NULL);
-SELECT add_column_if_not_exists('profiles', 'gender', 'TEXT', NULL);
-SELECT add_column_if_not_exists('profiles', 'matric_number', 'TEXT', NULL);
-SELECT add_column_if_not_exists('profiles', 'year_of_study', 'INT', NULL);
+DO $$ BEGIN ALTER TABLE profiles ADD COLUMN department TEXT; EXCEPTION WHEN duplicate_column THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE profiles ADD COLUMN faculty TEXT; EXCEPTION WHEN duplicate_column THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE profiles ADD COLUMN gender TEXT; EXCEPTION WHEN duplicate_column THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE profiles ADD COLUMN matric_number TEXT; EXCEPTION WHEN duplicate_column THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE profiles ADD COLUMN year_of_study INT; EXCEPTION WHEN duplicate_column THEN NULL; END $$;
 
 -- Add venue fields
-SELECT add_column_if_not_exists('venues', 'floor', 'TEXT', NULL);
-SELECT add_column_if_not_exists('venues', 'photo_url', 'TEXT', NULL);
-SELECT add_column_if_not_exists('venues', 'directions', 'TEXT', NULL);
-SELECT add_column_if_not_exists('venues', 'latitude', 'DOUBLE PRECISION', NULL);
-SELECT add_column_if_not_exists('venues', 'longitude', 'DOUBLE PRECISION', NULL);
+DO $$ BEGIN ALTER TABLE venues ADD COLUMN floor TEXT; EXCEPTION WHEN duplicate_column THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE venues ADD COLUMN photo_url TEXT; EXCEPTION WHEN duplicate_column THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE venues ADD COLUMN directions TEXT; EXCEPTION WHEN duplicate_column THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE venues ADD COLUMN latitude DOUBLE PRECISION; EXCEPTION WHEN duplicate_column THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE venues ADD COLUMN longitude DOUBLE PRECISION; EXCEPTION WHEN duplicate_column THEN NULL; END $$;
 
 -- Add schedule fields
-SELECT add_column_if_not_exists('schedules', 'is_cancelled', 'BOOLEAN DEFAULT false', NULL);
-SELECT add_column_if_not_exists('schedules', 'cancel_reason', 'TEXT', NULL);
-SELECT add_column_if_not_exists('schedules', 'cancelled_at', 'TIMESTAMPTZ', NULL);
-SELECT add_column_if_not_exists('schedules', 'alarm_minutes_before', 'INT DEFAULT 15', NULL);
+DO $$ BEGIN ALTER TABLE schedules ADD COLUMN is_cancelled BOOLEAN DEFAULT false; EXCEPTION WHEN duplicate_column THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE schedules ADD COLUMN cancel_reason TEXT; EXCEPTION WHEN duplicate_column THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE schedules ADD COLUMN cancelled_at TIMESTAMPTZ; EXCEPTION WHEN duplicate_column THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE schedules ADD COLUMN alarm_minutes_before INT DEFAULT 15; EXCEPTION WHEN duplicate_column THEN NULL; END $$;
 
 -- Add notification field
-SELECT add_column_if_not_exists('notifications', 'color_tag', 'TEXT DEFAULT ''blue''', NULL);
+DO $$ BEGIN ALTER TABLE notifications ADD COLUMN color_tag TEXT DEFAULT 'blue'; EXCEPTION WHEN duplicate_column THEN NULL; END $$;
 
 -- Add event fields
-SELECT add_column_if_not_exists('events', 'event_type', 'TEXT DEFAULT ''academic''', NULL);
-SELECT add_column_if_not_exists('events', 'end_date', 'TIMESTAMPTZ', NULL);
+DO $$ BEGIN ALTER TABLE events ADD COLUMN event_type TEXT DEFAULT 'academic'; EXCEPTION WHEN duplicate_column THEN NULL; END $$;
+DO $$ BEGIN ALTER TABLE events ADD COLUMN end_date TIMESTAMPTZ; EXCEPTION WHEN duplicate_column THEN NULL; END $$;
 
 -- Add announcement field
-SELECT add_column_if_not_exists('announcements', 'target_audience', 'TEXT DEFAULT ''all''', NULL);
+DO $$ BEGIN ALTER TABLE announcements ADD COLUMN target_audience TEXT DEFAULT 'all'; EXCEPTION WHEN duplicate_column THEN NULL; END $$;
 
 -- Add semester to videos
-SELECT add_column_if_not_exists('videos', 'semester', 'TEXT', NULL);
+DO $$ BEGIN ALTER TABLE videos ADD COLUMN semester TEXT; EXCEPTION WHEN duplicate_column THEN NULL; END $$;
 
--- Add billing table if not exists
+-- Create missing tables
 CREATE TABLE IF NOT EXISTS billing (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
@@ -83,7 +115,6 @@ CREATE TABLE IF NOT EXISTS billing (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Add email_verifications table if not exists
 CREATE TABLE IF NOT EXISTS email_verifications (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
@@ -93,7 +124,6 @@ CREATE TABLE IF NOT EXISTS email_verifications (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Add search_queries table if not exists
 CREATE TABLE IF NOT EXISTS search_queries (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID REFERENCES profiles(id),
@@ -102,11 +132,8 @@ CREATE TABLE IF NOT EXISTS search_queries (
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- Clean up helper function
-DROP FUNCTION IF EXISTS add_column_if_not_exists;
-
 -- ═══════════════════════════════════════════════════════════
--- STEP 2: Enable RLS on all tables
+-- STEP 2: Enable RLS
 -- ═══════════════════════════════════════════════════════════
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE courses ENABLE ROW LEVEL SECURITY;
@@ -130,7 +157,7 @@ ALTER TABLE email_verifications ENABLE ROW LEVEL SECURITY;
 ALTER TABLE search_queries ENABLE ROW LEVEL SECURITY;
 
 -- ═══════════════════════════════════════════════════════════
--- STEP 3: Drop all existing policies
+-- STEP 3: Drop ALL existing policies
 -- ═══════════════════════════════════════════════════════════
 DO $$ DECLARE r RECORD;
 BEGIN
@@ -141,7 +168,7 @@ BEGIN
 END $$;
 
 -- ═══════════════════════════════════════════════════════════
--- STEP 4: Create secure RLS policies
+-- STEP 4: Create RLS policies
 -- ═══════════════════════════════════════════════════════════
 
 -- PROFILES
@@ -150,13 +177,13 @@ CREATE POLICY "profiles_insert" ON profiles FOR INSERT TO authenticated WITH CHE
 CREATE POLICY "profiles_update" ON profiles FOR UPDATE TO authenticated USING (auth.uid() = id) WITH CHECK (auth.uid() = id);
 CREATE POLICY "profiles_delete" ON profiles FOR DELETE TO authenticated USING (auth.uid() = id);
 
--- COURSES (created_by exists after ALTER TABLE above)
+-- COURSES
 CREATE POLICY "courses_select" ON courses FOR SELECT TO authenticated USING (true);
 CREATE POLICY "courses_insert" ON courses FOR INSERT TO authenticated WITH CHECK (auth.uid()::text = created_by::text);
 CREATE POLICY "courses_update" ON courses FOR UPDATE TO authenticated USING (auth.uid()::text = created_by::text OR auth.uid()::text = lecturer_id::text);
 CREATE POLICY "courses_delete" ON courses FOR DELETE TO authenticated USING (auth.uid()::text = created_by::text OR auth.uid()::text = lecturer_id::text);
 
--- ENROLLMENTS
+-- ENROLLMENTS (now has student_id after ALTER TABLE above)
 CREATE POLICY "enrollments_select" ON enrollments FOR SELECT TO authenticated USING (true);
 CREATE POLICY "enrollments_insert" ON enrollments FOR INSERT TO authenticated WITH CHECK (auth.uid()::text = student_id::text);
 CREATE POLICY "enrollments_update" ON enrollments FOR UPDATE TO authenticated USING (auth.uid()::text = student_id::text);
@@ -270,7 +297,6 @@ CREATE POLICY "departments_delete" ON departments FOR DELETE TO authenticated US
 -- STEP 5: Triggers
 -- ═══════════════════════════════════════════════════════════
 
--- Auto-create profile on signup
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS trigger AS $$
 BEGIN
@@ -289,7 +315,6 @@ CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
 
--- Auto-update updated_at
 CREATE OR REPLACE FUNCTION update_updated_at()
 RETURNS trigger AS $$
 BEGIN
@@ -298,7 +323,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Apply triggers safely
 DO $$ BEGIN CREATE TRIGGER update_profiles_updated_at BEFORE UPDATE ON profiles FOR EACH ROW EXECUTE FUNCTION update_updated_at(); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 DO $$ BEGIN CREATE TRIGGER update_courses_updated_at BEFORE UPDATE ON courses FOR EACH ROW EXECUTE FUNCTION update_updated_at(); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
 DO $$ BEGIN CREATE TRIGGER update_exams_updated_at BEFORE UPDATE ON exams FOR EACH ROW EXECUTE FUNCTION update_updated_at(); EXCEPTION WHEN duplicate_object THEN NULL; END $$;
