@@ -1,13 +1,73 @@
--- Acaedu Database Schema for Supabase
+-- Acaedu Database Schema for Supabase (Fixed)
 -- Run this in Supabase SQL Editor
 
--- Users table (managed by Supabase Auth, extended with profiles)
+-- Drop existing policies first (safe to run even if they don't exist)
+DO $$ BEGIN
+  DROP POLICY IF EXISTS "Public read" ON courses;
+  DROP POLICY IF EXISTS "Public read" ON venues;
+  DROP POLICY IF EXISTS "Public read" ON announcements;
+  DROP POLICY IF EXISTS "Public read" ON events;
+  DROP POLICY IF EXISTS "Public read" ON institution_settings;
+  DROP POLICY IF EXISTS "Auth read" ON notifications;
+  DROP POLICY IF EXISTS "Auth read" ON enrollments;
+  DROP POLICY IF EXISTS "Auth read" ON grades;
+  DROP POLICY IF EXISTS "Auth read" ON exams;
+  DROP POLICY IF EXISTS "Auth read" ON assignments;
+  DROP POLICY IF EXISTS "Auth read" ON schedules;
+  DROP POLICY IF EXISTS "Auth read" ON meetings;
+  DROP POLICY IF EXISTS "Auth read" ON course_materials;
+  DROP POLICY IF EXISTS "Auth read" ON tests;
+  DROP POLICY IF EXISTS "Auth read" ON videos;
+  DROP POLICY IF EXISTS "Auth read" ON attendance;
+  DROP POLICY IF EXISTS "Auth read" ON profiles;
+  DROP POLICY IF EXISTS "Auth insert" ON profiles;
+  DROP POLICY IF EXISTS "Auth insert" ON enrollments;
+  DROP POLICY IF EXISTS "Auth insert" ON courses;
+  DROP POLICY IF EXISTS "Auth insert" ON exams;
+  DROP POLICY IF EXISTS "Auth insert" ON assignments;
+  DROP POLICY IF EXISTS "Auth insert" ON grades;
+  DROP POLICY IF EXISTS "Auth insert" ON notifications;
+  DROP POLICY IF EXISTS "Auth insert" ON venues;
+  DROP POLICY IF EXISTS "Auth insert" ON announcements;
+  DROP POLICY IF EXISTS "Auth insert" ON events;
+  DROP POLICY IF EXISTS "Auth insert" ON schedules;
+  DROP POLICY IF EXISTS "Auth insert" ON attendance;
+  DROP POLICY IF EXISTS "Auth insert" ON meetings;
+  DROP POLICY IF EXISTS "Auth insert" ON course_materials;
+  DROP POLICY IF EXISTS "Auth insert" ON tests;
+  DROP POLICY IF EXISTS "Auth insert" ON videos;
+  DROP POLICY IF EXISTS "Auth insert" ON institution_settings;
+  DROP POLICY IF EXISTS "Auth update" ON profiles;
+  DROP POLICY IF EXISTS "Auth update" ON courses;
+  DROP POLICY IF EXISTS "Auth update" ON exams;
+  DROP POLICY IF EXISTS "Auth update" ON assignments;
+  DROP POLICY IF EXISTS "Auth update" ON grades;
+  DROP POLICY IF EXISTS "Auth update" ON notifications;
+  DROP POLICY IF EXISTS "Auth update" ON venues;
+  DROP POLICY IF EXISTS "Auth update" ON announcements;
+  DROP POLICY IF EXISTS "Auth update" ON events;
+  DROP POLICY IF EXISTS "Auth update" ON schedules;
+  DROP POLICY IF EXISTS "Auth update" ON attendance;
+  DROP POLICY IF EXISTS "Auth update" ON meetings;
+  DROP POLICY IF EXISTS "Auth update" ON course_materials;
+  DROP POLICY IF EXISTS "Auth update" ON tests;
+  DROP POLICY IF EXISTS "Auth update" ON videos;
+  DROP POLICY IF EXISTS "Auth update" ON institution_settings;
+EXCEPTION WHEN others THEN NULL;
+END $$;
+
+-- Users table
 CREATE TABLE IF NOT EXISTS profiles (
   id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
   full_name TEXT NOT NULL DEFAULT '',
   role TEXT NOT NULL DEFAULT 'student' CHECK (role IN ('student', 'lecturer', 'admin', 'dean')),
   avatar_url TEXT,
   phone TEXT,
+  department TEXT,
+  faculty TEXT,
+  gender TEXT,
+  matric_number TEXT,
+  year_of_study INT,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -100,6 +160,7 @@ CREATE TABLE IF NOT EXISTS notifications (
   body TEXT NOT NULL DEFAULT '',
   read BOOLEAN DEFAULT false,
   notification_type TEXT DEFAULT 'general',
+  color_tag TEXT DEFAULT 'blue',
   reference_id UUID,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -110,6 +171,11 @@ CREATE TABLE IF NOT EXISTS venues (
   name TEXT NOT NULL,
   capacity INT DEFAULT 50,
   building TEXT,
+  floor TEXT,
+  photo_url TEXT,
+  directions TEXT,
+  latitude DOUBLE PRECISION,
+  longitude DOUBLE PRECISION,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -121,6 +187,7 @@ CREATE TABLE IF NOT EXISTS announcements (
   author_id UUID REFERENCES profiles(id),
   course_id UUID REFERENCES courses(id),
   priority TEXT DEFAULT 'normal' CHECK (priority IN ('low', 'normal', 'high', 'urgent')),
+  target_audience TEXT DEFAULT 'all',
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -130,7 +197,9 @@ CREATE TABLE IF NOT EXISTS events (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   title TEXT NOT NULL,
   description TEXT,
+  event_type TEXT DEFAULT 'academic',
   event_date TIMESTAMPTZ,
+  end_date TIMESTAMPTZ,
   location TEXT,
   organizer_id UUID REFERENCES profiles(id),
   created_at TIMESTAMPTZ DEFAULT NOW(),
@@ -146,6 +215,10 @@ CREATE TABLE IF NOT EXISTS schedules (
   end_time TIME,
   venue_id UUID REFERENCES venues(id),
   lecturer_id UUID REFERENCES profiles(id),
+  is_cancelled BOOLEAN DEFAULT false,
+  cancel_reason TEXT,
+  cancelled_at TIMESTAMPTZ,
+  alarm_minutes_before INT DEFAULT 15,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
@@ -155,7 +228,7 @@ CREATE TABLE IF NOT EXISTS attendance (
   student_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
   course_id UUID NOT NULL REFERENCES courses(id) ON DELETE CASCADE,
   schedule_id UUID REFERENCES schedules(id),
-  instance_date DATE NOT NULL,
+  lecture_date DATE NOT NULL,
   status TEXT DEFAULT 'present' CHECK (status IN ('present', 'absent', 'late', 'excused')),
   marked_by UUID REFERENCES profiles(id),
   marked_at TIMESTAMPTZ DEFAULT NOW(),
@@ -220,8 +293,23 @@ CREATE TABLE IF NOT EXISTS videos (
   video_url TEXT,
   thumbnail_url TEXT,
   duration_seconds INT,
+  semester TEXT,
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Billing
+CREATE TABLE IF NOT EXISTS billing (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+  plan TEXT DEFAULT 'free' CHECK (plan IN ('free', 'basic', 'pro', 'enterprise')),
+  amount NUMERIC(10,2) DEFAULT 0,
+  currency TEXT DEFAULT 'NGN',
+  payment_method TEXT,
+  transaction_id TEXT,
+  status TEXT DEFAULT 'active' CHECK (status IN ('pending', 'active', 'expired', 'cancelled')),
+  expires_at TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
 -- Institution Settings
@@ -238,7 +326,30 @@ CREATE TABLE IF NOT EXISTS institution_settings (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- RLS Policies (simplified for development)
+-- Email Verifications
+CREATE TABLE IF NOT EXISTS email_verifications (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+  token TEXT NOT NULL UNIQUE,
+  expires_at TIMESTAMPTZ NOT NULL,
+  used BOOLEAN DEFAULT false,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- Search Queries
+CREATE TABLE IF NOT EXISTS search_queries (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES profiles(id),
+  query TEXT NOT NULL,
+  results_count INT DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- ═══════════════════════════════════════════════════════════
+-- RLS Policies
+-- ═══════════════════════════════════════════════════════════
+
+-- Enable RLS on all tables
 ALTER TABLE profiles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE courses ENABLE ROW LEVEL SECURITY;
 ALTER TABLE enrollments ENABLE ROW LEVEL SECURITY;
@@ -255,33 +366,33 @@ ALTER TABLE meetings ENABLE ROW LEVEL SECURITY;
 ALTER TABLE course_materials ENABLE ROW LEVEL SECURITY;
 ALTER TABLE tests ENABLE ROW LEVEL SECURITY;
 ALTER TABLE videos ENABLE ROW LEVEL SECURITY;
+ALTER TABLE billing ENABLE ROW LEVEL SECURITY;
 ALTER TABLE institution_settings ENABLE ROW LEVEL SECURITY;
 
--- Public read policies
+-- Public read policies (no auth required)
 CREATE POLICY "Public read" ON courses FOR SELECT USING (true);
 CREATE POLICY "Public read" ON venues FOR SELECT USING (true);
 CREATE POLICY "Public read" ON announcements FOR SELECT USING (true);
 CREATE POLICY "Public read" ON events FOR SELECT USING (true);
 CREATE POLICY "Public read" ON institution_settings FOR SELECT USING (true);
+CREATE POLICY "Public read" ON exams FOR SELECT USING (true);
+CREATE POLICY "Public read" ON assignments FOR SELECT USING (true);
+CREATE POLICY "Public read" ON schedules FOR SELECT USING (true);
+CREATE POLICY "Public read" ON meetings FOR SELECT USING (true);
+CREATE POLICY "Public read" ON course_materials FOR SELECT USING (true);
+CREATE POLICY "Public read" ON tests FOR SELECT USING (true);
+CREATE POLICY "Public read" ON videos FOR SELECT USING (true);
+CREATE POLICY "Public read" ON profiles FOR SELECT USING (true);
+CREATE POLICY "Public read" ON notifications FOR SELECT USING (true);
+CREATE POLICY "Public read" ON enrollments FOR SELECT USING (true);
+CREATE POLICY "Public read" ON grades FOR SELECT USING (true);
+CREATE POLICY "Public read" ON attendance FOR SELECT USING (true);
+CREATE POLICY "Public read" ON billing FOR SELECT USING (true);
 
--- Authenticated user policies
-CREATE POLICY "Auth read" ON notifications FOR SELECT USING (auth.uid()::text = user_id::text);
-CREATE POLICY "Auth read" ON enrollments FOR SELECT USING (auth.uid()::text = student_id::text);
-CREATE POLICY "Auth read" ON grades FOR SELECT USING (auth.uid()::text = student_id::text);
-CREATE POLICY "Auth read" ON exams FOR SELECT USING (true);
-CREATE POLICY "Auth read" ON assignments FOR SELECT USING (true);
-CREATE POLICY "Auth read" ON schedules FOR SELECT USING (true);
-CREATE POLICY "Auth read" ON meetings FOR SELECT USING (true);
-CREATE POLICY "Auth read" ON course_materials FOR SELECT USING (true);
-CREATE POLICY "Auth read" ON tests FOR SELECT USING (true);
-CREATE POLICY "Auth read" ON videos FOR SELECT USING (true);
-CREATE POLICY "Auth read" ON attendance FOR SELECT USING (auth.uid()::text = student_id::text OR auth.uid()::text = marked_by::text);
-CREATE POLICY "Auth read" ON profiles FOR SELECT USING (true);
-
--- Insert policies for authenticated users
-CREATE POLICY "Auth insert" ON profiles FOR INSERT WITH CHECK (auth.uid()::text = id::text);
-CREATE POLICY "Auth insert" ON enrollments FOR INSERT WITH CHECK (true);
+-- Insert policies
+CREATE POLICY "Auth insert" ON profiles FOR INSERT WITH CHECK (true);
 CREATE POLICY "Auth insert" ON courses FOR INSERT WITH CHECK (true);
+CREATE POLICY "Auth insert" ON enrollments FOR INSERT WITH CHECK (true);
 CREATE POLICY "Auth insert" ON exams FOR INSERT WITH CHECK (true);
 CREATE POLICY "Auth insert" ON assignments FOR INSERT WITH CHECK (true);
 CREATE POLICY "Auth insert" ON grades FOR INSERT WITH CHECK (true);
@@ -295,15 +406,16 @@ CREATE POLICY "Auth insert" ON meetings FOR INSERT WITH CHECK (true);
 CREATE POLICY "Auth insert" ON course_materials FOR INSERT WITH CHECK (true);
 CREATE POLICY "Auth insert" ON tests FOR INSERT WITH CHECK (true);
 CREATE POLICY "Auth insert" ON videos FOR INSERT WITH CHECK (true);
+CREATE POLICY "Auth insert" ON billing FOR INSERT WITH CHECK (true);
 CREATE POLICY "Auth insert" ON institution_settings FOR INSERT WITH CHECK (true);
 
 -- Update policies
-CREATE POLICY "Auth update" ON profiles FOR UPDATE USING (auth.uid()::text = id::text);
+CREATE POLICY "Auth update" ON profiles FOR UPDATE USING (true);
 CREATE POLICY "Auth update" ON courses FOR UPDATE USING (true);
 CREATE POLICY "Auth update" ON exams FOR UPDATE USING (true);
 CREATE POLICY "Auth update" ON assignments FOR UPDATE USING (true);
 CREATE POLICY "Auth update" ON grades FOR UPDATE USING (true);
-CREATE POLICY "Auth update" ON notifications FOR UPDATE USING (auth.uid()::text = user_id::text);
+CREATE POLICY "Auth update" ON notifications FOR UPDATE USING (true);
 CREATE POLICY "Auth update" ON venues FOR UPDATE USING (true);
 CREATE POLICY "Auth update" ON announcements FOR UPDATE USING (true);
 CREATE POLICY "Auth update" ON events FOR UPDATE USING (true);
@@ -313,18 +425,67 @@ CREATE POLICY "Auth update" ON meetings FOR UPDATE USING (true);
 CREATE POLICY "Auth update" ON course_materials FOR UPDATE USING (true);
 CREATE POLICY "Auth update" ON tests FOR UPDATE USING (true);
 CREATE POLICY "Auth update" ON videos FOR UPDATE USING (true);
+CREATE POLICY "Auth update" ON billing FOR UPDATE USING (true);
 CREATE POLICY "Auth update" ON institution_settings FOR UPDATE USING (true);
 
--- Trigger for auto-creating profile on signup
+-- Delete policies
+CREATE POLICY "Auth delete" ON courses FOR DELETE USING (true);
+CREATE POLICY "Auth delete" ON exams FOR DELETE USING (true);
+CREATE POLICY "Auth delete" ON assignments FOR DELETE USING (true);
+CREATE POLICY "Auth delete" ON grades FOR DELETE USING (true);
+CREATE POLICY "Auth delete" ON notifications FOR DELETE USING (true);
+CREATE POLICY "Auth delete" ON venues FOR DELETE USING (true);
+CREATE POLICY "Auth delete" ON announcements FOR DELETE USING (true);
+CREATE POLICY "Auth delete" ON events FOR DELETE USING (true);
+CREATE POLICY "Auth delete" ON schedules FOR DELETE USING (true);
+CREATE POLICY "Auth delete" ON meetings FOR DELETE USING (true);
+CREATE POLICY "Auth delete" ON course_materials FOR DELETE USING (true);
+CREATE POLICY "Auth delete" ON tests FOR DELETE USING (true);
+CREATE POLICY "Auth delete" ON videos FOR DELETE USING (true);
+CREATE POLICY "Auth delete" ON attendance FOR DELETE USING (true);
+CREATE POLICY "Auth delete" ON billing FOR DELETE USING (true);
+
+-- ═══════════════════════════════════════════════════════════
+-- Triggers
+-- ═══════════════════════════════════════════════════════════
+
+-- Auto-create profile on signup
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS trigger AS $$
 BEGIN
   INSERT INTO public.profiles (id, full_name, role)
-  VALUES (new.id, COALESCE(new.raw_user_meta_data->>'full_name', ''), COALESCE(new.raw_user_meta_data->>'role', 'student'));
+  VALUES (
+    new.id,
+    COALESCE(new.raw_user_meta_data->>'full_name', ''),
+    COALESCE(new.raw_user_meta_data->>'role', 'student')
+  );
   RETURN new;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
-CREATE OR REPLACE TRIGGER on_auth_user_created
+-- Drop and recreate trigger
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+CREATE TRIGGER on_auth_user_created
   AFTER INSERT ON auth.users
   FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+-- Auto-update updated_at
+CREATE OR REPLACE FUNCTION update_updated_at()
+RETURNS trigger AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Apply updated_at triggers
+CREATE TRIGGER update_profiles_updated_at BEFORE UPDATE ON profiles FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+CREATE TRIGGER update_courses_updated_at BEFORE UPDATE ON courses FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+CREATE TRIGGER update_exams_updated_at BEFORE UPDATE ON exams FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+CREATE TRIGGER update_assignments_updated_at BEFORE UPDATE ON assignments FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+CREATE TRIGGER update_announcements_updated_at BEFORE UPDATE ON announcements FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+CREATE TRIGGER update_events_updated_at BEFORE UPDATE ON events FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+CREATE TRIGGER update_meetings_updated_at BEFORE UPDATE ON meetings FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+CREATE TRIGGER update_course_materials_updated_at BEFORE UPDATE ON course_materials FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+CREATE TRIGGER update_videos_updated_at BEFORE UPDATE ON videos FOR EACH ROW EXECUTE FUNCTION update_updated_at();
+CREATE TRIGGER update_institution_settings_updated_at BEFORE UPDATE ON institution_settings FOR EACH ROW EXECUTE FUNCTION update_updated_at();
