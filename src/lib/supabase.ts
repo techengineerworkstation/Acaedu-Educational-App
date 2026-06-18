@@ -1,18 +1,81 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || ''
-const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY || ''
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
-export const supabase = createClient(supabaseUrl, supabaseKey)
+if (!supabaseUrl || !supabaseKey) {
+  console.error('Missing Supabase credentials. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in .env')
+}
 
+export const supabase = createClient(supabaseUrl || '', supabaseKey || '', {
+  auth: {
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true,
+  },
+})
+
+// ─── Input Sanitization ─────────────────────────────────────
+function sanitize(str: string): string {
+  return str.replace(/[<>\"'&]/g, (char) => {
+    const map: Record<string, string> = { '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;', '&': '&amp;' }
+    return map[char] || char
+  })
+}
+
+function validateEmail(email: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+}
+
+function validatePassword(password: string): string | null {
+  if (password.length < 8) return 'Password must be at least 8 characters'
+  if (!/[A-Z]/.test(password)) return 'Password must contain an uppercase letter'
+  if (!/[a-z]/.test(password)) return 'Password must contain a lowercase letter'
+  if (!/[0-9]/.test(password)) return 'Password must contain a number'
+  return null
+}
+
+// ─── Rate Limiting (client-side) ────────────────────────────
+const rateLimits = new Map<string, { count: number; resetAt: number }>()
+
+function checkRateLimit(key: string, maxRequests: number = 10, windowMs: number = 60000): boolean {
+  const now = Date.now()
+  const limit = rateLimits.get(key)
+  if (!limit || now > limit.resetAt) {
+    rateLimits.set(key, { count: 1, resetAt: now + windowMs })
+    return true
+  }
+  if (limit.count >= maxRequests) return false
+  limit.count++
+  return true
+}
+
+// ─── Secure Auth Functions ──────────────────────────────────
 export async function signUp(email: string, password: string, name: string, role: string) {
-  const { data, error } = await supabase.auth.signUp({ email, password, options: { data: { full_name: name, role } } })
+  const cleanEmail = sanitize(email.trim().toLowerCase())
+  const cleanName = sanitize(name.trim())
+  
+  if (!validateEmail(cleanEmail)) throw new Error('Invalid email format')
+  const passError = validatePassword(password)
+  if (passError) throw new Error(passError)
+  if (!cleanName || cleanName.length < 2) throw new Error('Name must be at least 2 characters')
+  if (!checkRateLimit('signup', 3, 60000)) throw new Error('Too many signup attempts. Try again later.')
+
+  const { data, error } = await supabase.auth.signUp({
+    email: cleanEmail,
+    password,
+    options: { data: { full_name: cleanName, role } },
+  })
   if (error) throw error
   return data
 }
 
 export async function signIn(email: string, password: string) {
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+  const cleanEmail = sanitize(email.trim().toLowerCase())
+  if (!validateEmail(cleanEmail)) throw new Error('Invalid email format')
+  if (!checkRateLimit('signin', 5, 60000)) throw new Error('Too many login attempts. Try again later.')
+
+  const { data, error } = await supabase.auth.signInWithPassword({ email: cleanEmail, password })
   if (error) throw error
   return data
 }
@@ -22,13 +85,21 @@ export async function signOut() {
 }
 
 export async function signInWithGoogle() {
-  const { data, error } = await supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.origin + '/dashboard' } })
+  if (!checkRateLimit('oauth', 5, 60000)) throw new Error('Too many OAuth attempts.')
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: { redirectTo: window.location.origin + '/dashboard' },
+  })
   if (error) throw error
   return data
 }
 
 export async function signInWithApple() {
-  const { data, error } = await supabase.auth.signInWithOAuth({ provider: 'apple', options: { redirectTo: window.location.origin + '/dashboard' } })
+  if (!checkRateLimit('oauth', 5, 60000)) throw new Error('Too many OAuth attempts.')
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'apple',
+    options: { redirectTo: window.location.origin + '/dashboard' },
+  })
   if (error) throw error
   return data
 }
@@ -43,10 +114,32 @@ export async function getUser() {
   return data.user
 }
 
+// ─── Secure CRUD Functions ──────────────────────────────────
+const ALLOWED_TABLES = [
+  'profiles', 'courses', 'enrollments', 'exams', 'assignments',
+  'grades', 'notifications', 'venues', 'announcements', 'events',
+  'schedules', 'attendance', 'meetings', 'course_materials',
+  'tests', 'videos', 'institution_settings', 'departments',
+]
+
+function validateTable(table: string): void {
+  if (!ALLOWED_TABLES.includes(table)) throw new Error(`Invalid table: ${table}`)
+}
+
+function validateId(id: string): void {
+  if (!/^[0-9a-f-]{36}$/i.test(id)) throw new Error('Invalid ID format')
+}
+
 export async function fetchTable(table: string, filters?: Record<string, any>) {
+  validateTable(table)
+  if (!checkRateLimit('read', 100, 60000)) throw new Error('Rate limit exceeded')
+
   let query = supabase.from(table).select('*')
   if (filters) {
-    Object.entries(filters).forEach(([key, val]) => { query = query.eq(key, val) })
+    Object.entries(filters).forEach(([key, val]) => {
+      if (typeof val === 'string') val = sanitize(val)
+      query = query.eq(key, val)
+    })
   }
   const { data, error } = await query
   if (error) throw error
@@ -54,18 +147,62 @@ export async function fetchTable(table: string, filters?: Record<string, any>) {
 }
 
 export async function insertRow(table: string, row: Record<string, any>) {
+  validateTable(table)
+  if (!checkRateLimit('write', 30, 60000)) throw new Error('Rate limit exceeded')
+
+  // Sanitize string values
+  Object.keys(row).forEach(key => {
+    if (typeof row[key] === 'string') row[key] = sanitize(row[key])
+  })
+
   const { data, error } = await supabase.from(table).insert(row).select().single()
   if (error) throw error
   return data
 }
 
 export async function updateRow(table: string, id: string, updates: Record<string, any>) {
+  validateTable(table)
+  validateId(id)
+  if (!checkRateLimit('write', 30, 60000)) throw new Error('Rate limit exceeded')
+
+  Object.keys(updates).forEach(key => {
+    if (typeof updates[key] === 'string') updates[key] = sanitize(updates[key])
+  })
+
   const { data, error } = await supabase.from(table).update(updates).eq('id', id).select().single()
   if (error) throw error
   return data
 }
 
 export async function deleteRow(table: string, id: string) {
+  validateTable(table)
+  validateId(id)
+  if (!checkRateLimit('write', 10, 60000)) throw new Error('Rate limit exceeded')
+
   const { error } = await supabase.from(table).delete().eq('id', id)
   if (error) throw error
+}
+
+// ─── Security Audit Log ─────────────────────────────────────
+export function logSecurityEvent(event: string, details?: Record<string, any>) {
+  console.log(`[SECURITY] ${new Date().toISOString()} - ${event}`, details || '')
+}
+
+// ─── Session Timeout ────────────────────────────────────────
+let sessionTimeout: number | null = null
+const SESSION_TIMEOUT_MS = 30 * 60 * 1000 // 30 minutes
+
+export function resetSessionTimer() {
+  if (sessionTimeout) clearTimeout(sessionTimeout)
+  sessionTimeout = window.setTimeout(() => {
+    signOut()
+    window.location.href = '/login'
+  }, SESSION_TIMEOUT_MS)
+}
+
+// Reset timer on user activity
+if (typeof window !== 'undefined') {
+  ['click', 'keydown', 'scroll', 'touchstart'].forEach(event => {
+    window.addEventListener(event, resetSessionTimer, { passive: true })
+  })
 }
