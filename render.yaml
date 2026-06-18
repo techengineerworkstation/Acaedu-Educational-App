@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: acaedu
+    env: docker
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: VITE_SUPABASE_URL
+        sync: false
+      - key: VITE_SUPABASE_ANON_KEY
+        sync: false
+      - key: VITE_SUPABASE_SERVICE_KEY
+        sync: false
+      - key: NODE_ENV
+        value: production
+    healthCheckPath: /
+    plan: starter
+    region: oregon
+    autoDeploy: true
