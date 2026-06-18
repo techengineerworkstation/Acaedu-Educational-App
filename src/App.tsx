@@ -10,6 +10,7 @@ import { CoursesPage } from './pages/CoursesPage'
 import { ExamsPage, GradesPage, AssignmentsPage, NotificationsPage, VenuesPage, EventsPage, SchedulePage, SettingsPage } from './pages/CrudPages'
 import { AttendancePage } from './pages/AttendancePage'
 import { AnnouncementsPage } from './pages/AnnouncementsPage'
+import { LectureVideosPage, MaterialsPage } from './pages/ContentPages'
 import { FractalBackground } from './components/FractalBackground'
 import type { User } from './types'
 
@@ -68,6 +69,8 @@ export default function App() {
         <Route path="/schedule" element={user ? <RoleLayout user={user}><SchedulePage/></RoleLayout> : <Navigate to="/login"/>} />
         <Route path="/attendance" element={user ? <RoleLayout user={user}><AttendancePage/></RoleLayout> : <Navigate to="/login"/>} />
         <Route path="/announcements" element={user ? <RoleLayout user={user}><AnnouncementsPage/></RoleLayout> : <Navigate to="/login"/>} />
+        <Route path="/videos" element={user ? <RoleLayout user={user}><LectureVideosPage/></RoleLayout> : <Navigate to="/login"/>} />
+        <Route path="/materials" element={user ? <RoleLayout user={user}><MaterialsPage/></RoleLayout> : <Navigate to="/login"/>} />
         <Route path="/settings" element={user ? <RoleLayout user={user}><SettingsPage/></RoleLayout> : <Navigate to="/login"/>} />
         <Route path="*" element={<Navigate to="/"/>} />
       </Routes>
