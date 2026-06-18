@@ -346,6 +346,44 @@ export function SettingsPage() {
             <div className="w-5 h-5 rounded-full bg-white absolute top-0.5 transition-transform duration-300" style={{transform:'translateX(24px)'}}/>
           </button>
         </div>
+
+        <div className="mt-8 mb-4">
+          <div className="text-xs text-text-muted uppercase tracking-wider mb-1">BILLING</div>
+          <h2 className="text-lg font-bold">Subscription & Payments</h2>
+        </div>
+
+        <div className="p-5 rounded-xl bg-bg-card border border-border">
+          <div className="flex justify-between items-start mb-4">
+            <div>
+              <h3 className="font-bold text-lg">Current Plan</h3>
+              <p className="text-sm text-text-muted">Manage your subscription</p>
+            </div>
+            <span className="px-3 py-1 rounded-full bg-success/10 text-success text-xs font-semibold">Free</span>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+            <div className="p-3 rounded-lg bg-bg-secondary text-center">
+              <div className="text-lg font-bold text-primary">Free</div>
+              <div className="text-xs text-text-muted">Basic features</div>
+            </div>
+            <div className="p-3 rounded-lg border-2 border-primary/30 text-center">
+              <div className="text-lg font-bold text-primary">Pro</div>
+              <div className="text-xs text-text-muted">$9.99/month</div>
+            </div>
+            <div className="p-3 rounded-lg bg-bg-secondary text-center">
+              <div className="text-lg font-bold text-primary">Enterprise</div>
+              <div className="text-xs text-text-muted">Custom pricing</div>
+            </div>
+          </div>
+          <div className="flex gap-3">
+            <button className="flex-1 py-2.5 rounded-lg text-white font-semibold text-sm" style={{background:'var(--gradient-primary)'}}>Subscribe with Paystack</button>
+            <button className="flex-1 py-2.5 rounded-lg border-2 border-border font-semibold text-sm hover:border-primary transition">Pay with PayPal</button>
+          </div>
+        </div>
+
+        <div className="p-4 rounded-xl bg-bg-card border border-border">
+          <h3 className="font-bold mb-2">Payment History</h3>
+          <p className="text-sm text-text-muted">No payments yet.</p>
+        </div>
       </div>
     </div>
   )

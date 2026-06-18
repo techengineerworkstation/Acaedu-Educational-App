@@ -2,8 +2,6 @@
 // Deploy the Edge Function first: supabase functions deploy send-email
 
 const RESEND_API_KEY = import.meta.env.VITE_RESEND_API_KEY || ''
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || ''
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY || ''
 
 interface EmailParams {
   to: string
