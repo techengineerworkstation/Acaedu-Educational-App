@@ -157,7 +157,62 @@ export async function insertRow(table: string, row: Record<string, any>) {
 
   const { data, error } = await supabase.from(table).insert(row).select().single()
   if (error) throw error
+
+  // Trigger email notifications for certain tables
+  triggerEmailNotification(table, data).catch(console.error)
+
   return data
+}
+
+// ─── Email Notification Triggers ───────────────────────────
+async function triggerEmailNotification(table: string, data: any) {
+  try {
+    const { sendEmail, announcementEmail, gradePublishedEmail } = await import('./email')
+
+    if (table === 'announcements' && data) {
+      // Get enrolled students for the course
+      const { data: enrollments } = await supabase
+        .from('enrollments')
+        .select('student_id, profiles!inner(email, full_name)')
+        .eq('course_id', data.course_id)
+        .eq('status', 'active')
+
+      if (enrollments) {
+        for (const enrollment of enrollments) {
+          const profile = enrollment.profiles as any
+          if (profile?.email) {
+            const { subject, html } = announcementEmail(
+              profile.full_name || 'Student',
+              data.title,
+              data.content?.substring(0, 200) + '...'
+            )
+            await sendEmail({ to: profile.email, subject, html })
+          }
+        }
+      }
+    }
+
+    if (table === 'grades' && data) {
+      // Get student info
+      const { data: student } = await supabase
+        .from('profiles')
+        .select('email, full_name')
+        .eq('id', data.student_id)
+        .single()
+
+      if (student?.email) {
+        const { subject, html } = gradePublishedEmail(
+          student.full_name || 'Student',
+          data.course_name || 'Course',
+          data.score || 0,
+          data.grade_letter || 'N/A'
+        )
+        await sendEmail({ to: student.email, subject, html })
+      }
+    }
+  } catch (err) {
+    console.error('Email notification error:', err)
+  }
 }
 
 export async function updateRow(table: string, id: string, updates: Record<string, any>) {
