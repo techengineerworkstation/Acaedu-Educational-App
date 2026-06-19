@@ -1,54 +1,26 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { fetchTable, insertRow, updateRow, deleteRow } from '../lib/supabase'
+import {
+  Plus, Pencil, Trash2, BookOpen, FileText, Calendar, ClipboardList,
+  CheckCircle, Bell, MapPin, Megaphone, Upload, Video, Users, Building2,
+  GitBranch, CreditCard, Shield, Mail, Search, Brain, Clock, GraduationCap,
+  CalendarOff
+} from 'lucide-react'
 
-// SVG Icons
-const icons = {
-  plus: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>,
-  edit: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>,
-  trash: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>,
-  x: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>,
-  calendar: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>,
-  book: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>,
-  file: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/></svg>,
-  clipboard: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>,
-  users: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>,
-  mapPin: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>,
-  bell: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>,
-  video: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>,
-  megaphone: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="m3 11 18-5v12L3 13v-2z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>,
-  check: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>,
-  upload: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>,
-  user: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>,
-  settings: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9c.26.604.852.997 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>,
-  home: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>,
-  search: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>,
-  filter: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>,
-  download: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>,
-  clock: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,
-  link: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>,
-  logout: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>,
-  menu: <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>,
-  sun: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>,
-  moon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>,
-}
-
-// ─── Delete Confirmation Modal ──────────────────────────────
 function ConfirmModal({ open, title, message, onConfirm, onCancel }: {
   open: boolean; title: string; message: string; onConfirm: () => void; onCancel: () => void
 }) {
   if (!open) return null
   return (
     <AnimatePresence>
-      <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}
-        className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={onCancel}>
-        <motion.div initial={{scale:0.95,opacity:0}} animate={{scale:1,opacity:1}} exit={{scale:0.95,opacity:0}}
-          className="bg-bg-card rounded-2xl border border-border p-6 max-w-sm w-full" onClick={e => e.stopPropagation()}>
-          <h3 className="font-bold text-lg mb-2">{title}</h3>
-          <p className="text-sm text-text-muted mb-6">{message}</p>
-          <div className="flex gap-3 justify-end">
-            <button onClick={onCancel} className="px-4 py-2 rounded-lg border border-border text-sm font-medium hover:bg-bg-secondary transition">Cancel</button>
-            <button onClick={onConfirm} className="px-4 py-2 rounded-lg bg-danger text-white text-sm font-medium hover:bg-danger/90 transition">Delete</button>
+      <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="modal-backdrop" onClick={onCancel}>
+        <motion.div initial={{ scale: 0.96, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.96, opacity: 0 }} className="modal" onClick={e => e.stopPropagation()}>
+          <h3 className="text-[16px] font-bold text-[var(--color-navy)] mb-2 text-center" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>{title}</h3>
+          <p className="text-[13px] text-[var(--color-text-muted)] mb-6 text-center">{message}</p>
+          <div className="flex gap-3 justify-center">
+            <button onClick={onCancel} className="btn-secondary px-6 py-2">Cancel</button>
+            <button onClick={onConfirm} className="btn-primary px-6 py-2 bg-[var(--color-danger)] hover:bg-[var(--color-danger)]/90">Delete</button>
           </div>
         </motion.div>
       </motion.div>
@@ -56,132 +28,41 @@ function ConfirmModal({ open, title, message, onConfirm, onCancel }: {
   )
 }
 
-// ─── Subjects Page (renamed from Courses) ────────────────────
-export function SubjectsPage() {
-  const [items, setItems] = useState<any[]>([])
-  const [loading, setLoading] = useState(true)
-  const [showForm, setShowForm] = useState(false)
-  const [editId, setEditId] = useState<string | null>(null)
-  const [title, setTitle] = useState('')
-  const [code, setCode] = useState('')
-  const [credits, setCredits] = useState('3')
-  const [desc, setDesc] = useState('')
-  const [deleteId, setDeleteId] = useState<string | null>(null)
-
-  useEffect(() => { load() }, [])
-  const load = () => { fetchTable('courses').then(setItems).finally(() => setLoading(false)) }
-
-  const handleSubmit = async () => {
-    if (!title || !code) return
-    if (editId) {
-      await updateRow('courses', editId, { title, course_code: code, credits: parseInt(credits), description: desc })
-    } else {
-      await insertRow('courses', { title, course_code: code, credits: parseInt(credits), description: desc })
-    }
-    resetForm(); load()
-  }
-
-  const handleDelete = async () => {
-    if (deleteId) { await deleteRow('courses', deleteId); setDeleteId(null); load() }
-  }
-
-  const startEdit = (c: any) => {
-    setEditId(c.id); setTitle(c.title); setCode(c.course_code); setCredits(String(c.credits||3)); setDesc(c.description||''); setShowForm(true)
-  }
-
-  const resetForm = () => { setShowForm(false); setEditId(null); setTitle(''); setCode(''); setCredits('3'); setDesc('') }
-
-  return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
-        <div><div className="text-xs text-text-muted uppercase tracking-wider mb-1">SUBJECTS</div><h1 className="text-2xl font-bold">My Subjects</h1></div>
-        <button onClick={() => { resetForm(); setShowForm(!showForm) }} className="px-4 py-2 rounded-lg text-white font-semibold flex items-center gap-2" style={{background:'var(--gradient-primary)'}}>
-          {icons.plus} Add Subject
-        </button>
-      </div>
-
-      {showForm && (
-        <motion.div initial={{opacity:0,height:0}} animate={{opacity:1,height:'auto'}} className="mb-6 p-5 rounded-2xl bg-bg-card border border-border">
-          <h3 className="font-bold mb-4">{editId ? 'Edit Subject' : 'Create Subject'}</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div><label className="block text-sm text-text-secondary mb-1">Subject Title</label><input value={title} onChange={e => setTitle(e.target.value)} className="w-full px-3 py-2 rounded-lg border border-border bg-bg outline-none"/></div>
-            <div><label className="block text-sm text-text-secondary mb-1">Subject Code</label><input value={code} onChange={e => setCode(e.target.value)} className="w-full px-3 py-2 rounded-lg border border-border bg-bg outline-none"/></div>
-            <div><label className="block text-sm text-text-secondary mb-1">Credits</label><input type="number" value={credits} onChange={e => setCredits(e.target.value)} className="w-full px-3 py-2 rounded-lg border border-border bg-bg outline-none"/></div>
-            <div><label className="block text-sm text-text-secondary mb-1">Description</label><input value={desc} onChange={e => setDesc(e.target.value)} className="w-full px-3 py-2 rounded-lg border border-border bg-bg outline-none"/></div>
-          </div>
-          <div className="flex gap-3">
-            <button onClick={handleSubmit} className="px-4 py-2 rounded-lg text-white font-semibold" style={{background:'var(--gradient-primary)'}}>{editId ? 'Update' : 'Create'}</button>
-            <button onClick={resetForm} className="px-4 py-2 rounded-lg border border-border">Cancel</button>
-          </div>
-        </motion.div>
-      )}
-
-      {loading ? <div className="h-32 bg-bg-secondary rounded-2xl animate-pulse"/> : items.length === 0 ? (
-        <div className="text-center py-16">{icons.book}<p className="text-text-muted mt-4">No subjects yet.</p></div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {items.map((c, i) => (
-            <motion.div key={c.id} initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{delay:i*0.06}} className="p-5 rounded-2xl bg-bg-card border border-border glow-hover">
-              <div className="flex justify-between items-start mb-2">
-                <h3 className="font-bold text-lg">{c.title}</h3>
-                <div className="flex gap-1">
-                  <button onClick={() => startEdit(c)} className="p-1.5 rounded-lg hover:bg-primary/10 transition text-primary">{icons.edit}</button>
-                  <button onClick={() => setDeleteId(c.id)} className="p-1.5 rounded-lg hover:bg-danger/10 transition text-danger">{icons.trash}</button>
-                </div>
-              </div>
-              <p className="text-sm text-text-secondary mb-2">{c.description || 'No description'}</p>
-              <div className="flex justify-between items-center">
-                <span className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary font-mono">{c.course_code}</span>
-                <span className="text-xs text-text-muted">{c.credits} credits</span>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      )}
-      <ConfirmModal open={!!deleteId} title="Delete Subject" message="Are you sure? This will permanently delete this subject and all related data." onConfirm={handleDelete} onCancel={() => setDeleteId(null)}/>
-    </div>
-  )
-}
-
-// ─── Generic CRUD Page Factory ────────────────────────────────
 interface CrudField {
-  key: string
-  label: string
-  type: 'text' | 'number' | 'select' | 'textarea' | 'datetime-local' | 'time'
+  key: string; label: string
+  type: 'text' | 'number' | 'select' | 'textarea' | 'datetime-local' | 'time' | 'date' | 'boolean'
   options?: { value: string; label: string }[]
-  required?: boolean
 }
 
 interface CrudConfig {
-  title: string
-  singular: string
-  table: string
+  title: string; singular: string; table: string
   fields: CrudField[]
   displayFields: { key: string; label: string }[]
-  badgeField?: { key: string; colors?: Record<string, string> }
-  icon: any
+  badgeField?: { key: string }
+  icon: React.ReactNode
 }
 
 function CrudPage({ config }: { config: CrudConfig }) {
-  const [items, setItems] = useState<any[]>([])
+  const [items, setItems] = useState<Record<string, unknown>[]>([])
   const [loading, setLoading] = useState(true)
   const [showForm, setShowForm] = useState(false)
   const [editId, setEditId] = useState<string | null>(null)
   const [formState, setFormState] = useState<Record<string, string>>({})
   const [deleteId, setDeleteId] = useState<string | null>(null)
 
-  useEffect(() => { load() }, [])
-  const load = () => { fetchTable(config.table).then(setItems).finally(() => setLoading(false)) }
+  const load = useCallback(() => { fetchTable(config.table).then(setItems).finally(() => setLoading(false)) }, [config.table])
+  useEffect(() => { load() }, [load])
 
   const handleSubmit = async () => {
-    const row: Record<string, any> = {}
+    const row: Record<string, unknown> = {}
     config.fields.forEach(f => {
       const val = formState[f.key] || ''
       if (f.type === 'number') row[f.key] = parseFloat(val) || 0
+      else if (f.type === 'boolean') row[f.key] = val === 'true'
       else row[f.key] = val
     })
-    if (editId) { await updateRow(config.table, editId, row) }
-    else { await insertRow(config.table, row) }
+    if (editId) await updateRow(config.table, editId, row)
+    else await insertRow(config.table, row)
     resetForm(); load()
   }
 
@@ -189,120 +70,214 @@ function CrudPage({ config }: { config: CrudConfig }) {
     if (deleteId) { await deleteRow(config.table, deleteId); setDeleteId(null); load() }
   }
 
-  const startEdit = (item: any) => {
-    setEditId(item.id)
+  const startEdit = (item: Record<string, unknown>) => {
+    setEditId(item.id as string)
     const state: Record<string, string> = {}
-    config.fields.forEach(f => { state[f.key] = String(item[f.key] || '') })
-    setFormState(state)
-    setShowForm(true)
+    config.fields.forEach(f => { state[f.key] = String(item[f.key] ?? '') })
+    setFormState(state); setShowForm(true)
   }
 
   const resetForm = () => { setShowForm(false); setEditId(null); setFormState({}) }
 
   return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
-        <div><div className="text-xs text-text-muted uppercase tracking-wider mb-1">{config.title.toUpperCase()}</div><h1 className="text-2xl font-bold">{config.title}</h1></div>
-        <button onClick={() => { resetForm(); setShowForm(!showForm) }} className="px-4 py-2 rounded-lg text-white font-semibold flex items-center gap-2" style={{background:'var(--gradient-primary)'}}>
-          {icons.plus} Add {config.singular}
+    <div className="max-w-5xl mx-auto">
+      {/* Header */}
+      <div className="text-center mb-8">
+        <span className="section-label">{config.title}</span>
+        <h1 className="section-title mt-2 text-3xl">{config.title}</h1>
+      </div>
+      <div className="flex justify-center mb-8">
+        <button onClick={() => { resetForm(); setShowForm(!showForm) }} className="btn-primary">
+          <Plus size={16}/> Add {config.singular}
         </button>
       </div>
 
+      {/* Form */}
       {showForm && (
-        <motion.div initial={{opacity:0,height:0}} animate={{opacity:1,height:'auto'}} className="mb-6 p-5 rounded-2xl bg-bg-card border border-border">
-          <h3 className="font-bold mb-4">{editId ? `Edit ${config.singular}` : `Create ${config.singular}`}</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} className="card p-6 mb-6">
+          <h3 className="text-[15px] font-bold text-[var(--color-navy)] mb-5 text-center" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+            {editId ? `Edit ${config.singular}` : `Create ${config.singular}`}
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5 max-w-2xl mx-auto">
             {config.fields.map(f => (
-              <div key={f.key}>
-                <label className="block text-sm text-text-secondary mb-1">{f.label}</label>
+              <div key={f.key} className={f.type === 'textarea' ? 'md:col-span-2' : ''}>
+                <label className="label">{f.label}</label>
                 {f.type === 'select' ? (
-                  <select value={formState[f.key] || ''} onChange={e => setFormState({...formState, [f.key]: e.target.value})} className="w-full px-3 py-2 rounded-lg border border-border bg-bg outline-none">
+                  <select value={formState[f.key] || ''} onChange={e => setFormState({ ...formState, [f.key]: e.target.value })} className="select">
+                    <option value="">Select...</option>
                     {f.options?.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
                   </select>
                 ) : f.type === 'textarea' ? (
-                  <textarea value={formState[f.key] || ''} onChange={e => setFormState({...formState, [f.key]: e.target.value})} className="w-full px-3 py-2 rounded-lg border border-border bg-bg outline-none" rows={3}/>
+                  <textarea value={formState[f.key] || ''} onChange={e => setFormState({ ...formState, [f.key]: e.target.value })} className="textarea" rows={3} />
+                ) : f.type === 'boolean' ? (
+                  <select value={formState[f.key] || ''} onChange={e => setFormState({ ...formState, [f.key]: e.target.value })} className="select">
+                    <option value="false">No</option><option value="true">Yes</option>
+                  </select>
                 ) : (
-                  <input type={f.type} value={formState[f.key] || ''} onChange={e => setFormState({...formState, [f.key]: e.target.value})} className="w-full px-3 py-2 rounded-lg border border-border bg-bg outline-none"/>
+                  <input type={f.type} value={formState[f.key] || ''} onChange={e => setFormState({ ...formState, [f.key]: e.target.value })} className="input" />
                 )}
               </div>
             ))}
           </div>
-          <div className="flex gap-3">
-            <button onClick={handleSubmit} className="px-4 py-2 rounded-lg text-white font-semibold" style={{background:'var(--gradient-primary)'}}>{editId ? 'Update' : 'Create'}</button>
-            <button onClick={resetForm} className="px-4 py-2 rounded-lg border border-border">Cancel</button>
+          <div className="flex gap-3 justify-center">
+            <button onClick={handleSubmit} className="btn-primary px-6">{editId ? 'Update' : 'Create'}</button>
+            <button onClick={resetForm} className="btn-secondary px-6">Cancel</button>
           </div>
         </motion.div>
       )}
 
-      {loading ? <div className="h-32 bg-bg-secondary rounded-2xl animate-pulse"/> : items.length === 0 ? (
-        <div className="text-center py-16">{config.icon}<p className="text-text-muted mt-4">No {config.title.toLowerCase()} yet.</p></div>
-      ) : (
+      {/* List */}
+      {loading ? (
         <div className="space-y-3">
+          {Array.from({ length: 4 }).map((_, i) => <div key={i} className="skeleton h-14" />)}
+        </div>
+      ) : items.length === 0 ? (
+        <div className="empty-state">
+          <div className="empty-state-icon">{config.icon}</div>
+          <p className="empty-state-text">No {config.title.toLowerCase()} yet.</p>
+        </div>
+      ) : (
+        <div className="space-y-2">
           {items.map((item, i) => (
-            <motion.div key={item.id} initial={{opacity:0,x:-10}} animate={{opacity:1,x:0}} transition={{delay:i*0.05}}
-              className="p-4 rounded-xl bg-bg-card border border-border flex justify-between items-center">
-              <div className="flex-1 min-w-0">
-                <h3 className="font-bold truncate">{item[config.displayFields[0]?.key] || 'Untitled'}</h3>
-                <div className="flex flex-wrap gap-3 mt-1">
+            <motion.div key={item.id as string} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}
+              className="card card-interactive p-4 flex items-center gap-4">
+              <div className="flex-1 min-w-0 text-center">
+                <h3 className="text-[13px] font-bold text-[var(--color-navy)] truncate" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+                  {String(item[config.displayFields[0]?.key] || 'Untitled')}
+                </h3>
+                <div className="flex flex-wrap justify-center gap-3 mt-1">
                   {config.displayFields.slice(1).map(df => (
-                    <span key={df.key} className="text-xs text-text-muted">{item[df.key] || '-'}</span>
+                    <span key={df.key} className="text-[11px] text-[var(--color-text-muted)]">{String(item[df.key] ?? '-')}</span>
                   ))}
                 </div>
               </div>
-              <div className="flex items-center gap-2 ml-4">
-                {config.badgeField && (
-                  <span className="text-xs px-2 py-1 rounded-full bg-primary/10 text-primary">{item[config.badgeField.key]}</span>
+              <div className="flex items-center gap-2 flex-shrink-0">
+                {config.badgeField && item[config.badgeField.key] != null && (
+                  <span className="badge badge-navy">{String(item[config.badgeField.key])}</span>
                 )}
-                <button onClick={() => startEdit(item)} className="p-1.5 rounded-lg hover:bg-primary/10 transition text-primary">{icons.edit}</button>
-                <button onClick={() => setDeleteId(item.id)} className="p-1.5 rounded-lg hover:bg-danger/10 transition text-danger">{icons.trash}</button>
+                <button onClick={() => startEdit(item)} className="btn-ghost p-1.5"><Pencil size={14}/></button>
+                <button onClick={() => setDeleteId(item.id as string)} className="btn-ghost p-1.5 text-[var(--color-danger)] hover:bg-[var(--color-danger)]/8"><Trash2 size={14}/></button>
               </div>
             </motion.div>
           ))}
         </div>
       )}
-      <ConfirmModal open={!!deleteId} title={`Delete ${config.singular}`} message={`Are you sure? This will permanently delete this ${config.singular.toLowerCase()}.`} onConfirm={handleDelete} onCancel={() => setDeleteId(null)}/>
+      <ConfirmModal open={!!deleteId} title={`Delete ${config.singular}`} message={`Are you sure? This will permanently delete this ${config.singular.toLowerCase()}.`} onConfirm={handleDelete} onCancel={() => setDeleteId(null)} />
     </div>
   )
 }
 
-// ─── Pre-built Pages ──────────────────────────────────────────
+const icon = (Icon: React.ComponentType<{ size?: number; className?: string }>) => <Icon size={40} className="text-[var(--color-text-muted)]"/>
+
+export function CoursesPage() {
+  return <CrudPage config={{
+    title: 'Courses', singular: 'Course', table: 'courses', icon: icon(BookOpen),
+    fields: [
+      { key: 'title', label: 'Title', type: 'text' },
+      { key: 'course_code', label: 'Course Code', type: 'text' },
+      { key: 'description', label: 'Description', type: 'textarea' },
+      { key: 'credits', label: 'Credits', type: 'number' },
+      { key: 'department_id', label: 'Department ID', type: 'text' },
+      { key: 'lecturer_id', label: 'Lecturer ID', type: 'text' },
+    ],
+    displayFields: [{ key: 'title', label: 'Title' }, { key: 'course_code', label: 'Code' }, { key: 'credits', label: 'Credits' }],
+    badgeField: { key: 'course_code' },
+  }}/>
+}
+
+export function EnrollmentsPage() {
+  return <CrudPage config={{
+    title: 'Enrollments', singular: 'Enrollment', table: 'enrollments', icon: icon(GraduationCap),
+    fields: [
+      { key: 'student_id', label: 'Student ID', type: 'text' },
+      { key: 'course_id', label: 'Course ID', type: 'text' },
+      { key: 'status', label: 'Status', type: 'select', options: [{value:'active',label:'Active'},{value:'dropped',label:'Dropped'},{value:'completed',label:'Completed'}] },
+      { key: 'enrolled_at', label: 'Enrolled At', type: 'datetime-local' },
+    ],
+    displayFields: [{ key: 'student_id', label: 'Student' }, { key: 'course_id', label: 'Course' }, { key: 'status', label: 'Status' }],
+    badgeField: { key: 'status' },
+  }}/>
+}
+
+export function SchedulesPage() {
+  return <CrudPage config={{
+    title: 'Schedules', singular: 'Schedule', table: 'schedules', icon: icon(Calendar),
+    fields: [
+      { key: 'course_id', label: 'Course ID', type: 'text' },
+      { key: 'day_of_week', label: 'Day', type: 'select', options: [{value:'1',label:'Monday'},{value:'2',label:'Tuesday'},{value:'3',label:'Wednesday'},{value:'4',label:'Thursday'},{value:'5',label:'Friday'},{value:'6',label:'Saturday'}] },
+      { key: 'start_time', label: 'Start Time', type: 'time' },
+      { key: 'end_time', label: 'End Time', type: 'time' },
+      { key: 'venue_id', label: 'Venue ID', type: 'text' },
+    ],
+    displayFields: [{ key: 'course_id', label: 'Course' }, { key: 'day_of_week', label: 'Day' }, { key: 'start_time', label: 'Start' }, { key: 'end_time', label: 'End' }],
+    badgeField: { key: 'day_of_week' },
+  }}/>
+}
+
+export function ScheduleInstancesPage() {
+  return <CrudPage config={{
+    title: 'Schedule Instances', singular: 'Instance', table: 'schedule_instances', icon: icon(Clock),
+    fields: [
+      { key: 'schedule_id', label: 'Schedule ID', type: 'text' },
+      { key: 'date', label: 'Date', type: 'date' },
+      { key: 'status', label: 'Status', type: 'select', options: [{value:'scheduled',label:'Scheduled'},{value:'completed',label:'Completed'},{value:'cancelled',label:'Cancelled'}] },
+      { key: 'notes', label: 'Notes', type: 'textarea' },
+    ],
+    displayFields: [{ key: 'schedule_id', label: 'Schedule' }, { key: 'date', label: 'Date' }, { key: 'status', label: 'Status' }],
+    badgeField: { key: 'status' },
+  }}/>
+}
+
+export function AttendanceCrudPage() {
+  return <CrudPage config={{
+    title: 'Attendance', singular: 'Record', table: 'attendance', icon: icon(CheckCircle),
+    fields: [
+      { key: 'student_id', label: 'Student ID', type: 'text' },
+      { key: 'course_id', label: 'Course ID', type: 'text' },
+      { key: 'schedule_id', label: 'Schedule ID', type: 'text' },
+      { key: 'instance_date', label: 'Date', type: 'date' },
+      { key: 'status', label: 'Status', type: 'select', options: [{value:'present',label:'Present'},{value:'absent',label:'Absent'},{value:'late',label:'Late'},{value:'excused',label:'Excused'}] },
+    ],
+    displayFields: [{ key: 'student_id', label: 'Student' }, { key: 'course_id', label: 'Course' }, { key: 'status', label: 'Status' }, { key: 'instance_date', label: 'Date' }],
+    badgeField: { key: 'status' },
+  }}/>
+}
+
+export function HolidaysPage() {
+  return <CrudPage config={{
+    title: 'Holidays', singular: 'Holiday', table: 'holidays', icon: icon(CalendarOff),
+    fields: [
+      { key: 'name', label: 'Name', type: 'text' },
+      { key: 'date', label: 'Date', type: 'date' },
+      { key: 'description', label: 'Description', type: 'textarea' },
+      { key: 'institution_id', label: 'Institution ID', type: 'text' },
+    ],
+    displayFields: [{ key: 'name', label: 'Name' }, { key: 'date', label: 'Date' }, { key: 'description', label: 'Description' }],
+  }}/>
+}
 
 export function ExamsPage() {
   return <CrudPage config={{
-    title: 'Exams', singular: 'Exam', table: 'exams', icon: icons.file,
+    title: 'Exams', singular: 'Exam', table: 'exams', icon: icon(FileText),
     fields: [
-      { key: 'title', label: 'Title', type: 'text', required: true },
-      { key: 'course_id', label: 'Subject ID', type: 'text' },
+      { key: 'title', label: 'Title', type: 'text' },
+      { key: 'course_id', label: 'Course ID', type: 'text' },
       { key: 'exam_type', label: 'Type', type: 'select', options: [{value:'midterm',label:'Midterm'},{value:'final',label:'Final'},{value:'quiz',label:'Quiz'},{value:'practical',label:'Practical'}] },
       { key: 'date', label: 'Date', type: 'datetime-local' },
       { key: 'duration_minutes', label: 'Duration (min)', type: 'number' },
+      { key: 'total_marks', label: 'Total Marks', type: 'number' },
     ],
     displayFields: [{ key: 'title', label: 'Title' }, { key: 'exam_type', label: 'Type' }, { key: 'date', label: 'Date' }],
     badgeField: { key: 'exam_type' },
   }}/>
 }
 
-export function AssignmentsPage() {
-  return <CrudPage config={{
-    title: 'Assignments', singular: 'Assignment', table: 'assignments', icon: icons.clipboard,
-    fields: [
-      { key: 'title', label: 'Title', type: 'text', required: true },
-      { key: 'course_id', label: 'Subject ID', type: 'text' },
-      { key: 'description', label: 'Description', type: 'textarea' },
-      { key: 'due_date', label: 'Due Date', type: 'datetime-local' },
-      { key: 'max_points', label: 'Max Points', type: 'number' },
-    ],
-    displayFields: [{ key: 'title', label: 'Title' }, { key: 'due_date', label: 'Due Date' }, { key: 'max_points', label: 'Points' }],
-    badgeField: { key: 'status' },
-  }}/>
-}
-
 export function TestsPage() {
   return <CrudPage config={{
-    title: 'Tests', singular: 'Test', table: 'tests', icon: icons.clipboard,
+    title: 'Tests', singular: 'Test', table: 'tests', icon: icon(ClipboardList),
     fields: [
-      { key: 'title', label: 'Title', type: 'text', required: true },
-      { key: 'course_id', label: 'Subject ID', type: 'text' },
+      { key: 'title', label: 'Title', type: 'text' },
+      { key: 'course_id', label: 'Course ID', type: 'text' },
       { key: 'test_type', label: 'Type', type: 'select', options: [{value:'quiz',label:'Quiz'},{value:'pop_quiz',label:'Pop Quiz'},{value:'practice',label:'Practice'},{value:'assessment',label:'Assessment'}] },
       { key: 'test_date', label: 'Date', type: 'datetime-local' },
       { key: 'duration_minutes', label: 'Duration (min)', type: 'number' },
@@ -314,23 +289,102 @@ export function TestsPage() {
   }}/>
 }
 
-export function VenuesPage() {
+export function AssignmentsPage() {
   return <CrudPage config={{
-    title: 'Venues', singular: 'Venue', table: 'venues', icon: icons.mapPin,
+    title: 'Assignments', singular: 'Assignment', table: 'assignments', icon: icon(ClipboardList),
     fields: [
-      { key: 'name', label: 'Name', type: 'text', required: true },
-      { key: 'capacity', label: 'Capacity', type: 'number' },
-      { key: 'building', label: 'Building', type: 'text' },
+      { key: 'title', label: 'Title', type: 'text' },
+      { key: 'course_id', label: 'Course ID', type: 'text' },
+      { key: 'description', label: 'Description', type: 'textarea' },
+      { key: 'due_date', label: 'Due Date', type: 'datetime-local' },
+      { key: 'max_points', label: 'Max Points', type: 'number' },
     ],
-    displayFields: [{ key: 'name', label: 'Name' }, { key: 'building', label: 'Building' }, { key: 'capacity', label: 'Capacity' }],
+    displayFields: [{ key: 'title', label: 'Title' }, { key: 'due_date', label: 'Due Date' }, { key: 'max_points', label: 'Points' }],
+  }}/>
+}
+
+export function GradesPage() {
+  return <CrudPage config={{
+    title: 'Grades', singular: 'Grade', table: 'grades', icon: icon(CheckCircle),
+    fields: [
+      { key: 'student_id', label: 'Student ID', type: 'text' },
+      { key: 'course_id', label: 'Course ID', type: 'text' },
+      { key: 'score', label: 'Score', type: 'number' },
+      { key: 'grade_letter', label: 'Grade Letter', type: 'text' },
+      { key: 'remarks', label: 'Remarks', type: 'text' },
+    ],
+    displayFields: [{ key: 'student_id', label: 'Student' }, { key: 'course_id', label: 'Course' }, { key: 'score', label: 'Score' }, { key: 'grade_letter', label: 'Grade' }],
+    badgeField: { key: 'grade_letter' },
+  }}/>
+}
+
+export function AnnouncementsCrudPage() {
+  return <CrudPage config={{
+    title: 'Announcements', singular: 'Announcement', table: 'announcements', icon: icon(Megaphone),
+    fields: [
+      { key: 'title', label: 'Title', type: 'text' },
+      { key: 'content', label: 'Content', type: 'textarea' },
+      { key: 'priority', label: 'Priority', type: 'select', options: [{value:'low',label:'Low'},{value:'normal',label:'Normal'},{value:'high',label:'High'},{value:'urgent',label:'Urgent'}] },
+      { key: 'author_id', label: 'Author ID', type: 'text' },
+    ],
+    displayFields: [{ key: 'title', label: 'Title' }, { key: 'priority', label: 'Priority' }, { key: 'created_at', label: 'Created' }],
+    badgeField: { key: 'priority' },
+  }}/>
+}
+
+export function NotificationsPage() {
+  return <CrudPage config={{
+    title: 'Notifications', singular: 'Notification', table: 'notifications', icon: icon(Bell),
+    fields: [
+      { key: 'user_id', label: 'User ID', type: 'text' },
+      { key: 'title', label: 'Title', type: 'text' },
+      { key: 'body', label: 'Message', type: 'textarea' },
+      { key: 'notification_type', label: 'Type', type: 'select', options: [{value:'general',label:'General'},{value:'class_update',label:'Class Update'},{value:'exam',label:'Exam'},{value:'assignment',label:'Assignment'},{value:'billing',label:'Billing'}] },
+      { key: 'read', label: 'Read', type: 'boolean' },
+    ],
+    displayFields: [{ key: 'title', label: 'Title' }, { key: 'notification_type', label: 'Type' }, { key: 'created_at', label: 'Created' }],
+    badgeField: { key: 'notification_type' },
+  }}/>
+}
+
+export function VideosPage() {
+  return <CrudPage config={{
+    title: 'Videos', singular: 'Video', table: 'videos', icon: icon(Video),
+    fields: [
+      { key: 'title', label: 'Title', type: 'text' },
+      { key: 'course_id', label: 'Course ID', type: 'text' },
+      { key: 'video_url', label: 'Video URL', type: 'text' },
+      { key: 'description', label: 'Description', type: 'textarea' },
+      { key: 'video_type', label: 'Type', type: 'select', options: [{value:'lecture',label:'Lecture'},{value:'tutorial',label:'Tutorial'},{value:'seminar',label:'Seminar'}] },
+      { key: 'semester', label: 'Semester', type: 'text' },
+      { key: 'duration_seconds', label: 'Duration (sec)', type: 'number' },
+    ],
+    displayFields: [{ key: 'title', label: 'Title' }, { key: 'video_type', label: 'Type' }, { key: 'semester', label: 'Semester' }],
+    badgeField: { key: 'video_type' },
+  }}/>
+}
+
+export function MaterialsPage() {
+  return <CrudPage config={{
+    title: 'Course Materials', singular: 'Material', table: 'course_materials', icon: icon(Upload),
+    fields: [
+      { key: 'title', label: 'Title', type: 'text' },
+      { key: 'course_id', label: 'Course ID', type: 'text' },
+      { key: 'description', label: 'Description', type: 'textarea' },
+      { key: 'file_url', label: 'File URL', type: 'text' },
+      { key: 'file_type', label: 'File Type', type: 'select', options: [{value:'pdf',label:'PDF'},{value:'docx',label:'DOCX'},{value:'pptx',label:'PPTX'},{value:'video',label:'Video'},{value:'link',label:'Link'}] },
+      { key: 'is_public', label: 'Public', type: 'boolean' },
+    ],
+    displayFields: [{ key: 'title', label: 'Title' }, { key: 'file_type', label: 'Type' }, { key: 'course_id', label: 'Course' }],
+    badgeField: { key: 'file_type' },
   }}/>
 }
 
 export function EventsPage() {
   return <CrudPage config={{
-    title: 'Events', singular: 'Event', table: 'events', icon: icons.calendar,
+    title: 'Events', singular: 'Event', table: 'events', icon: icon(Calendar),
     fields: [
-      { key: 'title', label: 'Title', type: 'text', required: true },
+      { key: 'title', label: 'Title', type: 'text' },
       { key: 'description', label: 'Description', type: 'textarea' },
       { key: 'event_date', label: 'Date', type: 'datetime-local' },
       { key: 'location', label: 'Location', type: 'text' },
@@ -339,84 +393,410 @@ export function EventsPage() {
   }}/>
 }
 
-export function SchedulePage() {
+export function VenuesPage() {
   return <CrudPage config={{
-    title: 'Schedule', singular: 'Schedule', table: 'schedules', icon: icons.calendar,
+    title: 'Venues', singular: 'Venue', table: 'venues', icon: icon(MapPin),
     fields: [
-      { key: 'course_id', label: 'Subject ID', type: 'text' },
-      { key: 'day_of_week', label: 'Day', type: 'select', options: [{value:'1',label:'Monday'},{value:'2',label:'Tuesday'},{value:'3',label:'Wednesday'},{value:'4',label:'Thursday'},{value:'5',label:'Friday'}] },
-      { key: 'start_time', label: 'Start Time', type: 'time' },
-      { key: 'end_time', label: 'End Time', type: 'time' },
+      { key: 'name', label: 'Name', type: 'text' },
+      { key: 'capacity', label: 'Capacity', type: 'number' },
+      { key: 'building', label: 'Building', type: 'text' },
     ],
-    displayFields: [{ key: 'course_id', label: 'Subject' }, { key: 'day_of_week', label: 'Day' }, { key: 'start_time', label: 'Start' }, { key: 'end_time', label: 'End' }],
-    badgeField: { key: 'day_of_week' },
+    displayFields: [{ key: 'name', label: 'Name' }, { key: 'building', label: 'Building' }, { key: 'capacity', label: 'Capacity' }],
   }}/>
 }
 
-export function GradesPage() {
+export function AiSchedulerPage() {
   return <CrudPage config={{
-    title: 'Grades', singular: 'Grade', table: 'grades', icon: icons.check,
+    title: 'AI Scheduler Suggestions', singular: 'Suggestion', table: 'ai_scheduler_suggestions', icon: icon(Brain),
     fields: [
-      { key: 'student_id', label: 'Student ID', type: 'text', required: true },
-      { key: 'course_id', label: 'Subject ID', type: 'text', required: true },
-      { key: 'score', label: 'Score', type: 'number' },
-      { key: 'grade_letter', label: 'Grade Letter', type: 'text' },
-      { key: 'remarks', label: 'Remarks', type: 'text' },
+      { key: 'user_id', label: 'User ID', type: 'text' },
+      { key: 'course_id', label: 'Course ID', type: 'text' },
+      { key: 'suggestion', label: 'Suggestion', type: 'textarea' },
+      { key: 'status', label: 'Status', type: 'select', options: [{value:'pending',label:'Pending'},{value:'accepted',label:'Accepted'},{value:'rejected',label:'Rejected'}] },
+      { key: 'priority', label: 'Priority', type: 'number' },
     ],
-    displayFields: [{ key: 'student_id', label: 'Student' }, { key: 'course_id', label: 'Subject' }, { key: 'score', label: 'Score' }, { key: 'grade_letter', label: 'Grade' }],
-    badgeField: { key: 'grade_letter' },
+    displayFields: [{ key: 'user_id', label: 'User' }, { key: 'suggestion', label: 'Suggestion' }, { key: 'status', label: 'Status' }],
+    badgeField: { key: 'status' },
   }}/>
 }
 
-export function NotificationsPage() {
+export function AiSummariesPage() {
   return <CrudPage config={{
-    title: 'Notifications', singular: 'Notification', table: 'notifications', icon: icons.bell,
+    title: 'AI Summaries', singular: 'Summary', table: 'ai_summaries', icon: icon(Brain),
     fields: [
-      { key: 'title', label: 'Title', type: 'text', required: true },
-      { key: 'body', label: 'Message', type: 'textarea' },
-      { key: 'notification_type', label: 'Type', type: 'select', options: [{value:'general',label:'General'},{value:'class_update',label:'Class Update'},{value:'exam',label:'Exam'},{value:'assignment',label:'Assignment'},{value:'billing',label:'Billing'}] },
+      { key: 'course_id', label: 'Course ID', type: 'text' },
+      { key: 'content', label: 'Content', type: 'textarea' },
+      { key: 'summary_type', label: 'Type', type: 'select', options: [{value:'lecture',label:'Lecture'},{value:'assignment',label:'Assignment'},{value:'exam',label:'Exam'}] },
+      { key: 'generated_by', label: 'Generated By', type: 'text' },
     ],
-    displayFields: [{ key: 'title', label: 'Title' }, { key: 'body', label: 'Message' }, { key: 'notification_type', label: 'Type' }],
-    badgeField: { key: 'notification_type' },
+    displayFields: [{ key: 'course_id', label: 'Course' }, { key: 'summary_type', label: 'Type' }, { key: 'created_at', label: 'Created' }],
+    badgeField: { key: 'summary_type' },
+  }}/>
+}
+
+export function UsersPage() {
+  return <CrudPage config={{
+    title: 'Users', singular: 'User', table: 'profiles', icon: icon(Users),
+    fields: [
+      { key: 'full_name', label: 'Full Name', type: 'text' },
+      { key: 'email', label: 'Email', type: 'text' },
+      { key: 'role', label: 'Role', type: 'select', options: [{value:'student',label:'Student'},{value:'lecturer',label:'Lecturer'},{value:'admin',label:'Admin'},{value:'dean',label:'Dean'}] },
+      { key: 'phone', label: 'Phone', type: 'text' },
+      { key: 'department', label: 'Department', type: 'text' },
+      { key: 'faculty', label: 'Faculty', type: 'text' },
+      { key: 'matric_number', label: 'Matric Number', type: 'text' },
+      { key: 'gender', label: 'Gender', type: 'select', options: [{value:'male',label:'Male'},{value:'female',label:'Female'},{value:'other',label:'Other'}] },
+    ],
+    displayFields: [{ key: 'full_name', label: 'Name' }, { key: 'email', label: 'Email' }, { key: 'role', label: 'Role' }],
+    badgeField: { key: 'role' },
+  }}/>
+}
+
+export function DepartmentsPage() {
+  return <CrudPage config={{
+    title: 'Departments', singular: 'Department', table: 'departments', icon: icon(Building2),
+    fields: [
+      { key: 'name', label: 'Name', type: 'text' },
+      { key: 'faculty_id', label: 'Faculty ID', type: 'text' },
+      { key: 'head_id', label: 'Head ID', type: 'text' },
+      { key: 'description', label: 'Description', type: 'textarea' },
+    ],
+    displayFields: [{ key: 'name', label: 'Name' }, { key: 'faculty_id', label: 'Faculty' }, { key: 'description', label: 'Description' }],
+  }}/>
+}
+
+export function FacultiesPage() {
+  return <CrudPage config={{
+    title: 'Faculties', singular: 'Faculty', table: 'faculties', icon: icon(GitBranch),
+    fields: [
+      { key: 'name', label: 'Name', type: 'text' },
+      { key: 'institution_id', label: 'Institution ID', type: 'text' },
+      { key: 'dean_id', label: 'Dean ID', type: 'text' },
+      { key: 'description', label: 'Description', type: 'textarea' },
+    ],
+    displayFields: [{ key: 'name', label: 'Name' }, { key: 'institution_id', label: 'Institution' }, { key: 'description', label: 'Description' }],
+  }}/>
+}
+
+export function InstitutionsPage() {
+  return <CrudPage config={{
+    title: 'Institutions', singular: 'Institution', table: 'institutions', icon: icon(Building2),
+    fields: [
+      { key: 'name', label: 'Name', type: 'text' },
+      { key: 'address', label: 'Address', type: 'text' },
+      { key: 'phone', label: 'Phone', type: 'text' },
+      { key: 'email', label: 'Email', type: 'text' },
+      { key: 'website', label: 'Website', type: 'text' },
+    ],
+    displayFields: [{ key: 'name', label: 'Name' }, { key: 'email', label: 'Email' }, { key: 'phone', label: 'Phone' }],
+  }}/>
+}
+
+export function BillingPage() {
+  return <CrudPage config={{
+    title: 'Billing & Subscriptions', singular: 'Subscription', table: 'billing_subscriptions', icon: icon(CreditCard),
+    fields: [
+      { key: 'user_id', label: 'User ID', type: 'text' },
+      { key: 'plan', label: 'Plan', type: 'select', options: [{value:'free',label:'Free'},{value:'pro',label:'Pro'},{value:'enterprise',label:'Enterprise'}] },
+      { key: 'status', label: 'Status', type: 'select', options: [{value:'active',label:'Active'},{value:'cancelled',label:'Cancelled'},{value:'expired',label:'Expired'}] },
+      { key: 'amount', label: 'Amount', type: 'number' },
+      { key: 'start_date', label: 'Start Date', type: 'date' },
+      { key: 'end_date', label: 'End Date', type: 'date' },
+    ],
+    displayFields: [{ key: 'user_id', label: 'User' }, { key: 'plan', label: 'Plan' }, { key: 'status', label: 'Status' }, { key: 'amount', label: 'Amount' }],
+    badgeField: { key: 'status' },
+  }}/>
+}
+
+export function PaymentsPage() {
+  return <CrudPage config={{
+    title: 'Payments', singular: 'Payment', table: 'payments', icon: icon(CreditCard),
+    fields: [
+      { key: 'user_id', label: 'User ID', type: 'text' },
+      { key: 'amount', label: 'Amount', type: 'number' },
+      { key: 'currency', label: 'Currency', type: 'text' },
+      { key: 'status', label: 'Status', type: 'select', options: [{value:'pending',label:'Pending'},{value:'completed',label:'Completed'},{value:'failed',label:'Failed'},{value:'refunded',label:'Refunded'}] },
+      { key: 'provider', label: 'Provider', type: 'select', options: [{value:'paystack',label:'Paystack'},{value:'paypal',label:'PayPal'}] },
+      { key: 'reference', label: 'Reference', type: 'text' },
+    ],
+    displayFields: [{ key: 'user_id', label: 'User' }, { key: 'amount', label: 'Amount' }, { key: 'status', label: 'Status' }, { key: 'provider', label: 'Provider' }],
+    badgeField: { key: 'status' },
+  }}/>
+}
+
+export function FeatureAccessPage() {
+  return <CrudPage config={{
+    title: 'Feature Access', singular: 'Feature', table: 'feature_access', icon: icon(Shield),
+    fields: [
+      { key: 'role', label: 'Role', type: 'select', options: [{value:'student',label:'Student'},{value:'lecturer',label:'Lecturer'},{value:'admin',label:'Admin'},{value:'dean',label:'Dean'}] },
+      { key: 'feature_key', label: 'Feature Key', type: 'text' },
+      { key: 'enabled', label: 'Enabled', type: 'boolean' },
+      { key: 'institution_id', label: 'Institution ID', type: 'text' },
+    ],
+    displayFields: [{ key: 'role', label: 'Role' }, { key: 'feature_key', label: 'Feature' }, { key: 'enabled', label: 'Enabled' }],
+    badgeField: { key: 'enabled' },
+  }}/>
+}
+
+export function EmailVerificationsPage() {
+  return <CrudPage config={{
+    title: 'Email Verifications', singular: 'Verification', table: 'email_verifications', icon: icon(Mail),
+    fields: [
+      { key: 'user_id', label: 'User ID', type: 'text' },
+      { key: 'email', label: 'Email', type: 'text' },
+      { key: 'token', label: 'Token', type: 'text' },
+      { key: 'verified', label: 'Verified', type: 'boolean' },
+      { key: 'expires_at', label: 'Expires At', type: 'datetime-local' },
+    ],
+    displayFields: [{ key: 'email', label: 'Email' }, { key: 'verified', label: 'Verified' }, { key: 'expires_at', label: 'Expires' }],
+    badgeField: { key: 'verified' },
+  }}/>
+}
+
+export function SearchQueriesPage() {
+  return <CrudPage config={{
+    title: 'Search Queries', singular: 'Query', table: 'search_queries', icon: icon(Search),
+    fields: [
+      { key: 'user_id', label: 'User ID', type: 'text' },
+      { key: 'query', label: 'Query', type: 'text' },
+      { key: 'results_count', label: 'Results Count', type: 'number' },
+      { key: 'filters', label: 'Filters', type: 'textarea' },
+    ],
+    displayFields: [{ key: 'query', label: 'Query' }, { key: 'user_id', label: 'User' }, { key: 'results_count', label: 'Results' }, { key: 'created_at', label: 'Time' }],
   }}/>
 }
 
 export function SettingsPage() {
-  const [dark, setDark] = useState(() => document.documentElement.classList.contains('dark'))
+  const [dark, setDark] = useState(() => {
+    if (typeof window !== 'undefined') return localStorage.getItem('theme') === 'dark'
+    return false
+  })
+  const [sound, setSound] = useState(() => {
+    if (typeof window !== 'undefined') return localStorage.getItem('sound') !== 'off'
+    return true
+  })
+  const [emailNotifs, setEmailNotifs] = useState(true)
+  const [pushNotifs, setPushNotifs] = useState(true)
+  const [weeklyDigest, setWeeklyDigest] = useState(false)
+  const [language, setLanguage] = useState('en')
+  const [timezone, setTimezone] = useState('Africa/Lagos')
+  const [fontSize, setFontSize] = useState('medium')
+  const [sidebarCompact, setSidebarCompact] = useState(false)
+
   const toggleDark = () => { document.documentElement.classList.toggle('dark'); setDark(!dark); localStorage.setItem('theme', dark ? 'light' : 'dark') }
+  const toggleSound = () => { setSound(!sound); localStorage.setItem('sound', sound ? 'off' : 'on') }
+
   return (
-    <div>
-      <div className="mb-6"><div className="text-xs text-text-muted uppercase tracking-wider mb-1">SETTINGS</div><h1 className="text-2xl font-bold">Settings</h1></div>
-      <div className="max-w-lg space-y-4">
-        <div className="p-4 rounded-xl bg-bg-card border border-border flex justify-between items-center">
-          <div><h3 className="font-bold">Dark Mode</h3><p className="text-sm text-text-muted">Toggle dark/light theme</p></div>
-          <button onClick={toggleDark} className="w-12 h-6 rounded-full bg-border relative transition-colors duration-300" style={{background: dark ? 'var(--color-primary)' : 'var(--color-border)'}}>
-            <div className="w-5 h-5 rounded-full bg-white absolute top-0.5 transition-transform duration-300" style={{transform: dark ? 'translateX(24px)' : 'translateX(2px)'}}/>
-          </button>
-        </div>
-        <div className="p-4 rounded-xl bg-bg-card border border-border flex justify-between items-center">
-          <div><h3 className="font-bold">Sound Effects</h3><p className="text-sm text-text-muted">Play sounds on interactions</p></div>
-          <button className="w-12 h-6 rounded-full bg-primary relative transition-colors duration-300">
-            <div className="w-5 h-5 rounded-full bg-white absolute top-0.5 transition-transform duration-300" style={{transform:'translateX(24px)'}}/>
-          </button>
-        </div>
-        <div className="mt-8 mb-4">
-          <div className="text-xs text-text-muted uppercase tracking-wider mb-1">BILLING</div>
-          <h2 className="text-lg font-bold">Subscription & Payments</h2>
-        </div>
-        <div className="p-5 rounded-xl bg-bg-card border border-border">
-          <div className="flex justify-between items-start mb-4">
-            <div><h3 className="font-bold text-lg">Current Plan</h3><p className="text-sm text-text-muted">Manage your subscription</p></div>
-            <span className="px-3 py-1 rounded-full bg-success/10 text-success text-xs font-semibold">Free</span>
+    <div className="max-w-2xl mx-auto">
+      <div className="text-center mb-10">
+        <span className="section-label">Settings</span>
+        <h1 className="section-title mt-2 text-3xl">Settings</h1>
+        <p className="text-[13px] text-[var(--color-text-muted)] mt-1.5">Manage your account preferences and app settings</p>
+      </div>
+
+      {/* Appearance */}
+      <div className="mb-8">
+        <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Appearance</h2>
+        <div className="space-y-2">
+          <div className="card p-4 flex items-center justify-between">
+            <div>
+              <h3 className="text-[14px] font-bold text-[var(--color-navy)]">Dark Mode</h3>
+              <p className="text-[12px] text-[var(--color-text-muted)]">Switch between light and dark themes</p>
+            </div>
+            <button onClick={toggleDark} className="w-12 h-[26px] rounded-full relative transition-colors duration-200 flex-shrink-0" style={{ background: dark ? 'var(--color-navy)' : 'var(--color-beige)' }}>
+              <div className="w-5 h-5 rounded-full bg-white absolute top-[3px] transition-transform duration-200 shadow-sm" style={{ transform: dark ? 'translateX(23px)' : 'translateX(3px)' }} />
+            </button>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
-            <div className="p-3 rounded-lg bg-bg-secondary text-center"><div className="text-lg font-bold text-primary">Free</div><div className="text-xs text-text-muted">Basic features</div></div>
-            <div className="p-3 rounded-lg border-2 border-primary/30 text-center"><div className="text-lg font-bold text-primary">Pro</div><div className="text-xs text-text-muted">$9.99/month</div></div>
-            <div className="p-3 rounded-lg bg-bg-secondary text-center"><div className="text-lg font-bold text-primary">Enterprise</div><div className="text-xs text-text-muted">Custom pricing</div></div>
+          <div className="card p-4 flex items-center justify-between">
+            <div>
+              <h3 className="text-[14px] font-bold text-[var(--color-navy)]">Font Size</h3>
+              <p className="text-[12px] text-[var(--color-text-muted)]">Adjust text size across the app</p>
+            </div>
+            <select value={fontSize} onChange={e => setFontSize(e.target.value)} className="select w-auto text-[13px] min-w-[100px]">
+              <option value="small">Small</option>
+              <option value="medium">Medium</option>
+              <option value="large">Large</option>
+            </select>
+          </div>
+          <div className="card p-4 flex items-center justify-between">
+            <div>
+              <h3 className="text-[14px] font-bold text-[var(--color-navy)]">Compact Sidebar</h3>
+              <p className="text-[12px] text-[var(--color-text-muted)]">Show icons only in sidebar navigation</p>
+            </div>
+            <button onClick={() => setSidebarCompact(!sidebarCompact)} className="w-12 h-[26px] rounded-full relative transition-colors duration-200 flex-shrink-0" style={{ background: sidebarCompact ? 'var(--color-navy)' : 'var(--color-beige)' }}>
+              <div className="w-5 h-5 rounded-full bg-white absolute top-[3px] transition-transform duration-200 shadow-sm" style={{ transform: sidebarCompact ? 'translateX(23px)' : 'translateX(3px)' }} />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Notifications */}
+      <div className="mb-8">
+        <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Notifications</h2>
+        <div className="space-y-2">
+          <div className="card p-4 flex items-center justify-between">
+            <div>
+              <h3 className="text-[14px] font-bold text-[var(--color-navy)]">Email Notifications</h3>
+              <p className="text-[12px] text-[var(--color-text-muted)]">Receive email alerts for important updates</p>
+            </div>
+            <button onClick={() => setEmailNotifs(!emailNotifs)} className="w-12 h-[26px] rounded-full relative transition-colors duration-200 flex-shrink-0" style={{ background: emailNotifs ? 'var(--color-navy)' : 'var(--color-beige)' }}>
+              <div className="w-5 h-5 rounded-full bg-white absolute top-[3px] transition-transform duration-200 shadow-sm" style={{ transform: emailNotifs ? 'translateX(23px)' : 'translateX(3px)' }} />
+            </button>
+          </div>
+          <div className="card p-4 flex items-center justify-between">
+            <div>
+              <h3 className="text-[14px] font-bold text-[var(--color-navy)]">Push Notifications</h3>
+              <p className="text-[12px] text-[var(--color-text-muted)]">Browser push notifications for real-time alerts</p>
+            </div>
+            <button onClick={() => setPushNotifs(!pushNotifs)} className="w-12 h-[26px] rounded-full relative transition-colors duration-200 flex-shrink-0" style={{ background: pushNotifs ? 'var(--color-navy)' : 'var(--color-beige)' }}>
+              <div className="w-5 h-5 rounded-full bg-white absolute top-[3px] transition-transform duration-200 shadow-sm" style={{ transform: pushNotifs ? 'translateX(23px)' : 'translateX(3px)' }} />
+            </button>
+          </div>
+          <div className="card p-4 flex items-center justify-between">
+            <div>
+              <h3 className="text-[14px] font-bold text-[var(--color-navy)]">Weekly Digest</h3>
+              <p className="text-[12px] text-[var(--color-text-muted)]">Get a weekly summary of your academic activity</p>
+            </div>
+            <button onClick={() => setWeeklyDigest(!weeklyDigest)} className="w-12 h-[26px] rounded-full relative transition-colors duration-200 flex-shrink-0" style={{ background: weeklyDigest ? 'var(--color-navy)' : 'var(--color-beige)' }}>
+              <div className="w-5 h-5 rounded-full bg-white absolute top-[3px] transition-transform duration-200 shadow-sm" style={{ transform: weeklyDigest ? 'translateX(23px)' : 'translateX(3px)' }} />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Sound */}
+      <div className="mb-8">
+        <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Sound & Media</h2>
+        <div className="space-y-2">
+          <div className="card p-4 flex items-center justify-between">
+            <div>
+              <h3 className="text-[14px] font-bold text-[var(--color-navy)]">Sound Effects</h3>
+              <p className="text-[12px] text-[var(--color-text-muted)]">Play sounds on interactions and notifications</p>
+            </div>
+            <button onClick={toggleSound} className="w-12 h-[26px] rounded-full relative transition-colors duration-200 flex-shrink-0" style={{ background: sound ? 'var(--color-navy)' : 'var(--color-beige)' }}>
+              <div className="w-5 h-5 rounded-full bg-white absolute top-[3px] transition-transform duration-200 shadow-sm" style={{ transform: sound ? 'translateX(23px)' : 'translateX(3px)' }} />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Regional */}
+      <div className="mb-8">
+        <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Regional</h2>
+        <div className="space-y-2">
+          <div className="card p-4 flex items-center justify-between">
+            <div>
+              <h3 className="text-[14px] font-bold text-[var(--color-navy)]">Language</h3>
+              <p className="text-[12px] text-[var(--color-text-muted)]">Select your preferred language</p>
+            </div>
+            <select value={language} onChange={e => setLanguage(e.target.value)} className="select w-auto text-[13px] min-w-[140px]">
+              <option value="en">English</option>
+              <option value="fr">Français</option>
+              <option value="ha">Hausa</option>
+              <option value="yo">Yorùbá</option>
+              <option value="ig">Igbo</option>
+            </select>
+          </div>
+          <div className="card p-4 flex items-center justify-between">
+            <div>
+              <h3 className="text-[14px] font-bold text-[var(--color-navy)]">Timezone</h3>
+              <p className="text-[12px] text-[var(--color-text-muted)]">Set your local timezone for schedules</p>
+            </div>
+            <select value={timezone} onChange={e => setTimezone(e.target.value)} className="select w-auto text-[13px] min-w-[180px]">
+              <option value="Africa/Lagos">West Africa (WAT)</option>
+              <option value="Africa/Nairobi">East Africa (EAT)</option>
+              <option value="Europe/London">London (GMT)</option>
+              <option value="America/New_York">New York (EST)</option>
+              <option value="Asia/Dubai">Dubai (GST)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      {/* Privacy & Security */}
+      <div className="mb-8">
+        <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Privacy & Security</h2>
+        <div className="space-y-2">
+          <div className="card p-4 flex items-center justify-between">
+            <div>
+              <h3 className="text-[14px] font-bold text-[var(--color-navy)]">Two-Factor Authentication</h3>
+              <p className="text-[12px] text-[var(--color-text-muted)]">Add an extra layer of security to your account</p>
+            </div>
+            <button className="btn-secondary text-[12px] px-4 py-1.5">Enable</button>
+          </div>
+          <div className="card p-4 flex items-center justify-between">
+            <div>
+              <h3 className="text-[14px] font-bold text-[var(--color-navy)]">Active Sessions</h3>
+              <p className="text-[12px] text-[var(--color-text-muted)]">Manage devices where you're signed in</p>
+            </div>
+            <button className="btn-secondary text-[12px] px-4 py-1.5">View All</button>
+          </div>
+          <div className="card p-4 flex items-center justify-between">
+            <div>
+              <h3 className="text-[14px] font-bold text-[var(--color-navy)]">Download My Data</h3>
+              <p className="text-[12px] text-[var(--color-text-muted)]">Export a copy of all your account data</p>
+            </div>
+            <button className="btn-secondary text-[12px] px-4 py-1.5">Export</button>
+          </div>
+          <div className="card p-4 flex items-center justify-between border-[var(--color-danger)]/20">
+            <div>
+              <h3 className="text-[14px] font-bold text-[var(--color-danger)]">Delete Account</h3>
+              <p className="text-[12px] text-[var(--color-text-muted)]">Permanently delete your account and all data</p>
+            </div>
+            <button className="btn-secondary text-[12px] px-4 py-1.5 text-[var(--color-danger)] border-[var(--color-danger)]/30 hover:bg-[var(--color-danger)]/5">Delete</button>
+          </div>
+        </div>
+      </div>
+
+      {/* Billing */}
+      <div className="mb-8">
+        <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Billing & Subscription</h2>
+        <div className="card p-5">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="text-[14px] font-bold text-[var(--color-navy)]">Current Plan</h3>
+              <p className="text-[12px] text-[var(--color-text-muted)]">Manage your subscription and billing</p>
+            </div>
+            <span className="badge badge-success">Free</span>
+          </div>
+          <div className="grid grid-cols-3 gap-3 mb-4">
+            <div className="p-3 rounded-[10px] bg-[var(--color-bg)] text-center border border-[var(--color-beige)]">
+              <div className="text-[15px] font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Free</div>
+              <div className="text-[11px] text-[var(--color-text-muted)] mt-0.5">Basic features</div>
+            </div>
+            <div className="p-3 rounded-[10px] text-center border-2 border-[var(--color-navy)]/30 bg-[var(--color-navy)]/3">
+              <div className="text-[15px] font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Pro</div>
+              <div className="text-[11px] text-[var(--color-text-muted)] mt-0.5">$9.99/month</div>
+            </div>
+            <div className="p-3 rounded-[10px] bg-[var(--color-bg)] text-center border border-[var(--color-beige)]">
+              <div className="text-[15px] font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Enterprise</div>
+              <div className="text-[11px] text-[var(--color-text-muted)] mt-0.5">Custom pricing</div>
+            </div>
           </div>
           <div className="flex gap-3">
-            <button className="flex-1 py-2.5 rounded-lg text-white font-semibold text-sm" style={{background:'var(--gradient-primary)'}}>Subscribe with Paystack</button>
-            <button className="flex-1 py-2.5 rounded-lg border-2 border-border font-semibold text-sm hover:border-primary transition">Pay with PayPal</button>
+            <button className="btn-primary flex-1 py-2.5 text-[13px]">Subscribe with Paystack</button>
+            <button className="btn-secondary flex-1 py-2.5 text-[13px]">Pay with PayPal</button>
+          </div>
+        </div>
+      </div>
+
+      {/* Account Actions */}
+      <div className="mb-8">
+        <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Account</h2>
+        <div className="space-y-2">
+          <div className="card p-4 flex items-center justify-between">
+            <div>
+              <h3 className="text-[14px] font-bold text-[var(--color-navy)]">Change Password</h3>
+              <p className="text-[12px] text-[var(--color-text-muted)]">Update your account password</p>
+            </div>
+            <button className="btn-secondary text-[12px] px-4 py-1.5">Change</button>
+          </div>
+          <div className="card p-4 flex items-center justify-between">
+            <div>
+              <h3 className="text-[14px] font-bold text-[var(--color-navy)]">Update Email</h3>
+              <p className="text-[12px] text-[var(--color-text-muted)]">Change the email associated with your account</p>
+            </div>
+            <button className="btn-secondary text-[12px] px-4 py-1.5">Update</button>
           </div>
         </div>
       </div>
