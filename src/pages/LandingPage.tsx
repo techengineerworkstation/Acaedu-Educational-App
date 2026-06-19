@@ -91,7 +91,7 @@ export function LandingPage() {
           <div className="max-w-6xl mx-auto px-6 w-full relative z-10">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               {/* Left: Text */}
-              <motion.div initial="hidden" animate="visible" variants={stagger} className="text-center lg:text-left">
+              <motion.div initial="hidden" animate="visible" variants={stagger} className="text-center">
                 <motion.div variants={fadeInUp}>
                   <span className="inline-flex items-center gap-2 px-4 py-1.5 text-[11px] font-semibold tracking-[0.1em] uppercase text-[var(--color-navy)] bg-[var(--color-navy)]/5 border border-[var(--color-navy)]/8 rounded-full mb-8">
                     <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-gold)] animate-pulse" />
@@ -106,10 +106,10 @@ export function LandingPage() {
                 </motion.h1>
 
                 <motion.div variants={fadeInUp}>
-                  <TextReveal text="AI-powered scheduling, real-time notifications, and seamless collaboration for students, lecturers, and administrators." className="text-[15px] md:text-base text-[var(--color-text-secondary)] max-w-md mx-auto lg:mx-0 leading-relaxed mb-10" />
+                  <TextReveal text="AI-powered scheduling, real-time notifications, and seamless collaboration for students, lecturers, and administrators." className="text-[15px] md:text-base text-[var(--color-text-secondary)] max-w-lg mx-auto leading-relaxed mb-10" />
                 </motion.div>
 
-                <motion.div variants={fadeInUp} className="flex items-center justify-center lg:justify-start gap-4">
+                <motion.div variants={fadeInUp} className="flex items-center justify-center gap-4">
                   <Link to="/register" className="btn-primary px-7 py-3 text-[13px] group">
                     Get started
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="group-hover:translate-x-0.5 transition-transform">

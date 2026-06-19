@@ -9,13 +9,13 @@ export function TextReveal({ text, className }: { text: string; className?: stri
   const words = text.split(' ')
 
   return (
-    <div ref={ref} className={cn('flex flex-wrap', className)}>
+    <div ref={ref} className={cn('leading-relaxed', className)}>
       {words.map((word, i) => (
         <motion.span key={i}
           initial={{ opacity: 0, y: 20, filter: 'blur(8px)' }}
           animate={isInView ? { opacity: 1, y: 0, filter: 'blur(0px)' } : {}}
-          transition={{ duration: 0.5, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
-          className="mr-[0.3em] inline-block">
+          transition={{ duration: 0.5, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
+          style={{ display: 'inline-block', marginRight: '0.3em' }}>
           {word}
         </motion.span>
       ))}
