@@ -31,7 +31,14 @@
 html { font-family: 'Inter', system-ui, -apple-system, sans-serif; scroll-behavior: smooth; }
 body { background: var(--color-bg); color: var(--color-text); min-height: 100vh; }
 
-/* Fractal background */
+/* ─── Animated Gradient Background ─────────────────────────── */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* ─── Fractal Background ───────────────────────────────────── */
 .fractal-bg {
   position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
 }
@@ -43,7 +50,7 @@ body { background: var(--color-bg); color: var(--color-text); min-height: 100vh;
   50% { transform: translate(20px, -20px) scale(1.1); }
 }
 
-/* Animated entry */
+/* ─── Animated entry ───────────────────────────────────────── */
 .animate-in { animation: fadeInUp 0.6s cubic-bezier(0.16,1,0.3,1) both; }
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(20px); }
@@ -55,14 +62,31 @@ body { background: var(--color-bg); color: var(--color-text); min-height: 100vh;
   to { opacity: 1; transform: scale(1); }
 }
 
-/* Glow effects */
+/* ─── Glow effects ─────────────────────────────────────────── */
 .glow-hover { transition: all 0.3s; }
 .glow-hover:hover {
   box-shadow: 0 0 20px rgba(91,140,192,0.3), 0 4px 12px rgba(0,0,0,0.1);
   transform: translateY(-2px);
 }
 
-/* Scrollbar */
+/* ─── Scrollbar ────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--color-text-muted); }
+
+/* ─── Metallic Gradient Text ───────────────────────────────── */
+.metallic-text {
+  background: linear-gradient(135deg, #5B8CC0, #C9A96E, #7BAAD4, #D4B87A);
+  background-size: 200% 200%;
+  animation: gradientShift 4s ease infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ─── Pulse animation ──────────────────────────────────────── */
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(0.95); }
+}
+
