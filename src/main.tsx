@@ -8,5 +8,4 @@ createRoot(document.getElementById('root')!).render(
     <App />
   </StrictMode>,
 )
-// Force redeploy Fri Jun 19 01:14:32 AM WAT 2026
-// Force rebuild Fri Jun 19 02:18:00 AM WAT 2026
+// Cache bust: shadcn + aceternity + design tokens deployment
