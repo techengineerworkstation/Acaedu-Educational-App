@@ -25,6 +25,6 @@
     }
   ],
   "framework": "vite",
-  "buildCommand": "pnpm run build",
+  "buildCommand": "rm -rf dist && pnpm run build",
   "outputDirectory": "dist"
 }
