@@ -1,34 +1,70 @@
 'use client'
 import { useState, useRef } from 'react'
+import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
 
 export function CardContainer({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <div className={cn('py-4', className)}>{children}</div>
+  return (
+    <div className={cn('py-3 [perspective:1200px]', className)}>
+      {children}
+    </div>
+  )
 }
 
 export function CardBody({ children, className }: { children: React.ReactNode; className?: string }) {
   const ref = useRef<HTMLDivElement>(null)
-  const [transform, setTransform] = useState('')
+  const [style, setStyle] = useState<React.CSSProperties>({
+    transform: 'perspective(1200px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)',
+  })
+  const [glowPos, setGlowPos] = useState({ x: 50, y: 50 })
+  const [hovered, setHovered] = useState(false)
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!ref.current) return
     const rect = ref.current.getBoundingClientRect()
     const x = e.clientX - rect.left
     const y = e.clientY - rect.top
-    const centerX = rect.width / 2
-    const centerY = rect.height / 2
-    const rotateX = (y - centerY) / 20
-    const rotateY = (centerX - x) / 20
-    setTransform(`perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`)
+    const cx = rect.width / 2
+    const cy = rect.height / 2
+    const rotateX = ((y - cy) / cy) * -10
+    const rotateY = ((x - cx) / cx) *  10
+    setStyle({
+      transform: `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.03,1.03,1.03)`,
+      transition: 'transform 0.1s ease-out',
+    })
+    setGlowPos({ x: (x / rect.width) * 100, y: (y / rect.height) * 100 })
   }
 
-  const handleMouseLeave = () => setTransform('perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)')
+  const handleMouseLeave = () => {
+    setStyle({
+      transform: 'perspective(1200px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)',
+      transition: 'transform 0.5s cubic-bezier(0.23, 1, 0.32, 1)',
+    })
+    setHovered(false)
+  }
 
   return (
-    <div ref={ref} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}
-      className={cn('[transform-style:preserve-3d] transition-transform duration-200 ease-out', className)}
-      style={{ transform }}>
+    <motion.div
+      ref={ref}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={handleMouseLeave}
+      className={cn('[transform-style:preserve-3d] relative', className)}
+      style={style}
+    >
+      {/* Depth shine layer */}
+      {hovered && (
+        <div
+          className="absolute inset-0 pointer-events-none rounded-[inherit] z-20"
+          style={{
+            background: `radial-gradient(280px circle at ${glowPos.x}% ${glowPos.y}%,
+              rgba(255,255,255,0.08) 0%,
+              transparent 65%)`,
+            mixBlendMode: 'overlay',
+          }}
+        />
+      )}
       {children}
-    </div>
+    </motion.div>
   )
 }
