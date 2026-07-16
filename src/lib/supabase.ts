@@ -120,8 +120,8 @@ const ALLOWED_TABLES = [
   'attendance', 'billing_subscriptions', 'course_materials', 'courses',
   'departments', 'email_verifications', 'enrollments', 'events', 'exams',
   'faculties', 'feature_access', 'grades', 'holidays', 'institutions',
-  'notifications', 'payments', 'profiles', 'schedule_instances', 'schedules',
-  'search_queries', 'tests', 'users', 'venues', 'videos',
+  'meetings', 'notifications', 'payments', 'profiles', 'schedule_instances',
+  'schedules', 'search_queries', 'tests', 'users', 'venues', 'videos',
 ]
 
 function validateTable(table: string): void {

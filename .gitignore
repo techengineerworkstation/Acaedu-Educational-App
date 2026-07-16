@@ -24,3 +24,13 @@ dist-ssr
 *.sw?
 .env
 .vercel
+
+# Kiro agent memory cache
+.kiro/
+
+# Keys — never commit
+privatekey
+publickey
+
+# Supabase local temp files
+supabase/.temp/

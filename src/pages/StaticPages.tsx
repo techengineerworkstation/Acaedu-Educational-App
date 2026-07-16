@@ -1,4 +1,6 @@
 import { motion } from 'framer-motion'
+import { useState } from 'react'
+import { sendEmail } from '../lib/email'
 
 export function TermsPage() {
   return (
@@ -89,6 +91,39 @@ export function PrivacyPage() {
 }
 
 export function ContactPage() {
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [message, setMessage] = useState('')
+  const [sending, setSending] = useState(false)
+  const [sent, setSent] = useState(false)
+  const [error, setError] = useState('')
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!name.trim() || !email.trim() || !message.trim()) { setError('Please fill in all fields.'); return }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { setError('Enter a valid email address.'); return }
+    setSending(true); setError('')
+    try {
+      const html = `
+        <div style="font-family:system-ui,sans-serif;max-width:600px;margin:0 auto;padding:2rem">
+          <h2 style="color:#1B3A5C">New Contact Form Submission</h2>
+          <table style="width:100%;border-collapse:collapse;margin-top:1rem">
+            <tr><td style="padding:8px 0;color:#555;width:80px"><strong>Name:</strong></td><td style="padding:8px 0">${name}</td></tr>
+            <tr><td style="padding:8px 0;color:#555"><strong>Email:</strong></td><td style="padding:8px 0"><a href="mailto:${email}">${email}</a></td></tr>
+            <tr><td style="padding:8px 0;color:#555;vertical-align:top"><strong>Message:</strong></td>
+              <td style="padding:8px 0;white-space:pre-wrap">${message}</td></tr>
+          </table>
+          <hr style="border:none;border-top:1px solid #e5e2db;margin:1.5rem 0"/>
+          <p style="color:#888;font-size:0.75rem">Sent from acaedu.sbs contact form</p>
+        </div>`
+      await sendEmail({ to: 'support@acaedu.sbs', subject: `Contact: ${name}`, html })
+      setSent(true); setName(''); setEmail(''); setMessage('')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to send. Please email us directly.')
+    }
+    setSending(false)
+  }
+
   return (
     <div className="max-w-2xl mx-auto">
       <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}}>
@@ -114,21 +149,41 @@ export function ContactPage() {
 
         <div className="p-6 rounded-xl bg-white border border-beige">
           <h3 className="font-bold text-navy mb-4 text-sm">Send us a message</h3>
-          <form className="space-y-4" onSubmit={e => { e.preventDefault(); alert('Message sent!') }}>
-            <div>
-              <label className="block text-xs font-semibold text-text-secondary mb-1.5 uppercase tracking-wider">Name</label>
-              <input className="w-full px-4 py-2.5 rounded-lg border border-beige bg-cream text-sm outline-none focus:border-navy focus:ring-2 focus:ring-navy/10 transition" placeholder="Your name"/>
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-text-secondary mb-1.5 uppercase tracking-wider">Email</label>
-              <input type="email" className="w-full px-4 py-2.5 rounded-lg border border-beige bg-cream text-sm outline-none focus:border-navy focus:ring-2 focus:ring-navy/10 transition" placeholder="you@example.com"/>
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-text-secondary mb-1.5 uppercase tracking-wider">Message</label>
-              <textarea className="w-full px-4 py-2.5 rounded-lg border border-beige bg-cream text-sm outline-none focus:border-navy focus:ring-2 focus:ring-navy/10 transition resize-none" rows={4} placeholder="Your message..."/>
-            </div>
-            <button type="submit" className="w-full py-3 rounded-lg bg-navy text-white font-semibold text-sm hover:bg-navy-light transition-all shadow-sm">Send Message</button>
-          </form>
+
+          {sent ? (
+            <motion.div initial={{opacity:0,y:8}} animate={{opacity:1,y:0}}
+              className="py-10 text-center">
+              <div className="w-14 h-14 rounded-full bg-green-50 border border-green-200 flex items-center justify-center mx-auto mb-3">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <p className="font-bold text-navy mb-1">Message sent!</p>
+              <p className="text-sm text-text-muted">We'll get back to you at <strong>{email || 'your email'}</strong> soon.</p>
+              <button onClick={() => setSent(false)} className="mt-4 text-sm text-navy hover:underline">Send another message</button>
+            </motion.div>
+          ) : (
+            <form className="space-y-4" onSubmit={handleSubmit}>
+              {error && <div className="px-3 py-2 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">{error}</div>}
+              <div>
+                <label className="block text-xs font-semibold text-text-secondary mb-1.5 uppercase tracking-wider">Name</label>
+                <input value={name} onChange={e => setName(e.target.value)} required
+                  className="w-full px-4 py-2.5 rounded-lg border border-beige bg-cream text-sm outline-none focus:border-navy focus:ring-2 focus:ring-navy/10 transition" placeholder="Your name"/>
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-text-secondary mb-1.5 uppercase tracking-wider">Email</label>
+                <input type="email" value={email} onChange={e => setEmail(e.target.value)} required
+                  className="w-full px-4 py-2.5 rounded-lg border border-beige bg-cream text-sm outline-none focus:border-navy focus:ring-2 focus:ring-navy/10 transition" placeholder="you@example.com"/>
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-text-secondary mb-1.5 uppercase tracking-wider">Message</label>
+                <textarea value={message} onChange={e => setMessage(e.target.value)} required
+                  className="w-full px-4 py-2.5 rounded-lg border border-beige bg-cream text-sm outline-none focus:border-navy focus:ring-2 focus:ring-navy/10 transition resize-none" rows={4} placeholder="Your message..."/>
+              </div>
+              <button type="submit" disabled={sending}
+                className="w-full py-3 rounded-lg bg-navy text-white font-semibold text-sm hover:bg-navy/90 transition-all shadow-sm disabled:opacity-60 flex items-center justify-center gap-2">
+                {sending ? <><div className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin"/>Sending...</> : 'Send Message'}
+              </button>
+            </form>
+          )}
         </div>
       </motion.div>
     </div>

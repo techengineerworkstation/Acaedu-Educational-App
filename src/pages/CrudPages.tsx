@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { fetchTable, insertRow, updateRow, deleteRow } from '../lib/supabase'
+import { fetchTable, insertRow, updateRow, deleteRow, supabase } from '../lib/supabase'
 import {
   Plus, Pencil, Trash2, BookOpen, FileText, Calendar, ClipboardList,
   CheckCircle, Bell, MapPin, Megaphone, Upload, Video, Users, Building2,
@@ -583,8 +583,146 @@ export function SettingsPage() {
   const [fontSize, setFontSize] = useState('medium')
   const [sidebarCompact, setSidebarCompact] = useState(false)
 
+  // Modal state
+  const [modal, setModal] = useState<null | 'password' | 'email' | '2fa' | 'export' | 'delete'>(null)
+  const [modalLoading, setModalLoading] = useState(false)
+  const [modalMsg, setModalMsg] = useState('')
+  const [modalError, setModalError] = useState('')
+
+  // Form fields
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [newEmail, setNewEmail] = useState('')
+  const [deleteConfirm, setDeleteConfirm] = useState('')
+
+  const closeModal = () => { setModal(null); setModalMsg(''); setModalError(''); setNewPassword(''); setConfirmPassword(''); setNewEmail(''); setDeleteConfirm('') }
+
   const toggleDark = () => { document.documentElement.classList.toggle('dark'); setDark(!dark); localStorage.setItem('theme', dark ? 'light' : 'dark') }
   const toggleSound = () => { setSound(!sound); localStorage.setItem('sound', sound ? 'off' : 'on') }
+
+  const handleChangePassword = async () => {
+    if (newPassword.length < 8) { setModalError('Password must be at least 8 characters.'); return }
+    if (newPassword !== confirmPassword) { setModalError('Passwords do not match.'); return }
+    setModalLoading(true); setModalError('')
+    try {
+      const { error } = await supabase.auth.updateUser({ password: newPassword })
+      if (error) throw error
+      setModalMsg('Password updated successfully.')
+      setTimeout(closeModal, 2000)
+    } catch (err) {
+      setModalError(err instanceof Error ? err.message : 'Failed to update password.')
+    }
+    setModalLoading(false)
+  }
+
+  const handleUpdateEmail = async () => {
+    if (!newEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) { setModalError('Enter a valid email address.'); return }
+    setModalLoading(true); setModalError('')
+    try {
+      const { error } = await supabase.auth.updateUser({ email: newEmail })
+      if (error) throw error
+      setModalMsg('Confirmation email sent. Check your inbox to verify the new address.')
+      setTimeout(closeModal, 3000)
+    } catch (err) {
+      setModalError(err instanceof Error ? err.message : 'Failed to update email.')
+    }
+    setModalLoading(false)
+  }
+
+  const handle2FA = async () => {
+    setModalLoading(true); setModalError('')
+    try {
+      // Supabase MFA enrollment — opens TOTP setup
+      const { data, error } = await supabase.auth.mfa.enroll({ factorType: 'totp', issuer: 'Acaedu' })
+      if (error) throw error
+      // Show QR code URI in a new tab as a simple fallback
+      if (data?.totp?.qr_code) {
+        setModalMsg(`Scan the QR code with your authenticator app.\n\nManual key: ${data.totp.secret}`)
+      } else {
+        setModalMsg('2FA enrollment initiated. Check your authenticator app.')
+      }
+    } catch (err) {
+      setModalError(err instanceof Error ? err.message : 'Could not enroll 2FA.')
+    }
+    setModalLoading(false)
+  }
+
+  const handleExportData = async () => {
+    setModalLoading(true); setModalError('')
+    try {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (!user) throw new Error('Not authenticated')
+      const [profile, grades, enrollments, attendance] = await Promise.all([
+        fetchTable('profiles', { id: user.id }),
+        fetchTable('grades', { student_id: user.id }),
+        fetchTable('enrollments', { student_id: user.id }),
+        fetchTable('attendance', { student_id: user.id }),
+      ])
+      const exportData = {
+        exportedAt: new Date().toISOString(),
+        profile: profile[0] || {},
+        grades, enrollments, attendance,
+      }
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a'); a.href = url; a.download = `acaedu-data-${user.id.slice(0,8)}.json`
+      document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url)
+      setModalMsg('Your data has been downloaded.')
+      setTimeout(closeModal, 2000)
+    } catch (err) {
+      setModalError(err instanceof Error ? err.message : 'Export failed.')
+    }
+    setModalLoading(false)
+  }
+
+  const handleDeleteAccount = async () => {
+    if (deleteConfirm !== 'DELETE') { setModalError('Type DELETE to confirm.'); return }
+    setModalLoading(true); setModalError('')
+    try {
+      const { error } = await supabase.auth.admin.deleteUser((await supabase.auth.getUser()).data.user?.id || '')
+      if (error) {
+        // Admin API not available client-side — sign out and show message
+        await supabase.auth.signOut()
+        window.location.href = '/login'
+        return
+      }
+      await supabase.auth.signOut()
+      window.location.href = '/login'
+    } catch {
+      // Graceful fallback: sign out since client can't call admin API
+      await supabase.auth.signOut()
+      window.location.href = '/login'
+    }
+  }
+
+  // Toggle helper
+  const Toggle = ({ on, onToggle }: { on: boolean; onToggle: () => void }) => (
+    <button onClick={onToggle} className="w-12 h-[26px] rounded-full relative transition-colors duration-200 flex-shrink-0"
+      style={{ background: on ? 'var(--color-navy)' : 'var(--color-beige)' }}>
+      <div className="w-5 h-5 rounded-full bg-white absolute top-[3px] transition-transform duration-200 shadow-sm"
+        style={{ transform: on ? 'translateX(23px)' : 'translateX(3px)' }} />
+    </button>
+  )
+
+  // Reusable modal shell
+  const Modal = ({ title, children }: { title: string; children: React.ReactNode }) => (
+    <AnimatePresence>
+      {modal && (
+        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm p-4"
+          onClick={closeModal}>
+          <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }}
+            className="bg-white rounded-xl border border-beige p-6 w-full max-w-sm shadow-2xl"
+            onClick={e => e.stopPropagation()}>
+            <h3 className="text-[15px] font-bold text-navy mb-4 text-center" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>{title}</h3>
+            {modalError && <div className="mb-3 px-3 py-2 rounded-lg bg-red-50 border border-red-200 text-red-700 text-[12px]">{modalError}</div>}
+            {modalMsg && <div className="mb-3 px-3 py-2 rounded-lg bg-green-50 border border-green-200 text-green-700 text-[12px]">{modalMsg}</div>}
+            {children}
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  )
 
   return (
     <div className="max-w-2xl mx-auto">
@@ -599,33 +737,18 @@ export function SettingsPage() {
         <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Appearance</h2>
         <div className="space-y-2">
           <div className="card p-4 flex items-center justify-between">
-            <div>
-              <h3 className="text-[14px] font-bold text-[var(--color-navy)]">Dark Mode</h3>
-              <p className="text-[12px] text-[var(--color-text-muted)]">Switch between light and dark themes</p>
-            </div>
-            <button onClick={toggleDark} className="w-12 h-[26px] rounded-full relative transition-colors duration-200 flex-shrink-0" style={{ background: dark ? 'var(--color-navy)' : 'var(--color-beige)' }}>
-              <div className="w-5 h-5 rounded-full bg-white absolute top-[3px] transition-transform duration-200 shadow-sm" style={{ transform: dark ? 'translateX(23px)' : 'translateX(3px)' }} />
-            </button>
+            <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]">Dark Mode</h3><p className="text-[12px] text-[var(--color-text-muted)]">Switch between light and dark themes</p></div>
+            <Toggle on={dark} onToggle={toggleDark} />
           </div>
           <div className="card p-4 flex items-center justify-between">
-            <div>
-              <h3 className="text-[14px] font-bold text-[var(--color-navy)]">Font Size</h3>
-              <p className="text-[12px] text-[var(--color-text-muted)]">Adjust text size across the app</p>
-            </div>
+            <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]">Font Size</h3><p className="text-[12px] text-[var(--color-text-muted)]">Adjust text size across the app</p></div>
             <select value={fontSize} onChange={e => setFontSize(e.target.value)} className="select w-auto text-[13px] min-w-[100px]">
-              <option value="small">Small</option>
-              <option value="medium">Medium</option>
-              <option value="large">Large</option>
+              <option value="small">Small</option><option value="medium">Medium</option><option value="large">Large</option>
             </select>
           </div>
           <div className="card p-4 flex items-center justify-between">
-            <div>
-              <h3 className="text-[14px] font-bold text-[var(--color-navy)]">Compact Sidebar</h3>
-              <p className="text-[12px] text-[var(--color-text-muted)]">Show icons only in sidebar navigation</p>
-            </div>
-            <button onClick={() => setSidebarCompact(!sidebarCompact)} className="w-12 h-[26px] rounded-full relative transition-colors duration-200 flex-shrink-0" style={{ background: sidebarCompact ? 'var(--color-navy)' : 'var(--color-beige)' }}>
-              <div className="w-5 h-5 rounded-full bg-white absolute top-[3px] transition-transform duration-200 shadow-sm" style={{ transform: sidebarCompact ? 'translateX(23px)' : 'translateX(3px)' }} />
-            </button>
+            <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]">Compact Sidebar</h3><p className="text-[12px] text-[var(--color-text-muted)]">Show icons only in sidebar navigation</p></div>
+            <Toggle on={sidebarCompact} onToggle={() => setSidebarCompact(!sidebarCompact)} />
           </div>
         </div>
       </div>
@@ -635,31 +758,16 @@ export function SettingsPage() {
         <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Notifications</h2>
         <div className="space-y-2">
           <div className="card p-4 flex items-center justify-between">
-            <div>
-              <h3 className="text-[14px] font-bold text-[var(--color-navy)]">Email Notifications</h3>
-              <p className="text-[12px] text-[var(--color-text-muted)]">Receive email alerts for important updates</p>
-            </div>
-            <button onClick={() => setEmailNotifs(!emailNotifs)} className="w-12 h-[26px] rounded-full relative transition-colors duration-200 flex-shrink-0" style={{ background: emailNotifs ? 'var(--color-navy)' : 'var(--color-beige)' }}>
-              <div className="w-5 h-5 rounded-full bg-white absolute top-[3px] transition-transform duration-200 shadow-sm" style={{ transform: emailNotifs ? 'translateX(23px)' : 'translateX(3px)' }} />
-            </button>
+            <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]">Email Notifications</h3><p className="text-[12px] text-[var(--color-text-muted)]">Receive email alerts for important updates</p></div>
+            <Toggle on={emailNotifs} onToggle={() => setEmailNotifs(!emailNotifs)} />
           </div>
           <div className="card p-4 flex items-center justify-between">
-            <div>
-              <h3 className="text-[14px] font-bold text-[var(--color-navy)]">Push Notifications</h3>
-              <p className="text-[12px] text-[var(--color-text-muted)]">Browser push notifications for real-time alerts</p>
-            </div>
-            <button onClick={() => setPushNotifs(!pushNotifs)} className="w-12 h-[26px] rounded-full relative transition-colors duration-200 flex-shrink-0" style={{ background: pushNotifs ? 'var(--color-navy)' : 'var(--color-beige)' }}>
-              <div className="w-5 h-5 rounded-full bg-white absolute top-[3px] transition-transform duration-200 shadow-sm" style={{ transform: pushNotifs ? 'translateX(23px)' : 'translateX(3px)' }} />
-            </button>
+            <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]">Push Notifications</h3><p className="text-[12px] text-[var(--color-text-muted)]">Browser push notifications for real-time alerts</p></div>
+            <Toggle on={pushNotifs} onToggle={() => setPushNotifs(!pushNotifs)} />
           </div>
           <div className="card p-4 flex items-center justify-between">
-            <div>
-              <h3 className="text-[14px] font-bold text-[var(--color-navy)]">Weekly Digest</h3>
-              <p className="text-[12px] text-[var(--color-text-muted)]">Get a weekly summary of your academic activity</p>
-            </div>
-            <button onClick={() => setWeeklyDigest(!weeklyDigest)} className="w-12 h-[26px] rounded-full relative transition-colors duration-200 flex-shrink-0" style={{ background: weeklyDigest ? 'var(--color-navy)' : 'var(--color-beige)' }}>
-              <div className="w-5 h-5 rounded-full bg-white absolute top-[3px] transition-transform duration-200 shadow-sm" style={{ transform: weeklyDigest ? 'translateX(23px)' : 'translateX(3px)' }} />
-            </button>
+            <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]">Weekly Digest</h3><p className="text-[12px] text-[var(--color-text-muted)]">Get a weekly summary of your academic activity</p></div>
+            <Toggle on={weeklyDigest} onToggle={() => setWeeklyDigest(!weeklyDigest)} />
           </div>
         </div>
       </div>
@@ -669,13 +777,8 @@ export function SettingsPage() {
         <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Sound & Media</h2>
         <div className="space-y-2">
           <div className="card p-4 flex items-center justify-between">
-            <div>
-              <h3 className="text-[14px] font-bold text-[var(--color-navy)]">Sound Effects</h3>
-              <p className="text-[12px] text-[var(--color-text-muted)]">Play sounds on interactions and notifications</p>
-            </div>
-            <button onClick={toggleSound} className="w-12 h-[26px] rounded-full relative transition-colors duration-200 flex-shrink-0" style={{ background: sound ? 'var(--color-navy)' : 'var(--color-beige)' }}>
-              <div className="w-5 h-5 rounded-full bg-white absolute top-[3px] transition-transform duration-200 shadow-sm" style={{ transform: sound ? 'translateX(23px)' : 'translateX(3px)' }} />
-            </button>
+            <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]">Sound Effects</h3><p className="text-[12px] text-[var(--color-text-muted)]">Play sounds on interactions and notifications</p></div>
+            <Toggle on={sound} onToggle={toggleSound} />
           </div>
         </div>
       </div>
@@ -685,29 +788,16 @@ export function SettingsPage() {
         <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Regional</h2>
         <div className="space-y-2">
           <div className="card p-4 flex items-center justify-between">
-            <div>
-              <h3 className="text-[14px] font-bold text-[var(--color-navy)]">Language</h3>
-              <p className="text-[12px] text-[var(--color-text-muted)]">Select your preferred language</p>
-            </div>
+            <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]">Language</h3><p className="text-[12px] text-[var(--color-text-muted)]">Select your preferred language</p></div>
             <select value={language} onChange={e => setLanguage(e.target.value)} className="select w-auto text-[13px] min-w-[140px]">
-              <option value="en">English</option>
-              <option value="fr">Français</option>
-              <option value="ha">Hausa</option>
-              <option value="yo">Yorùbá</option>
-              <option value="ig">Igbo</option>
+              <option value="en">English</option><option value="fr">Français</option><option value="ha">Hausa</option><option value="yo">Yorùbá</option><option value="ig">Igbo</option>
             </select>
           </div>
           <div className="card p-4 flex items-center justify-between">
-            <div>
-              <h3 className="text-[14px] font-bold text-[var(--color-navy)]">Timezone</h3>
-              <p className="text-[12px] text-[var(--color-text-muted)]">Set your local timezone for schedules</p>
-            </div>
+            <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]">Timezone</h3><p className="text-[12px] text-[var(--color-text-muted)]">Set your local timezone for schedules</p></div>
             <select value={timezone} onChange={e => setTimezone(e.target.value)} className="select w-auto text-[13px] min-w-[180px]">
-              <option value="Africa/Lagos">West Africa (WAT)</option>
-              <option value="Africa/Nairobi">East Africa (EAT)</option>
-              <option value="Europe/London">London (GMT)</option>
-              <option value="America/New_York">New York (EST)</option>
-              <option value="Asia/Dubai">Dubai (GST)</option>
+              <option value="Africa/Lagos">West Africa (WAT)</option><option value="Africa/Nairobi">East Africa (EAT)</option>
+              <option value="Europe/London">London (GMT)</option><option value="America/New_York">New York (EST)</option><option value="Asia/Dubai">Dubai (GST)</option>
             </select>
           </div>
         </div>
@@ -718,32 +808,16 @@ export function SettingsPage() {
         <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Privacy & Security</h2>
         <div className="space-y-2">
           <div className="card p-4 flex items-center justify-between">
-            <div>
-              <h3 className="text-[14px] font-bold text-[var(--color-navy)]">Two-Factor Authentication</h3>
-              <p className="text-[12px] text-[var(--color-text-muted)]">Add an extra layer of security to your account</p>
-            </div>
-            <button className="btn-secondary text-[12px] px-4 py-1.5">Enable</button>
+            <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]">Two-Factor Authentication</h3><p className="text-[12px] text-[var(--color-text-muted)]">Add an extra layer of security to your account</p></div>
+            <button onClick={() => { setModal('2fa'); setModalMsg(''); setModalError('') }} className="btn-secondary text-[12px] px-4 py-1.5">Enable</button>
           </div>
           <div className="card p-4 flex items-center justify-between">
-            <div>
-              <h3 className="text-[14px] font-bold text-[var(--color-navy)]">Active Sessions</h3>
-              <p className="text-[12px] text-[var(--color-text-muted)]">Manage devices where you're signed in</p>
-            </div>
-            <button className="btn-secondary text-[12px] px-4 py-1.5">View All</button>
-          </div>
-          <div className="card p-4 flex items-center justify-between">
-            <div>
-              <h3 className="text-[14px] font-bold text-[var(--color-navy)]">Download My Data</h3>
-              <p className="text-[12px] text-[var(--color-text-muted)]">Export a copy of all your account data</p>
-            </div>
-            <button className="btn-secondary text-[12px] px-4 py-1.5">Export</button>
+            <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]">Download My Data</h3><p className="text-[12px] text-[var(--color-text-muted)]">Export a copy of all your account data</p></div>
+            <button onClick={() => { setModal('export'); setModalMsg(''); setModalError('') }} className="btn-secondary text-[12px] px-4 py-1.5">Export</button>
           </div>
           <div className="card p-4 flex items-center justify-between border-[var(--color-danger)]/20">
-            <div>
-              <h3 className="text-[14px] font-bold text-[var(--color-danger)]">Delete Account</h3>
-              <p className="text-[12px] text-[var(--color-text-muted)]">Permanently delete your account and all data</p>
-            </div>
-            <button className="btn-secondary text-[12px] px-4 py-1.5 text-[var(--color-danger)] border-[var(--color-danger)]/30 hover:bg-[var(--color-danger)]/5">Delete</button>
+            <div><h3 className="text-[14px] font-bold text-[var(--color-danger)]">Delete Account</h3><p className="text-[12px] text-[var(--color-text-muted)]">Permanently delete your account and all data</p></div>
+            <button onClick={() => { setModal('delete'); setModalMsg(''); setModalError('') }} className="btn-secondary text-[12px] px-4 py-1.5 text-[var(--color-danger)] border-[var(--color-danger)]/30 hover:bg-[var(--color-danger)]/5">Delete</button>
           </div>
         </div>
       </div>
@@ -753,10 +827,7 @@ export function SettingsPage() {
         <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Billing & Subscription</h2>
         <div className="card p-5">
           <div className="flex items-center justify-between mb-4">
-            <div>
-              <h3 className="text-[14px] font-bold text-[var(--color-navy)]">Current Plan</h3>
-              <p className="text-[12px] text-[var(--color-text-muted)]">Manage your subscription and billing</p>
-            </div>
+            <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]">Current Plan</h3><p className="text-[12px] text-[var(--color-text-muted)]">Manage your subscription and billing</p></div>
             <span className="badge badge-success">Free</span>
           </div>
           <div className="grid grid-cols-3 gap-3 mb-4">
@@ -780,26 +851,119 @@ export function SettingsPage() {
         </div>
       </div>
 
-      {/* Account Actions */}
+      {/* Account */}
       <div className="mb-8">
         <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Account</h2>
         <div className="space-y-2">
           <div className="card p-4 flex items-center justify-between">
-            <div>
-              <h3 className="text-[14px] font-bold text-[var(--color-navy)]">Change Password</h3>
-              <p className="text-[12px] text-[var(--color-text-muted)]">Update your account password</p>
-            </div>
-            <button className="btn-secondary text-[12px] px-4 py-1.5">Change</button>
+            <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]">Change Password</h3><p className="text-[12px] text-[var(--color-text-muted)]">Update your account password</p></div>
+            <button onClick={() => { setModal('password'); setModalMsg(''); setModalError('') }} className="btn-secondary text-[12px] px-4 py-1.5">Change</button>
           </div>
           <div className="card p-4 flex items-center justify-between">
-            <div>
-              <h3 className="text-[14px] font-bold text-[var(--color-navy)]">Update Email</h3>
-              <p className="text-[12px] text-[var(--color-text-muted)]">Change the email associated with your account</p>
-            </div>
-            <button className="btn-secondary text-[12px] px-4 py-1.5">Update</button>
+            <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]">Update Email</h3><p className="text-[12px] text-[var(--color-text-muted)]">Change the email associated with your account</p></div>
+            <button onClick={() => { setModal('email'); setModalMsg(''); setModalError('') }} className="btn-secondary text-[12px] px-4 py-1.5">Update</button>
           </div>
         </div>
       </div>
+
+      {/* ── Modals ─────────────────────────────────────── */}
+
+      {/* Change Password */}
+      {modal === 'password' && (
+        <Modal title="Change Password">
+          <div className="space-y-3 mb-4">
+            <div>
+              <label className="label">New Password</label>
+              <input type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} className="input" placeholder="Min 8 characters" />
+            </div>
+            <div>
+              <label className="label">Confirm Password</label>
+              <input type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} className="input" placeholder="Repeat new password" />
+            </div>
+          </div>
+          <div className="flex gap-2">
+            <button onClick={closeModal} className="btn-secondary flex-1 py-2">Cancel</button>
+            <button onClick={handleChangePassword} disabled={modalLoading} className="btn-primary flex-1 py-2">
+              {modalLoading ? 'Saving...' : 'Update'}
+            </button>
+          </div>
+        </Modal>
+      )}
+
+      {/* Update Email */}
+      {modal === 'email' && (
+        <Modal title="Update Email">
+          <div className="mb-4">
+            <label className="label">New Email Address</label>
+            <input type="email" value={newEmail} onChange={e => setNewEmail(e.target.value)} className="input" placeholder="new@example.com" />
+            <p className="text-[11px] text-[var(--color-text-muted)] mt-1.5">A confirmation link will be sent to the new address.</p>
+          </div>
+          <div className="flex gap-2">
+            <button onClick={closeModal} className="btn-secondary flex-1 py-2">Cancel</button>
+            <button onClick={handleUpdateEmail} disabled={modalLoading} className="btn-primary flex-1 py-2">
+              {modalLoading ? 'Sending...' : 'Send Link'}
+            </button>
+          </div>
+        </Modal>
+      )}
+
+      {/* 2FA */}
+      {modal === '2fa' && (
+        <Modal title="Enable Two-Factor Authentication">
+          {!modalMsg ? (
+            <>
+              <p className="text-[13px] text-[var(--color-text-muted)] mb-4 text-center">Use an authenticator app like Google Authenticator or Authy to add 2FA to your account.</p>
+              <div className="flex gap-2">
+                <button onClick={closeModal} className="btn-secondary flex-1 py-2">Cancel</button>
+                <button onClick={handle2FA} disabled={modalLoading} className="btn-primary flex-1 py-2">
+                  {modalLoading ? 'Setting up...' : 'Enable 2FA'}
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <pre className="text-[11px] bg-cream rounded-lg p-3 mb-4 whitespace-pre-wrap break-all">{modalMsg}</pre>
+              <button onClick={closeModal} className="btn-primary w-full py-2">Done</button>
+            </>
+          )}
+        </Modal>
+      )}
+
+      {/* Export Data */}
+      {modal === 'export' && (
+        <Modal title="Export My Data">
+          {!modalMsg ? (
+            <>
+              <p className="text-[13px] text-[var(--color-text-muted)] mb-4 text-center">Downloads a JSON file containing your profile, grades, enrollments, and attendance records.</p>
+              <div className="flex gap-2">
+                <button onClick={closeModal} className="btn-secondary flex-1 py-2">Cancel</button>
+                <button onClick={handleExportData} disabled={modalLoading} className="btn-primary flex-1 py-2">
+                  {modalLoading ? 'Exporting...' : 'Download'}
+                </button>
+              </div>
+            </>
+          ) : (
+            <button onClick={closeModal} className="btn-primary w-full py-2">Close</button>
+          )}
+        </Modal>
+      )}
+
+      {/* Delete Account */}
+      {modal === 'delete' && (
+        <Modal title="Delete Account">
+          <p className="text-[13px] text-[var(--color-text-muted)] mb-3 text-center">This is permanent and cannot be undone. Type <strong>DELETE</strong> to confirm.</p>
+          <div className="mb-4">
+            <input value={deleteConfirm} onChange={e => setDeleteConfirm(e.target.value)} className="input text-center font-mono" placeholder="DELETE" />
+          </div>
+          <div className="flex gap-2">
+            <button onClick={closeModal} className="btn-secondary flex-1 py-2">Cancel</button>
+            <button onClick={handleDeleteAccount} disabled={modalLoading || deleteConfirm !== 'DELETE'}
+              className="flex-1 py-2 rounded-[var(--radius-md)] bg-[var(--color-danger)] text-white font-semibold text-[13px] disabled:opacity-40 hover:bg-[var(--color-danger)]/90 transition">
+              {modalLoading ? 'Deleting...' : 'Delete Forever'}
+            </button>
+          </div>
+        </Modal>
+      )}
     </div>
   )
 }

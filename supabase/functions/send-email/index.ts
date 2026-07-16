@@ -63,6 +63,6 @@ serve(async (req: Request) => {
       headers: { 'Content-Type': 'application/json' },
     })
   } catch (error) {
-    return new Response(JSON.stringify { error: `Server error: ${error}` }), { status: 500 })
+    return new Response(JSON.stringify({ error: `Server error: ${error}` }), { status: 500 })
   }
 })
