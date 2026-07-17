@@ -54,7 +54,7 @@ function checkRateLimit(key: string, maxRequests: number = 10, windowMs: number 
 export async function signUp(email: string, password: string, name: string, role: string) {
   const cleanEmail = sanitize(email.trim().toLowerCase())
   const cleanName = sanitize(name.trim())
-  
+
   if (!validateEmail(cleanEmail)) throw new Error('Invalid email format')
   const passError = validatePassword(password)
   if (passError) throw new Error(passError)
@@ -66,6 +66,44 @@ export async function signUp(email: string, password: string, name: string, role
     password,
     options: { data: { full_name: cleanName, role } },
   })
+  if (error) throw error
+
+  // Write profile row immediately — the DB trigger may not exist in all environments
+  if (data.user) {
+    const { error: profileError } = await supabase.from('profiles').upsert({
+      id:        data.user.id,
+      full_name: cleanName,
+      role,
+    }, { onConflict: 'id' })
+    if (profileError) console.warn('Profile upsert warning:', profileError.message)
+  }
+
+  return data
+}
+
+// Fetch a full profile row for an authenticated user
+export async function getProfile(userId: string) {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', userId)
+    .single()
+  if (error) throw error
+  return data
+}
+
+// Update a profile row
+export async function updateProfile(userId: string, updates: Record<string, unknown>) {
+  validateId(userId)
+  Object.keys(updates).forEach(key => {
+    if (typeof updates[key] === 'string') updates[key] = sanitize(updates[key] as string)
+  })
+  const { data, error } = await supabase
+    .from('profiles')
+    .update({ ...updates, updated_at: new Date().toISOString() })
+    .eq('id', userId)
+    .select()
+    .single()
   if (error) throw error
   return data
 }

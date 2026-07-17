@@ -745,3 +745,461 @@ input, select, textarea { font: inherit; color: inherit; }
 .animate-pulse-glow  { animation: pulse-glow 2.5s ease-in-out infinite; }
 .animate-spin-slow   { animation: spin-slow 20s linear infinite; }
 .animate-aurora      { animation: aurora-drift 14s ease-in-out infinite; }
+
+/* ═══════════════════════════════════════════════════════════
+   CENTRE ALIGNMENT — Global & Utility
+   ═══════════════════════════════════════════════════════════ */
+
+/* All page-level headings and section labels centre by default */
+.section-label,
+.section-title {
+  text-align: center;
+}
+
+/* Auth page headings */
+.auth-heading { text-align: center; }
+
+/* Utility classes */
+.text-center-all * { text-align: center; }
+
+/* Stat counters always centred */
+.stat-card { text-align: center; }
+
+/* Dashboard page header */
+.page-header { text-align: center; }
+
+/* Empty states */
+.empty-state { text-align: center; }
+
+/* ═══════════════════════════════════════════════════════════
+   ACADEMIC DESIGN POLISH
+   Inspired by: institutional clarity, MIT whitespace,
+   Canvas LMS information hierarchy
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Institutional rule line ─────────────────────────────── */
+/* A thin gold rule used under major section headings */
+.rule-gold {
+  display: block;
+  width: 40px;
+  height: 2px;
+  background: var(--gradient-warm);
+  border-radius: var(--radius-pill);
+  margin: 10px auto 0;
+}
+
+/* ── Academic eyebrow / overline ─────────────────────────── */
+.eyebrow {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-secondary);
+  margin-bottom: 8px;
+}
+
+/* ── Feature number badge (01, 02 …) ────────────────────── */
+.feature-number {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: var(--color-gold-mid);
+  text-transform: uppercase;
+}
+
+/* ── Institutional hero rule ─────────────────────────────── */
+/* Horizontal separator inside dark hero sections */
+.hero-rule {
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.12), transparent);
+  border: none;
+  margin: 24px 0;
+}
+
+/* ── Data label / value pair ─────────────────────────────── */
+.data-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-muted);
+  margin-bottom: 3px;
+}
+.data-value {
+  font-size: 22px;
+  font-weight: 800;
+  font-family: var(--font-display);
+  color: var(--color-navy);
+  line-height: 1;
+}
+
+/* ── Academic nav link ───────────────────────────────────── */
+.nav-link {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  position: relative;
+  transition: color var(--duration-fast) var(--ease-out);
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1.5px;
+  background: var(--color-primary);
+  transition: width var(--duration-base) var(--ease-out);
+  border-radius: var(--radius-pill);
+}
+.nav-link:hover { color: var(--color-navy); }
+.nav-link:hover::after { width: 100%; }
+
+/* ── Credential / trust badge ────────────────────────────── */
+.trust-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: var(--radius-pill);
+  color: rgba(255,255,255,0.3);
+}
+
+/* ── Testimonial quote styling ───────────────────────────── */
+.quote-mark {
+  font-size: 48px;
+  line-height: 0;
+  color: var(--color-gold-pale);
+  font-family: var(--font-serif);
+  vertical-align: -16px;
+  margin-right: 4px;
+}
+
+/* ── Discipline pill ─────────────────────────────────────── */
+.discipline-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-navy);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--duration-base) var(--ease-out);
+  white-space: nowrap;
+}
+.discipline-pill:hover {
+  background: var(--color-navy);
+  color: white;
+  border-color: var(--color-navy);
+  box-shadow: var(--shadow-glow-navy);
+  transform: translateY(-1px);
+}
+
+/* ── Page section wrapper ────────────────────────────────── */
+.page-section {
+  max-width: 1152px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+/* ── Stat row (landing stats bar) ────────────────────────── */
+.stat-row-item {
+  text-align: center;
+}
+.stat-row-value {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  font-weight: 800;
+  color: var(--color-navy);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-row-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-muted);
+}
+
+/* ── Role card (register page) ───────────────────────────── */
+.role-card {
+  width: 100%;
+  padding: 16px;
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--color-border);
+  background: var(--color-bg-card);
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: all var(--duration-base) var(--ease-out);
+  cursor: pointer;
+}
+.role-card:hover {
+  border-color: var(--color-primary);
+  background: var(--color-primary-muted);
+}
+.role-card.selected {
+  border-color: var(--color-primary);
+  background: var(--color-primary-muted);
+}
+
+/* ── Form group ──────────────────────────────────────────── */
+.form-group { display: flex; flex-direction: column; gap: 5px; }
+
+/* ── Auth card container ─────────────────────────────────── */
+.auth-card {
+  width: 100%;
+  max-width: 360px;
+  margin: auto;
+}
+
+/* ── Section divider with label ──────────────────────────── */
+.divider-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+}
+.divider-label::before,
+.divider-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--color-border-light);
+}
+.divider-label span {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+/* ── Loading spinner ─────────────────────────────────────── */
+.spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin-slow 0.7s linear infinite;
+}
+.spinner-navy {
+  border-color: rgba(29,78,143,0.2);
+  border-top-color: var(--color-primary);
+}
+
+/* ── Focus ring override for inputs (academic style) ─────── */
+.input:focus,
+.select:focus,
+.textarea:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(29,78,143,0.10);
+}
+
+/* ── Responsive text centre on mobile ────────────────────── */
+@media (max-width: 768px) {
+  .section-label,
+  .section-title,
+  .stat-row-item,
+  .page-header {
+    text-align: center;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CENTRE ALIGNMENT — Global utilities
+   ═══════════════════════════════════════════════════════════ */
+
+.section-label,
+.section-title { text-align: center; }
+
+.stat-card      { text-align: center; }
+.empty-state    { text-align: center; }
+.page-header    { text-align: center; }
+
+/* ═══════════════════════════════════════════════════════════
+   ACADEMIC DESIGN POLISH
+   ═══════════════════════════════════════════════════════════ */
+
+/* Gold rule under section headings */
+.rule-gold {
+  display: block;
+  width: 36px;
+  height: 2px;
+  background: var(--gradient-warm);
+  border-radius: var(--radius-pill);
+  margin: 8px auto 0;
+}
+
+/* Eyebrow / overline text */
+.eyebrow {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-secondary);
+  margin-bottom: 6px;
+}
+
+/* Stat label / value pair */
+.data-label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-muted);
+  margin-bottom: 3px;
+}
+.data-value {
+  font-size: 22px;
+  font-weight: 800;
+  font-family: var(--font-display);
+  color: var(--color-navy);
+  line-height: 1;
+}
+
+/* Discipline pill tag */
+.discipline-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-navy);
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--duration-base) var(--ease-out);
+}
+.discipline-pill:hover {
+  background: var(--color-navy);
+  color: white;
+  border-color: var(--color-navy);
+  box-shadow: var(--shadow-glow-navy);
+  transform: translateY(-1px);
+}
+
+/* Trust / credential badge (dark backgrounds) */
+.trust-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: var(--radius-pill);
+  color: rgba(255,255,255,0.3);
+}
+
+/* Stats row (landing page bar) */
+.stat-row-item  { text-align: center; }
+.stat-row-value {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 2.8vw, 2.2rem);
+  font-weight: 800;
+  color: var(--color-navy);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.stat-row-label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-muted);
+}
+
+/* Role selector card (register page) */
+.role-card {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--color-border);
+  background: var(--color-bg-card);
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: all var(--duration-base) var(--ease-out);
+}
+.role-card:hover,
+.role-card.selected {
+  border-color: var(--color-primary);
+  background: var(--color-primary-muted);
+}
+
+/* Divider with centred label */
+.divider-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 18px 0;
+}
+.divider-label::before,
+.divider-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--color-border-light);
+}
+.divider-label span {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+/* Inline spinner */
+.spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255,255,255,0.25);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin-slow 0.65s linear infinite;
+  flex-shrink: 0;
+}
+
+/* Page content section wrapper */
+.page-section {
+  max-width: 1152px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+/* Horizontal rule inside dark hero panels */
+.hero-rule {
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.10), transparent);
+  border: none;
+}
+
+/* Mobile: ensure key elements stay centred */
+@media (max-width: 768px) {
+  .section-label,
+  .section-title,
+  .stat-row-item,
+  .page-header { text-align: center; }
+}

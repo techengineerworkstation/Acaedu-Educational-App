@@ -232,7 +232,7 @@ export function LandingPage() {
 
         {/* ── Stats bar ──────────────────────────────────────────── */}
         <Section className="py-12 border-y border-[var(--color-border)] bg-[var(--color-bg-secondary)]">
-          <div className="max-w-6xl mx-auto px-6">
+          <div className="page-section">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               {[
                 { num: 10000, suffix: '+', label: 'Students Enrolled' },
@@ -240,14 +240,11 @@ export function LandingPage() {
                 { num: 50,    suffix: '+', label: 'Institutions' },
                 { num: 99.9,  suffix: '%', label: 'Uptime SLA' },
               ].map((s, i) => (
-                <motion.div key={i} variants={fadeUp} className="text-center">
-                  <div className="text-3xl md:text-4xl font-extrabold text-[var(--color-navy)] tracking-tight mb-1"
-                    style={{ fontFamily: 'var(--font-display)' }}>
+                <motion.div key={i} variants={fadeUp} className="stat-row-item">
+                  <div className="stat-row-value">
                     <NumberTicker value={s.num} />{s.suffix}
                   </div>
-                  <div className="text-[11px] font-semibold text-[var(--color-text-muted)] uppercase tracking-[0.1em]">
-                    {s.label}
-                  </div>
+                  <div className="stat-row-label">{s.label}</div>
                 </motion.div>
               ))}
             </div>
@@ -256,17 +253,17 @@ export function LandingPage() {
 
         {/* ── Features ───────────────────────────────────────────── */}
         <Section id="features" className="py-24">
-          <div className="max-w-6xl mx-auto px-6">
+          <div className="page-section">
             <motion.div variants={fadeUp} className="text-center mb-14">
               <span className="section-label">What You Get</span>
-              <h2 className="section-title mt-2.5 text-3xl md:text-4xl mb-3">
+              <span className="rule-gold" />
+              <h2 className="section-title mt-4 text-3xl md:text-4xl mb-3">
                 Everything your institution needs
               </h2>
               <p className="text-[14px] text-[var(--color-text-muted)] max-w-md mx-auto leading-relaxed">
                 One platform for every academic workflow — from enrollment to graduation.
               </p>
             </motion.div>
-
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {features.map((f, i) => (
                 <motion.div key={i} variants={fadeUp}>
@@ -275,17 +272,11 @@ export function LandingPage() {
                       <div className="w-10 h-10 rounded-[10px] bg-[var(--color-navy-pale)] flex items-center justify-center">
                         <f.icon size={19} className="text-[var(--color-primary)]" />
                       </div>
-                      <span className="text-[10px] font-bold tracking-[0.14em] text-[var(--color-gold-mid)] uppercase">
-                        {f.num}
-                      </span>
+                      <span className="feature-number">{f.num}</span>
                     </div>
                     <h3 className="text-[14px] font-bold text-[var(--color-navy)] mb-2"
-                      style={{ fontFamily: 'var(--font-display)' }}>
-                      {f.title}
-                    </h3>
-                    <p className="text-[13px] text-[var(--color-text-muted)] leading-relaxed flex-1">
-                      {f.desc}
-                    </p>
+                      style={{ fontFamily: 'var(--font-display)' }}>{f.title}</h3>
+                    <p className="text-[13px] text-[var(--color-text-muted)] leading-relaxed flex-1">{f.desc}</p>
                   </div>
                 </motion.div>
               ))}
@@ -295,16 +286,16 @@ export function LandingPage() {
 
         {/* ── Disciplines ────────────────────────────────────────── */}
         <Section id="disciplines" className="py-20 bg-[var(--color-bg-secondary)] border-y border-[var(--color-border)]">
-          <div className="max-w-6xl mx-auto px-6">
+          <div className="page-section">
             <motion.div variants={fadeUp} className="text-center mb-12">
               <span className="section-label">Explore</span>
-              <h2 className="section-title mt-2.5 text-3xl md:text-4xl">Popular Disciplines</h2>
+              <span className="rule-gold" />
+              <h2 className="section-title mt-4 text-3xl md:text-4xl">Popular Disciplines</h2>
             </motion.div>
             <div className="flex flex-wrap justify-center gap-2.5">
               {disciplines.map((d, i) => (
-                <motion.div key={i} variants={fadeUp} whileHover={{ scale: 1.03 }}
-                  className="px-5 py-2 bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-[var(--radius-md)] text-[13px] font-semibold text-[var(--color-navy)] hover:bg-[var(--color-navy)] hover:text-white hover:border-[var(--color-navy)] hover:shadow-[var(--shadow-glow-navy)] transition-all duration-200 cursor-pointer">
-                  {d}
+                <motion.div key={i} variants={fadeUp} whileHover={{ scale: 1.03 }}>
+                  <span className="discipline-pill">{d}</span>
                 </motion.div>
               ))}
             </div>
@@ -313,10 +304,11 @@ export function LandingPage() {
 
         {/* ── Testimonials ───────────────────────────────────────── */}
         <Section id="testimonials" className="py-24">
-          <div className="max-w-6xl mx-auto px-6">
+          <div className="page-section">
             <motion.div variants={fadeUp} className="text-center mb-14">
               <span className="section-label">Testimonials</span>
-              <h2 className="section-title mt-2.5 text-3xl md:text-4xl">
+              <span className="rule-gold" />
+              <h2 className="section-title mt-4 text-3xl md:text-4xl">
                 Trusted by educators worldwide
               </h2>
             </motion.div>
@@ -324,7 +316,6 @@ export function LandingPage() {
               {testimonials.map((t, i) => (
                 <motion.div key={i} variants={fadeUp}>
                   <div className="card p-6 flex flex-col h-full">
-                    {/* Stars */}
                     <div className="flex gap-0.5 mb-4">
                       {[1,2,3,4,5].map(s => (
                         <svg key={s} width="12" height="12" viewBox="0 0 24 24"
@@ -356,15 +347,11 @@ export function LandingPage() {
           <div className="absolute inset-0 opacity-[0.06]">
             <img src="/images/campus.jpg" alt="" className="w-full h-full object-cover" />
           </div>
-          {/* Subtle diagonal pattern */}
           <div className="absolute inset-0 opacity-[0.03]"
-            style={{
-              backgroundImage: 'repeating-linear-gradient(-45deg, rgba(255,255,255,0.9) 0px, rgba(255,255,255,0.9) 1px, transparent 1px, transparent 24px)',
-            }} />
-
-          <div className="max-w-3xl mx-auto px-6 text-center relative z-10">
+            style={{ backgroundImage: 'repeating-linear-gradient(-45deg, rgba(255,255,255,0.9) 0px, rgba(255,255,255,0.9) 1px, transparent 1px, transparent 24px)' }} />
+          <div className="page-section text-center relative z-10">
             <motion.div variants={fadeUp}>
-              <span className="inline-flex items-center gap-2 px-3.5 py-1.5 text-[10px] font-bold tracking-[0.13em] uppercase text-[var(--color-gold-light)] bg-white/5 border border-white/10 rounded-full mb-7">
+              <span className="trust-badge mb-7 inline-flex gap-1.5">
                 <Zap size={10} className="text-[var(--color-gold-bright)]" />
                 Start Today — Free Forever
               </span>
@@ -372,8 +359,7 @@ export function LandingPage() {
             <motion.h2 variants={fadeUp} className="text-display-lg text-white mb-4">
               Ready to modernise your institution?
             </motion.h2>
-            <motion.p variants={fadeUp}
-              className="text-[14px] text-white/40 mb-9 max-w-lg mx-auto leading-relaxed">
+            <motion.p variants={fadeUp} className="text-[14px] text-white/40 mb-9 max-w-lg mx-auto leading-relaxed">
               Join thousands of students, lecturers, and administrators already streamlining their academic experience.
             </motion.p>
             <motion.div variants={fadeUp} className="flex items-center justify-center gap-3 flex-wrap">
@@ -391,7 +377,7 @@ export function LandingPage() {
 
         {/* ── Footer ─────────────────────────────────────────────── */}
         <footer className="py-10 bg-[var(--color-navy)] border-t border-white/5">
-          <div className="max-w-6xl mx-auto px-6">
+          <div className="page-section">
             <div className="flex flex-col md:flex-row items-center justify-between gap-5">
               <div className="flex items-center gap-2.5">
                 <div className="w-7 h-7 rounded-[8px] bg-white/8 flex items-center justify-center">
@@ -405,9 +391,7 @@ export function LandingPage() {
               <div className="flex items-center gap-5">
                 {['Terms', 'Privacy', 'Contact'].map(item => (
                   <Link key={item} to={`/${item.toLowerCase()}`}
-                    className="text-[12px] text-white/28 hover:text-white/65 transition-colors">
-                    {item}
-                  </Link>
+                    className="text-[12px] text-white/28 hover:text-white/65 transition-colors">{item}</Link>
                 ))}
               </div>
             </div>

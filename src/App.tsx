@@ -49,31 +49,35 @@ export default function App() {
   const [user, setUser]       = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
 
+  // Fetch full profile from profiles table, fall back to user_metadata
+  async function loadProfile(authUser: import('@supabase/supabase-js').User) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', authUser.id)
+      .single()
+
+    setUser({
+      id:         authUser.id,
+      email:      authUser.email || '',
+      full_name:  profile?.full_name || authUser.user_metadata?.full_name || 'User',
+      role:       profile?.role       || authUser.user_metadata?.role       || 'student',
+      avatar_url: profile?.avatar_url || authUser.user_metadata?.avatar_url,
+      phone:      profile?.phone,
+      created_at: authUser.created_at,
+      updated_at: profile?.updated_at || authUser.updated_at || authUser.created_at,
+    })
+  }
+
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session?.user) {
-        setUser({
-          id:         session.user.id,
-          email:      session.user.email || '',
-          full_name:  session.user.user_metadata?.full_name || 'User',
-          role:       session.user.user_metadata?.role || 'student',
-          created_at: session.user.created_at,
-          updated_at: session.user.updated_at || session.user.created_at,
-        })
-      }
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
+      if (session?.user) await loadProfile(session.user)
       setLoading(false)
     })
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
       if (session?.user) {
-        setUser({
-          id:         session.user.id,
-          email:      session.user.email || '',
-          full_name:  session.user.user_metadata?.full_name || 'User',
-          role:       session.user.user_metadata?.role || 'student',
-          created_at: session.user.created_at,
-          updated_at: session.user.updated_at || session.user.created_at,
-        })
+        await loadProfile(session.user)
       } else {
         setUser(null)
       }
