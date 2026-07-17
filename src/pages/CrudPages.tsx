@@ -699,7 +699,7 @@ export function SettingsPage() {
   const Toggle = ({ on, onToggle }: { on: boolean; onToggle: () => void }) => (
     <button onClick={onToggle} className="w-12 h-[26px] rounded-full relative transition-colors duration-200 flex-shrink-0"
       style={{ background: on ? 'var(--color-navy)' : 'var(--color-beige)' }}>
-      <div className="w-5 h-5 rounded-full bg-white absolute top-[3px] transition-transform duration-200 shadow-sm"
+      <div className="w-5 h-5 rounded-full bg-[var(--color-bg-card)] absolute top-[3px] transition-transform duration-200 shadow-sm"
         style={{ transform: on ? 'translateX(23px)' : 'translateX(3px)' }} />
     </button>
   )
@@ -712,9 +712,9 @@ export function SettingsPage() {
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm p-4"
           onClick={closeModal}>
           <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }}
-            className="bg-white rounded-xl border border-beige p-6 w-full max-w-sm shadow-2xl"
+            className="bg-[var(--color-bg-card)] rounded-xl border border-[var(--color-border)] p-6 w-full max-w-sm shadow-2xl"
             onClick={e => e.stopPropagation()}>
-            <h3 className="text-[15px] font-bold text-navy mb-4 text-center" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>{title}</h3>
+            <h3 className="text-[15px] font-bold text-[var(--color-navy)] mb-4 text-center" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>{title}</h3>
             {modalError && <div className="mb-3 px-3 py-2 rounded-lg bg-red-50 border border-red-200 text-red-700 text-[12px]">{modalError}</div>}
             {modalMsg && <div className="mb-3 px-3 py-2 rounded-lg bg-green-50 border border-green-200 text-green-700 text-[12px]">{modalMsg}</div>}
             {children}
@@ -922,7 +922,7 @@ export function SettingsPage() {
             </>
           ) : (
             <>
-              <pre className="text-[11px] bg-cream rounded-lg p-3 mb-4 whitespace-pre-wrap break-all">{modalMsg}</pre>
+              <pre className="text-[11px] bg-[var(--color-cream)] rounded-lg p-3 mb-4 whitespace-pre-wrap break-all">{modalMsg}</pre>
               <button onClick={closeModal} className="btn-primary w-full py-2">Done</button>
             </>
           )}

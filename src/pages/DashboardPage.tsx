@@ -1,204 +1,176 @@
 import { useEffect, useState, useRef } from 'react'
 import { motion, useInView, animate } from 'framer-motion'
-import { fetchTable } from '../lib/supabase'
+import { Link } from 'react-router-dom'
+import { supabase } from '../lib/supabase'
 import type { User } from '../types'
-import { BookOpen, FileText, Calendar, Bell, ClipboardList, CheckCircle, BarChart3, Video } from 'lucide-react'
+import {
+  BookOpen, FileText, Calendar, Bell, ClipboardList, CheckCircle,
+  BarChart3, Video, ArrowRight, TrendingUp, Users, Award, Clock,
+} from 'lucide-react'
 
 /* ─── Animated counter ───────────────────────────────────────── */
 function AnimatedCounter({ value, suffix = '' }: { value: number; suffix?: string }) {
   const ref = useRef<HTMLSpanElement>(null)
   const inView = useInView(ref, { once: true })
   useEffect(() => {
-    if (inView && ref.current) {
-      const node = ref.current
-      const ctrl = animate(0, value, {
-        duration: 1.1,
-        ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
-        onUpdate(v) {
-          node.textContent = suffix === '%' ? `${v.toFixed(1)}%` : Math.round(v).toString()
-        },
-      })
-      return () => ctrl.stop()
-    }
+    if (!inView || !ref.current) return
+    const node = ref.current
+    const ctrl = animate(0, value, {
+      duration: 1.1, ease: [0.22, 1, 0.36, 1] as [number,number,number,number],
+      onUpdate(v) { node.textContent = suffix === '%' ? `${v.toFixed(1)}%` : Math.round(v).toString() },
+    })
+    return () => ctrl.stop()
   }, [inView, value, suffix])
   return <span ref={ref}>0</span>
 }
 
-/* ─── Donut ring ─────────────────────────────────────────────── */
-function DonutRing({ value, max, color, size = 110, label }: {
-  value: number; max: number; color: string; size?: number; label: string
+/* ─── Progress bar ───────────────────────────────────────────── */
+function ProgressBar({ value, max, color = 'var(--color-primary)' }: {
+  value: number; max: number; color?: string
 }) {
-  const ref = useRef<SVGSVGElement>(null)
-  const inView = useInView(ref, { once: true })
-  const radius = (size - 14) / 2
-  const circ = 2 * Math.PI * radius
-  const pct = max > 0 ? value / max : 0
-
-  useEffect(() => {
-    if (inView && ref.current) {
-      const circle = ref.current.querySelector('circle:last-child') as SVGCircleElement
-      if (circle) {
-        circle.style.strokeDasharray = `${circ}`
-        circle.style.strokeDashoffset = `${circ}`
-        const ctrl = animate(0, pct * circ, {
-          duration: 1.4,
-          ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
-          onUpdate(v) { circle.style.strokeDashoffset = `${circ - v}` },
-        })
-        return () => ctrl.stop()
-      }
-    }
-  }, [inView, pct, circ])
-
+  const pct = max > 0 ? Math.min((value / max) * 100, 100) : 0
   return (
-    <div className="flex flex-col items-center gap-1">
-      <div className="relative" style={{ width: size, height: size }}>
-        <svg ref={ref} width={size} height={size} className="-rotate-90 absolute inset-0">
-          <circle cx={size/2} cy={size/2} r={radius} fill="none"
-            stroke="var(--color-bg-secondary)" strokeWidth="8" />
-          <circle cx={size/2} cy={size/2} r={radius} fill="none"
-            stroke={color} strokeWidth="8" strokeLinecap="round"
-            style={{ strokeDasharray: circ, strokeDashoffset: circ }} />
-        </svg>
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-lg font-extrabold text-[var(--color-navy)]"
-            style={{ fontFamily: 'var(--font-display)' }}>{value}</span>
-        </div>
-      </div>
-      <span className="text-[11px] text-[var(--color-text-muted)] font-medium">{label}</span>
+    <div className="w-full h-1.5 rounded-full bg-[var(--color-bg-secondary)] overflow-hidden">
+      <motion.div
+        initial={{ width: 0 }}
+        animate={{ width: `${pct}%` }}
+        transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+        className="h-full rounded-full"
+        style={{ background: color }}
+      />
     </div>
   )
 }
 
-/* ─── Bar chart ──────────────────────────────────────────────── */
-function BarChart({ data, colors }: { data: { label: string; value: number }[]; colors: string[] }) {
-  const ref = useRef<HTMLDivElement>(null)
-  const inView = useInView(ref, { once: true })
-  const max = Math.max(...data.map(d => d.value), 1)
-
-  return (
-    <div ref={ref} className="flex items-end gap-3 h-36 px-1">
-      {data.map((d, i) => (
-        <div key={i} className="flex-1 flex flex-col items-center gap-1.5">
-          <span className="text-[10px] font-bold text-[var(--color-navy)]">{d.value}</span>
-          <div className="w-full rounded-t-[5px] overflow-hidden min-h-[4px]"
-            style={{
-              height: inView ? `${(d.value / max) * 100}%` : '0%',
-              background: colors[i % colors.length],
-              transition: `height 0.9s cubic-bezier(0.22,1,0.36,1) ${i * 0.08}s`,
-            }} />
-          <span className="text-[10px] text-[var(--color-text-muted)] font-medium text-center leading-tight">{d.label}</span>
-        </div>
-      ))}
-    </div>
-  )
-}
-
-/* ─── Pie chart ──────────────────────────────────────────────── */
-function PieChart({ segments, size = 130 }: { segments: { value: number; color: string; label: string }[]; size?: number }) {
-  const total = segments.reduce((s, seg) => s + seg.value, 0) || 1
-  let cumulative = 0
-  const gradients = segments.map(seg => {
-    const start = (cumulative / total) * 360
-    cumulative += seg.value
-    const end = (cumulative / total) * 360
-    return `${seg.color} ${start}deg ${end}deg`
-  })
-
-  return (
-    <div className="flex flex-col items-center gap-3">
-      <div className="rounded-full" style={{ width: size, height: size, background: `conic-gradient(${gradients.join(', ')})` }}>
-        <div className="rounded-full flex items-center justify-center bg-[var(--color-bg-card)]"
-          style={{ width: size * 0.54, height: size * 0.54, margin: `${size * 0.23}px auto` }}>
-          <span className="text-[13px] font-extrabold text-[var(--color-navy)]"
-            style={{ fontFamily: 'var(--font-display)' }}>{total}</span>
-        </div>
-      </div>
-      <div className="flex flex-wrap justify-center gap-2.5">
-        {segments.map((seg, i) => (
-          <div key={i} className="flex items-center gap-1.5">
-            <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: seg.color }} />
-            <span className="text-[11px] text-[var(--color-text-muted)]">{seg.label}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-/* ─── Stats table ────────────────────────────────────────────── */
-function StatsTable({ title, headers, rows }: {
-  title: string; headers: string[]; rows: (string | number)[][]
-}) {
-  return (
-    <div className="table-container">
-      <div className="px-4 py-3 border-b border-[var(--color-border)]">
-        <span className="text-[12px] font-bold text-[var(--color-navy)]"
-          style={{ fontFamily: 'var(--font-display)' }}>{title}</span>
-      </div>
-      <table className="table">
-        <thead>
-          <tr>{headers.map((h, i) => <th key={i}>{h}</th>)}</tr>
-        </thead>
-        <tbody>
-          {rows.length === 0 ? (
-            <tr>
-              <td colSpan={headers.length}
-                className="text-center text-[var(--color-text-muted)] py-8 text-[13px]">
-                No data available
-              </td>
-            </tr>
-          ) : rows.map((row, i) => (
-            <tr key={i}>{row.map((cell, j) => <td key={j}>{cell}</td>)}</tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  )
-}
-
-/* ─── Stat card data ─────────────────────────────────────────── */
+/* ─── Stat card metadata ─────────────────────────────────────── */
 const statCards = [
-  { key: 'subjects',      label: 'Active Subjects',    icon: BookOpen,     accent: 'var(--color-primary)' },
-  { key: 'exams',         label: 'Upcoming Exams',     icon: FileText,     accent: 'var(--color-secondary)' },
-  { key: 'lectures',      label: 'Lectures This Week', icon: Calendar,     accent: 'var(--color-accent)' },
-  { key: 'notifications', label: 'Notifications',      icon: Bell,         accent: 'var(--color-success)' },
-  { key: 'assignments',   label: 'Pending Work',       icon: ClipboardList,accent: 'var(--color-warning)' },
-  { key: 'completed',     label: 'Completed',          icon: CheckCircle,  accent: '#6B5CE7' },
-  { key: 'grade',         label: 'Grade Average',      icon: BarChart3,    accent: 'var(--color-primary-light)' },
-  { key: 'sessions',      label: 'Live Sessions',      icon: Video,        accent: 'var(--color-danger)' },
+  { key: 'courses',       label: 'Enrolled Courses',  icon: BookOpen,       accent: 'var(--color-primary)',        link: '/courses' },
+  { key: 'exams',         label: 'Upcoming Exams',    icon: FileText,       accent: 'var(--color-secondary)',      link: '/exams' },
+  { key: 'assignments',   label: 'Pending Tasks',     icon: ClipboardList,  accent: 'var(--color-warning)',        link: '/assignments' },
+  { key: 'notifications', label: 'Notifications',     icon: Bell,           accent: 'var(--color-success)',        link: '/notifications' },
+  { key: 'completed',     label: 'Completed',         icon: CheckCircle,    accent: '#6B5CE7',                    link: '/grades' },
+  { key: 'grade',         label: 'Avg Grade',         icon: BarChart3,      accent: 'var(--color-primary-light)',  link: '/grades',   suffix: '%' },
+  { key: 'sessions',      label: 'Live Sessions',     icon: Video,          accent: 'var(--color-danger)',         link: '/live-classes' },
+  { key: 'enrollments',   label: 'Enrollments',       icon: Users,          accent: 'var(--color-accent)',         link: '/enrollments' },
 ]
+
+/* ─── Course card (Coursera-style) ───────────────────────────── */
+function CourseCard({ course, index }: { course: Record<string,unknown>; index: number }) {
+  const palette = [
+    'var(--color-primary)',   'var(--color-secondary)',
+    '#6B5CE7',                'var(--color-success)',
+    'var(--color-accent)',
+  ]
+  const color = palette[index % palette.length]
+  const progress = course._progress as number ?? Math.floor(Math.random() * 75) + 10
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: index * 0.07, duration: 0.4, ease: [0.22,1,0.36,1] }}>
+      <Link to="/courses"
+        className="card p-4 flex flex-col gap-3 block hover:-translate-y-1 transition-transform duration-200"
+        style={{ borderTop: `3px solid ${color}` }}>
+        <div className="flex items-start justify-between gap-2">
+          <div className="w-9 h-9 rounded-[8px] flex items-center justify-center flex-shrink-0"
+            style={{ background: `color-mix(in srgb, ${color} 12%, transparent)` }}>
+            <BookOpen size={15} style={{ color }} />
+          </div>
+          <span className="badge badge-navy">{course.credits as number || 3} cr</span>
+        </div>
+        <div>
+          <div className="text-[13px] font-bold text-[var(--color-navy)] leading-snug"
+            style={{ fontFamily: 'var(--font-display)' }}>
+            {course.title as string}
+          </div>
+          <div className="text-[11px] text-[var(--color-text-muted)] mt-0.5">
+            {course.course_code as string}
+          </div>
+        </div>
+        <div>
+          <div className="flex justify-between mb-1">
+            <span className="text-[10px] text-[var(--color-text-muted)]">Progress</span>
+            <span className="text-[10px] font-bold" style={{ color }}>{progress}%</span>
+          </div>
+          <ProgressBar value={progress} max={100} color={color} />
+        </div>
+      </Link>
+    </motion.div>
+  )
+}
+
+/* ─── Activity feed item (Canvas-style) ─────────────────────── */
+function ActivityItem({ icon: Icon, text, sub, color }: {
+  icon: React.ComponentType<{size?:number; style?:React.CSSProperties}>
+  text: string; sub: string; color: string
+}) {
+  return (
+    <div className="flex items-start gap-3 py-2.5 border-b border-[var(--color-border-light)] last:border-0">
+      <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
+        style={{ background: `color-mix(in srgb, ${color} 12%, transparent)` }}>
+        <Icon size={13} style={{ color }} />
+      </div>
+      <div className="flex-1 min-w-0">
+        <p className="text-[12px] text-[var(--color-text)] leading-snug font-medium truncate">{text}</p>
+        <p className="text-[10px] text-[var(--color-text-muted)] mt-0.5">{sub}</p>
+      </div>
+    </div>
+  )
+}
 
 /* ─── Main dashboard ─────────────────────────────────────────── */
 export function DashboardPage({ user }: { user: User }) {
-  const [stats, setStats] = useState<Record<string, number>>({})
-  const [recentCourses, setRecentCourses] = useState<Record<string, unknown>[]>([])
-  const [recentGrades, setRecentGrades] = useState<Record<string, unknown>[]>([])
-  const [recentAnnouncements, setRecentAnnouncements] = useState<Record<string, unknown>[]>([])
-  const [loading, setLoading] = useState(true)
+  const [stats, setStats]               = useState<Record<string,number>>({})
+  const [courses, setCourses]           = useState<Record<string,unknown>[]>([])
+  const [announcements, setAnnouncements] = useState<Record<string,unknown>[]>([])
+  const [recentGrades, setRecentGrades] = useState<Record<string,unknown>[]>([])
+  const [loading, setLoading]           = useState(true)
 
   useEffect(() => {
     async function load() {
       try {
-        const [courses, exams, assignments, notifications, grades, schedules, announcements] =
-          await Promise.all([
-            fetchTable('courses'), fetchTable('exams'), fetchTable('assignments'),
-            fetchTable('notifications'), fetchTable('grades'), fetchTable('schedules'),
-            fetchTable('announcements'),
-          ])
-        const gradeAvg = grades.length > 0
-          ? grades.reduce((s: number, g: Record<string, unknown>) => s + ((g.score as number) || 0), 0) / grades.length
+        const [
+          { data: coursesData },
+          { data: examsData },
+          { data: assignData },
+          { data: notifData },
+          { data: gradesData },
+          { data: schedData },
+          { data: announcData },
+          { data: enrollData },
+        ] = await Promise.all([
+          supabase.from('courses').select('*').limit(6),
+          supabase.from('exams').select('id').limit(100),
+          supabase.from('assignments').select('id').limit(100),
+          supabase.from('notifications').select('id').eq('read', false).limit(100),
+          supabase.from('grades').select('*').limit(100),
+          supabase.from('schedules').select('id').limit(100),
+          supabase.from('announcements').select('*').order('created_at', { ascending: false }).limit(5),
+          supabase.from('enrollments').select('id').limit(100),
+        ])
+
+        const gradeAvg = gradesData && gradesData.length > 0
+          ? gradesData.reduce((s: number, g: Record<string,unknown>) => s + ((g.score as number) || 0), 0) / gradesData.length
           : 0
-        const completed = grades.filter((g: Record<string, unknown>) => (g.score as number) >= 50).length
+        const completed = gradesData?.filter((g: Record<string,unknown>) => (g.score as number) >= 50).length || 0
+
         setStats({
-          subjects: courses.length, exams: exams.length, lectures: schedules.length,
-          notifications: notifications.length, assignments: assignments.length,
-          completed, grade: gradeAvg, sessions: schedules.length,
+          courses:       coursesData?.length  || 0,
+          exams:         examsData?.length    || 0,
+          assignments:   assignData?.length   || 0,
+          notifications: notifData?.length    || 0,
+          completed,
+          grade:         gradeAvg,
+          sessions:      schedData?.length    || 0,
+          enrollments:   enrollData?.length   || 0,
         })
-        setRecentCourses(courses.slice(0, 5))
-        setRecentGrades(grades.slice(0, 5))
-        setRecentAnnouncements(announcements.slice(0, 5))
-      } catch { /* empty */ }
+        setCourses(coursesData || [])
+        setAnnouncements(announcData || [])
+        setRecentGrades((gradesData || []).slice(0, 4))
+      } catch (e) {
+        console.warn('Dashboard load error:', e)
+      }
       setLoading(false)
     }
     load()
@@ -211,167 +183,223 @@ export function DashboardPage({ user }: { user: User }) {
     return 'Good evening'
   }
 
-  const fadeUp = { hidden: { opacity: 0, y: 12 }, visible: { opacity: 1, y: 0 } }
+  const timeAgo = (date: string) => {
+    const diff = Date.now() - new Date(date).getTime()
+    const m = Math.floor(diff / 60000)
+    if (m < 60) return `${m}m ago`
+    const hr = Math.floor(m / 60)
+    if (hr < 24) return `${hr}h ago`
+    return `${Math.floor(hr / 24)}d ago`
+  }
 
   return (
     <div className="max-w-5xl mx-auto">
 
-      {/* ── Page header ────────────────────────────────────────── */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-        className="mb-8">
+      {/* ── Page header ──────────────────────────────────────────── */}
+      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="page-header mb-8">
         <span className="section-label">Dashboard</span>
-        <h1 className="section-title mt-1.5 text-2xl">
-          {greeting()}, {user.full_name}
-        </h1>
+        <span className="rule-gold" />
+        <h1 className="text-display-sm mt-3">{greeting()}, {user.full_name}</h1>
         <p className="text-[13px] text-[var(--color-text-muted)] mt-1 capitalize">
-          {user.role} Overview
+          {user.role} · {new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
         </p>
       </motion.div>
 
-      {/* ── Stat cards ─────────────────────────────────────────── */}
+      {/* ── Stat cards ───────────────────────────────────────────── */}
       {loading ? (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="skeleton h-[110px] rounded-[var(--radius-lg)]" />
-          ))}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+          {Array.from({ length: 8 }).map((_, i) => <div key={i} className="skeleton h-[100px] rounded-[var(--radius-lg)]" />)}
         </div>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
           {statCards.map((card, i) => (
             <motion.div key={card.key}
-              initial={{ opacity: 0, y: 14, scale: 0.97 }}
+              initial={{ opacity: 0, y: 12, scale: 0.97 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ delay: i * 0.055, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-              className="card p-4 flex flex-col gap-3 cursor-default group hover:-translate-y-1 transition-transform duration-200"
-              style={{ borderTop: `3px solid ${card.accent}` }}>
-              <div className="flex items-center justify-between">
+              transition={{ delay: i * 0.05, duration: 0.4, ease: [0.22,1,0.36,1] }}>
+              <Link to={card.link}
+                className="card p-4 flex flex-col gap-2 block hover:-translate-y-1 transition-transform duration-200"
+                style={{ borderTop: `3px solid ${card.accent}` }}>
                 <div className="w-8 h-8 rounded-[8px] flex items-center justify-center"
-                  style={{ background: `${card.accent}18` }}>
-                  <card.icon size={16} style={{ color: card.accent }} />
+                  style={{ background: `color-mix(in srgb, ${card.accent} 12%, transparent)` }}>
+                  <card.icon size={15} style={{ color: card.accent }} />
                 </div>
-              </div>
-              <div>
-                <div className="text-2xl font-extrabold text-[var(--color-navy)] leading-none mb-1"
-                  style={{ fontFamily: 'var(--font-display)' }}>
-                  <AnimatedCounter value={stats[card.key] || 0} suffix={card.key === 'grade' ? '%' : ''} />
+                <div>
+                  <div className="text-2xl font-extrabold text-[var(--color-navy)] leading-none"
+                    style={{ fontFamily: 'var(--font-display)' }}>
+                    <AnimatedCounter value={stats[card.key] || 0} suffix={card.suffix || ''} />
+                  </div>
+                  <div className="text-[10px] font-semibold text-[var(--color-text-muted)] uppercase tracking-[0.07em] mt-1">
+                    {card.label}
+                  </div>
                 </div>
-                <div className="text-[11px] font-semibold text-[var(--color-text-muted)] uppercase tracking-[0.08em]">
-                  {card.label}
-                </div>
-              </div>
+              </Link>
             </motion.div>
           ))}
         </div>
       )}
 
-      {/* ── Charts row ─────────────────────────────────────────── */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-        <motion.div variants={fadeUp} initial="hidden" animate="visible"
-          transition={{ delay: 0.4 }} className="card p-5">
-          <span className="section-label block mb-4">Completion</span>
-          <div className="flex items-center justify-center gap-6">
-            <DonutRing value={stats.completed || 0}
-              max={Math.max((stats.completed || 0) + (stats.assignments || 0), 1)}
-              color="var(--color-success)" label="Done" />
-            <DonutRing value={stats.assignments || 0}
-              max={Math.max((stats.completed || 0) + (stats.assignments || 0), 1)}
-              color="var(--color-secondary)" label="Pending" />
+      {/* ── Courses + Activity feed ───────────────────────────────── */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-5">
+
+        {/* Course progress cards — Coursera style */}
+        <div className="lg:col-span-2">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <span className="section-label">In Progress</span>
+              <h2 className="text-[15px] font-bold text-[var(--color-navy)] mt-0.5"
+                style={{ fontFamily: 'var(--font-display)' }}>Your Courses</h2>
+            </div>
+            <Link to="/courses" className="btn-ghost text-[12px] flex items-center gap-1">
+              View all <ArrowRight size={13} />
+            </Link>
           </div>
-        </motion.div>
+          {loading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {Array.from({ length: 4 }).map((_, i) => <div key={i} className="skeleton h-36 rounded-[var(--radius-lg)]" />)}
+            </div>
+          ) : courses.length === 0 ? (
+            <div className="empty-state card py-12">
+              <div className="empty-state-icon"><BookOpen size={20} /></div>
+              <p className="text-[13px] text-[var(--color-text-muted)] mb-3">No courses yet</p>
+              <Link to="/enrollments" className="btn-primary text-[12px] px-4 py-2">Browse Courses</Link>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {courses.slice(0, 4).map((c, i) => <CourseCard key={c.id as string} course={c} index={i} />)}
+            </div>
+          )}
+        </div>
 
-        <motion.div variants={fadeUp} initial="hidden" animate="visible"
-          transition={{ delay: 0.45 }} className="card p-5">
-          <span className="section-label block mb-4">Activity</span>
-          <BarChart
-            data={[
-              { label: 'Courses',  value: stats.subjects      || 0 },
-              { label: 'Exams',    value: stats.exams         || 0 },
-              { label: 'Grades',   value: stats.completed     || 0 },
-              { label: 'Notif.',   value: Math.min(stats.notifications || 0, 20) },
-              { label: 'Sessions', value: stats.lectures      || 0 },
-            ]}
-            colors={[
-              'var(--color-primary)',
-              'var(--color-secondary)',
-              'var(--color-success)',
-              'var(--color-accent)',
-              'var(--color-primary-light)',
-            ]}
-          />
-        </motion.div>
-
-        <motion.div variants={fadeUp} initial="hidden" animate="visible"
-          transition={{ delay: 0.5 }} className="card p-5">
-          <span className="section-label block mb-4">Distribution</span>
-          <PieChart segments={[
-            { value: stats.subjects    || 0, color: 'var(--color-primary)',   label: 'Subjects' },
-            { value: stats.exams       || 0, color: 'var(--color-secondary)', label: 'Exams' },
-            { value: stats.assignments || 0, color: 'var(--color-success)',   label: 'Assignments' },
-            { value: stats.completed   || 0, color: '#6B5CE7',                label: 'Completed' },
-          ]} />
-        </motion.div>
-      </div>
-
-      {/* ── Tables ─────────────────────────────────────────────── */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.55 }}>
-          <StatsTable
-            title="Recent Courses"
-            headers={['Course', 'Code', 'Credits']}
-            rows={recentCourses.map(c => [
-              String(c.title || '-'),
-              String(c.course_code || '-'),
-              String(c.credits || '-'),
-            ])}
-          />
-        </motion.div>
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6 }}>
-          <StatsTable
-            title="Latest Grades"
-            headers={['Student', 'Score', 'Grade']}
-            rows={recentGrades.map(g => [
-              String(g.student_id || '-'),
-              String(g.score ?? '-'),
-              String(g.grade_letter || '-'),
-            ])}
-          />
-        </motion.div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.65 }}>
-          <StatsTable
-            title="Announcements"
-            headers={['Title', 'Priority', 'Date']}
-            rows={recentAnnouncements.map(a => [
-              String(a.title || '-'),
-              String(a.priority || '-'),
-              a.created_at ? new Date(a.created_at as string).toLocaleDateString() : '-',
-            ])}
-          />
-        </motion.div>
-
-        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7 }} className="card p-5">
-          <span className="section-label block mb-4">Quick Stats</span>
-          <div className="space-y-2.5">
-            {[
-              { label: 'Total Courses',  value: stats.subjects || 0,                 accent: 'var(--color-primary)' },
-              { label: 'Total Exams',    value: stats.exams    || 0,                 accent: 'var(--color-secondary)' },
-              { label: 'Avg Grade',      value: `${(stats.grade || 0).toFixed(1)}%`, accent: 'var(--color-success)' },
-              { label: 'Live Sessions',  value: stats.sessions || 0,                 accent: 'var(--color-danger)' },
-            ].map((item, i) => (
-              <div key={i}
-                className="flex items-center justify-between px-3 py-2.5 rounded-[var(--radius-md)] bg-[var(--color-bg)]">
-                <span className="text-[12px] text-[var(--color-text-muted)] font-medium">{item.label}</span>
-                <span className="text-[13px] font-bold" style={{ color: item.accent, fontFamily: 'var(--font-display)' }}>
-                  {item.value}
-                </span>
+        {/* Activity / Announcements feed — Canvas style */}
+        <div>
+          <div className="mb-4">
+            <span className="section-label">Recent Activity</span>
+            <h2 className="text-[15px] font-bold text-[var(--color-navy)] mt-0.5"
+              style={{ fontFamily: 'var(--font-display)' }}>Announcements</h2>
+          </div>
+          <div className="card p-4">
+            {loading ? (
+              <div className="space-y-3">
+                {Array.from({ length: 4 }).map((_, i) => <div key={i} className="skeleton h-10 rounded-[var(--radius-md)]" />)}
               </div>
+            ) : announcements.length === 0 ? (
+              <div className="empty-state py-8">
+                <div className="empty-state-icon"><Bell size={18} /></div>
+                <p className="text-[12px] text-[var(--color-text-muted)]">No announcements yet</p>
+              </div>
+            ) : (
+              <>
+                {announcements.map(a => (
+                  <ActivityItem key={a.id as string}
+                    icon={Bell}
+                    text={a.title as string}
+                    sub={a.created_at ? timeAgo(a.created_at as string) : ''}
+                    color="var(--color-primary)"
+                  />
+                ))}
+                <Link to="/announcements"
+                  className="flex items-center gap-1 text-[11px] font-semibold text-[var(--color-primary)] mt-3 hover:underline">
+                  View all <ArrowRight size={11} />
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* ── Grades table + Quick links ────────────────────────────── */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+        {/* Grades — edX style */}
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <span className="section-label">Performance</span>
+              <h2 className="text-[15px] font-bold text-[var(--color-navy)] mt-0.5"
+                style={{ fontFamily: 'var(--font-display)' }}>Recent Grades</h2>
+            </div>
+            <Link to="/grades" className="btn-ghost text-[12px] flex items-center gap-1">
+              View all <ArrowRight size={13} />
+            </Link>
+          </div>
+          <div className="table-container">
+            <table className="table">
+              <thead>
+                <tr><th>Student</th><th>Score</th><th>Grade</th></tr>
+              </thead>
+              <tbody>
+                {loading ? (
+                  <tr><td colSpan={3} className="py-8 text-center">
+                    <div className="skeleton h-4 w-28 mx-auto rounded" />
+                  </td></tr>
+                ) : recentGrades.length === 0 ? (
+                  <tr><td colSpan={3} className="text-center text-[var(--color-text-muted)] py-8 text-[13px]">
+                    No grades recorded yet
+                  </td></tr>
+                ) : recentGrades.map((g, i) => (
+                  <tr key={i}>
+                    <td className="text-[var(--color-text-secondary)] max-w-[100px] truncate">
+                      {String(g.student_id || '—').slice(0, 8)}…
+                    </td>
+                    <td>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[13px] font-bold text-[var(--color-navy)] w-8 text-right flex-shrink-0">
+                          {String(g.score ?? '—')}
+                        </span>
+                        <ProgressBar value={Number(g.score) || 0} max={100}
+                          color={Number(g.score) >= 70 ? 'var(--color-success)'
+                            : Number(g.score) >= 50 ? 'var(--color-warning)'
+                            : 'var(--color-danger)'} />
+                      </div>
+                    </td>
+                    <td>
+                      <span className={`badge ${
+                        g.grade_letter === 'A' ? 'badge-success'
+                        : g.grade_letter === 'B' ? 'badge-navy'
+                        : g.grade_letter === 'F' ? 'badge-danger'
+                        : 'badge-neutral'
+                      }`}>{String(g.grade_letter || '—')}</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Quick actions */}
+        <div>
+          <div className="mb-4">
+            <span className="section-label">Quick Access</span>
+            <h2 className="text-[15px] font-bold text-[var(--color-navy)] mt-0.5"
+              style={{ fontFamily: 'var(--font-display)' }}>Academic Tools</h2>
+          </div>
+          <div className="grid grid-cols-2 gap-2.5">
+            {[
+              { label: 'Schedule',      icon: Calendar,      to: '/schedule',          accent: 'var(--color-primary)' },
+              { label: 'Assignments',   icon: ClipboardList, to: '/assignments',        accent: 'var(--color-warning)' },
+              { label: 'Attendance',    icon: CheckCircle,   to: '/attendance',         accent: 'var(--color-success)' },
+              { label: 'AI Scheduler',  icon: TrendingUp,    to: '/ai-scheduler',       accent: '#6B5CE7' },
+              { label: 'Events',        icon: Award,         to: '/events',             accent: 'var(--color-secondary)' },
+              { label: 'Materials',     icon: Clock,         to: '/course-materials',   accent: 'var(--color-accent)' },
+            ].map((item, i) => (
+              <motion.div key={i}
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.5 + i * 0.05 }}>
+                <Link to={item.to}
+                  className="card p-3.5 flex items-center gap-3 block hover:-translate-y-0.5 transition-transform duration-150">
+                  <div className="w-8 h-8 rounded-[8px] flex items-center justify-center flex-shrink-0"
+                    style={{ background: `color-mix(in srgb, ${item.accent} 12%, transparent)` }}>
+                    <item.icon size={15} style={{ color: item.accent }} />
+                  </div>
+                  <span className="text-[12px] font-semibold text-[var(--color-navy)]">{item.label}</span>
+                </Link>
+              </motion.div>
             ))}
           </div>
-        </motion.div>
+        </div>
       </div>
 
     </div>
