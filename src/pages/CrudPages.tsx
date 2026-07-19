@@ -173,10 +173,10 @@ const icon = (Icon: React.ComponentType<{ size?: number; className?: string }>) 
 
 export function CoursesPage() {
   return <CrudPage config={{
-    title: 'Courses', singular: 'Course', table: 'courses', icon: icon(BookOpen),
+    title: 'Subjects', singular: 'Subject', table: 'courses', icon: icon(BookOpen),
     fields: [
       { key: 'title', label: 'Title', type: 'text' },
-      { key: 'course_code', label: 'Course Code', type: 'text' },
+      { key: 'course_code', label: 'Subject Code', type: 'text' },
       { key: 'description', label: 'Description', type: 'textarea' },
       { key: 'credits', label: 'Credits', type: 'number' },
       { key: 'department_id', label: 'Department ID', type: 'text' },
@@ -368,7 +368,7 @@ export function VideosPage() {
 
 export function MaterialsPage() {
   return <CrudPage config={{
-    title: 'Course Materials', singular: 'Material', table: 'course_materials', icon: icon(Upload),
+    title: 'Subject Materials', singular: 'Material', table: 'course_materials', icon: icon(Upload),
     fields: [
       { key: 'title', label: 'Title', type: 'text' },
       { key: 'course_id', label: 'Course ID', type: 'text' },

@@ -70,7 +70,7 @@ export function welcomeEmail(name: string): { subject: string; html: string } {
     subject: 'Welcome to Acaedu!',
     html: emailWrapper(`
       <h1 style="color:${brandColors.text};font-size:1.5rem;text-align:center">Welcome, ${name}!</h1>
-      <p style="color:${brandColors.textMuted};line-height:1.7">Your account has been created successfully. You can now access courses, schedules, grades, and more.</p>
+      <p style="color:${brandColors.textMuted};line-height:1.7">Your account has been created successfully. You can now access subjects, schedules, grades, and more.</p>
       <div style="text-align:center;margin:1.5rem 0">
         <a href="https://acaedu.sbs/dashboard" style="display:inline-block;padding:0.75rem 2rem;background:${brandColors.gradient};color:white;text-decoration:none;border-radius:8px;font-weight:600">Go to Dashboard</a>
       </div>

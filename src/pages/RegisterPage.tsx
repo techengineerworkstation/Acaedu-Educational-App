@@ -93,7 +93,7 @@ export function RegisterPage() {
             className="mt-14 grid grid-cols-3 gap-6">
             {[
               { label: 'Students', value: '10K+' },
-              { label: 'Courses', value: '500+' },
+              { label: 'Subjects', value: '500+' },
               { label: 'Institutions', value: '50+' },
             ].map((s, i) => (
               <div key={i} className="text-center">

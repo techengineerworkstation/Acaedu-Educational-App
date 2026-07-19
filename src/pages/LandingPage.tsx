@@ -234,7 +234,7 @@ const heroSlides = [
 
 /* ─── Data ───────────────────────────────────────────────────── */
 const features = [
-  { icon: BookOpen,  title: 'Subject Management',  desc: 'Organise courses, materials, and timetables in one unified workspace.', gradient: 'linear-gradient(135deg, rgba(193,39,45,0.08) 0%, rgba(193,39,45,0.02) 100%)', iconBg: 'rgba(193,39,45,0.10)', iconColor: '#c1272d' },
+    { icon: BookOpen,  title: 'Subject Management',  desc: 'Organise subjects, materials, and timetables in one unified workspace.', gradient: 'linear-gradient(135deg, rgba(193,39,45,0.08) 0%, rgba(193,39,45,0.02) 100%)', iconBg: 'rgba(193,39,45,0.10)', iconColor: '#c1272d' },
   { icon: LineChart, title: 'Grade Analytics',      desc: 'Real-time grade tracking with visual performance dashboards.', gradient: 'linear-gradient(135deg, rgba(2,94,107,0.08) 0%, rgba(2,94,107,0.02) 100%)', iconBg: 'rgba(2,94,107,0.08)', iconColor: '#025e6b' },
   { icon: Bell,      title: 'Smart Notifications', desc: 'Context-aware alerts for deadlines, exams, and announcements.', gradient: 'linear-gradient(135deg, rgba(184,134,11,0.08) 0%, rgba(184,134,11,0.02) 100%)', iconBg: 'rgba(184,134,11,0.10)', iconColor: '#b8860b' },
   { icon: Video,     title: 'Live Collaboration',  desc: 'Integrated video conferencing and shared class recordings.', gradient: 'linear-gradient(135deg, rgba(77,208,216,0.08) 0%, rgba(77,208,216,0.02) 100%)', iconBg: 'rgba(77,208,216,0.08)', iconColor: '#025e6b' },
@@ -346,7 +346,7 @@ export function LandingPage() {
               {themeIcons[theme]}
             </motion.button>
             <Link to="/login" className="btn-ghost text-[13px] px-4 py-2">Sign In</Link>
-            <Link to="/register" className="btn-primary text-[13px] px-5 py-2">Get Started</Link>
+            <Link to="/register" className="btn-primary text-[13px] px-5 py-2">Start Now</Link>
           </div>
         </div>
       </nav>
@@ -354,7 +354,7 @@ export function LandingPage() {
       <main className="pt-[60px]">
 
         {/* ── Hero — full-width centered with sparkles + floating carousel ─── */}
-        <section ref={heroRef} className="relative min-h-[calc(100vh-60px)] flex items-center overflow-hidden bg-[var(--color-secondary)]">
+        <section ref={heroRef} className="relative min-h-[calc(100vh-60px)] flex items-center justify-center overflow-hidden bg-[var(--color-secondary)]">
           {/* Sparkles particle overlay */}
           <div className="absolute inset-0 z-[1] pointer-events-none opacity-60">
             <SilentErrorBoundary>
@@ -403,7 +403,7 @@ export function LandingPage() {
                 </div>
                 <Link to="/register"
                   className="flex items-center gap-2 px-5 py-2.5 bg-[var(--color-primary)] text-white text-[13px] font-semibold rounded-[8px] hover:bg-[var(--color-primary-hover)] transition-colors shadow-lg shadow-[var(--color-primary)]/20">
-                  Get Started
+                  Start Now
                   <ArrowRight size={13} />
                 </Link>
               </motion.div>
@@ -469,7 +469,7 @@ export function LandingPage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               {[
                 { num: 10000, suffix: '+', label: 'Students Enrolled' },
-                { num: 500,   suffix: '+', label: 'Active Courses' },
+                { num: 500,   suffix: '+', label: 'Active Subjects' },
                 { num: 50,    suffix: '+', label: 'Institutions' },
                 { num: 99.9,  suffix: '%', label: 'Uptime SLA' },
               ].map((s, i) => (
@@ -536,7 +536,7 @@ export function LandingPage() {
               <motion.div variants={fadeUp} className="text-center mb-10">
                 <span className="section-label">Explore Programs</span>
                 <span className="rule-gold" />
-                <h2 className="section-title mt-4 text-2xl md:text-3xl">Popular courses</h2>
+                <h2 className="section-title mt-4 text-2xl md:text-3xl">Popular Subjects</h2>
               </motion.div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 {courseCards.map((course, i) => (

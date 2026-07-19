@@ -44,7 +44,7 @@ function ProgressBar({ value, max, color = 'var(--color-primary)' }: {
 
 /* ─── Stat card metadata ─────────────────────────────────────── */
 const statCards = [
-  { key: 'courses',       label: 'Enrolled Courses',  icon: BookOpen,       accent: 'var(--color-primary)',        link: '/courses' },
+  { key: 'courses',       label: 'Enrolled Subjects',  icon: BookOpen,       accent: 'var(--color-primary)',        link: '/courses' },
   { key: 'exams',         label: 'Upcoming Exams',    icon: FileText,       accent: 'var(--color-secondary)',      link: '/exams' },
   { key: 'assignments',   label: 'Pending Tasks',     icon: ClipboardList,  accent: 'var(--color-warning)',        link: '/assignments' },
   { key: 'notifications', label: 'Notifications',     icon: Bell,           accent: 'var(--color-success)',        link: '/notifications' },
@@ -248,7 +248,7 @@ export function DashboardPage({ user }: { user: User }) {
             <div>
               <span className="section-label">In Progress</span>
               <h2 className="text-[15px] font-bold text-[var(--color-navy)] mt-0.5"
-                style={{ fontFamily: 'var(--font-display)' }}>Your Courses</h2>
+                style={{ fontFamily: 'var(--font-display)' }}>Your Subjects</h2>
             </div>
             <Link to="/courses" className="btn-ghost text-[12px] flex items-center gap-1">
               View all <ArrowRight size={13} />
@@ -261,8 +261,8 @@ export function DashboardPage({ user }: { user: User }) {
           ) : courses.length === 0 ? (
             <div className="empty-state card py-12">
               <div className="empty-state-icon"><BookOpen size={20} /></div>
-              <p className="text-[13px] text-[var(--color-text-muted)] mb-3">No courses yet</p>
-              <Link to="/enrollments" className="btn-primary text-[12px] px-4 py-2">Browse Courses</Link>
+              <p className="text-[13px] text-[var(--color-text-muted)] mb-3">No subjects yet</p>
+               <Link to="/enrollments" className="btn-primary text-[12px] px-4 py-2">Browse Subjects</Link>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

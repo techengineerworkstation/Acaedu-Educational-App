@@ -21,7 +21,7 @@ interface NavItem {
 
 const allNav: NavItem[] = [
   { to: '/dashboard',           icon: Home,          label: 'Dashboard',           group: 'main' },
-  { to: '/courses',             icon: BookOpen,      label: 'Courses',             group: 'academics' },
+  { to: '/courses',             icon: BookOpen,      label: 'Subjects',             group: 'academics' },
   { to: '/enrollments',         icon: GraduationCap, label: 'Enrollments',         group: 'academics' },
   { to: '/schedule',            icon: Calendar,      label: 'Schedules',           group: 'academics' },
   { to: '/schedule-instances',  icon: Clock,         label: 'Schedule Instances',  group: 'academics' },

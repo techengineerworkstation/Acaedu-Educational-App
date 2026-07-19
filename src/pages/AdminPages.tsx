@@ -115,7 +115,7 @@ export function AdminDashboard() {
     { label: 'Total Users', value: stats.users || 0, icon: Users, color: '#1B3A5C' },
     { label: 'Students', value: stats.students || 0, icon: UserCheck, color: '#3D8B60' },
     { label: 'Lecturers', value: stats.lecturers || 0, icon: Users, color: '#B8976A' },
-    { label: 'Active Courses', value: stats.courses || 0, icon: BookOpen, color: '#6B5CE7' },
+    { label: 'Active Subjects', value: stats.courses || 0, icon: BookOpen, color: '#6B5CE7' },
     { label: 'Enrollments', value: stats.enrollments || 0, icon: GraduationCap, color: '#2A5580' },
     { label: 'Exams', value: stats.exams || 0, icon: BookOpen, color: '#C49840' },
     { label: 'Assignments', value: stats.assignments || 0, icon: BookOpen, color: '#C44040' },
@@ -164,7 +164,7 @@ export function AdminDashboard() {
                 { label: 'Active', value: stats.activeEnrollments || 0 },
                 { label: 'Completed', value: stats.completedEnrollments || 0 },
                 { label: 'Dropped', value: stats.droppedEnrollments || 0 },
-                { label: 'Courses', value: stats.courses || 0 },
+                { label: 'Subjects', value: stats.courses || 0 },
                 { label: 'Exams', value: stats.exams || 0 },
                 { label: 'Assignments', value: stats.assignments || 0 },
               ]}

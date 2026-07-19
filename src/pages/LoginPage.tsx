@@ -91,7 +91,7 @@ export function LoginPage() {
             </motion.h2>
             <motion.p initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.6, ease }}
               className="text-[14px] text-white/35 leading-relaxed max-w-sm">
-              Access your courses, grades, schedule, and institution tools, all in one place.
+              Access your subjects, grades, schedule, and institution tools, all in one place.
             </motion.p>
           </div>
 
@@ -99,7 +99,7 @@ export function LoginPage() {
             className="flex items-center gap-8 border-t border-white/8 pt-8">
             {[
               { value: '10K+', label: 'Active Students' },
-              { value: '500+', label: 'Courses' },
+              { value: '500+', label: 'Subjects' },
               { value: '50+',  label: 'Institutions' },
             ].map((s, i) => (
               <div key={i} className="text-center">

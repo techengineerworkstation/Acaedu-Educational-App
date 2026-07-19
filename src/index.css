@@ -1133,6 +1133,14 @@ input, select, textarea { font: inherit; color: inherit; }
   margin-right: auto;
   padding-left: 24px;
   padding-right: 24px;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* ── Consistent vertical spacing for all sections ────────── */
+section + section,
+.section + .section {
+  margin-top: 0;
 }
 
 /* ── Stat row (landing stats bar) ────────────────────────── */
