@@ -10,6 +10,9 @@ import {
   CalendarOff
 } from 'lucide-react'
 
+const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.03 } } }
+const fadeUp = { hidden: { opacity: 0, y: 8 }, show: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.22,1,0.36,1] as [number,number,number,number] } } }
+
 function ConfirmModal({ open, title, message, onConfirm, onCancel }: {
   open: boolean; title: string; message: string; onConfirm: () => void; onCancel: () => void
 }) {
@@ -17,12 +20,17 @@ function ConfirmModal({ open, title, message, onConfirm, onCancel }: {
   return (
     <AnimatePresence>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="modal-backdrop" onClick={onCancel}>
-        <motion.div initial={{ scale: 0.96, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.96, opacity: 0 }} className="modal" onClick={e => e.stopPropagation()}>
+        <motion.div initial={{ scale: 0.92, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.92, opacity: 0 }}
+          transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+          className="modal" onClick={e => e.stopPropagation()}>
+          <div className="w-12 h-12 rounded-full mx-auto mb-4 flex items-center justify-center" style={{background:'color-mix(in srgb, var(--color-danger) 10%, transparent)'}}>
+            <Trash2 size={20} className="text-[var(--color-danger)]"/>
+          </div>
           <h3 className="text-[16px] font-bold text-[var(--color-navy)] mb-2 text-center" style={{ fontFamily: 'var(--font-display)' }}>{title}</h3>
           <p className="text-[13px] text-[var(--color-text-muted)] mb-6 text-center">{message}</p>
           <div className="flex gap-3 justify-center">
-            <button onClick={onCancel} className="btn-secondary px-6 py-2">Cancel</button>
-            <button onClick={onConfirm} className="btn-primary px-6 py-2 bg-[var(--color-danger)] hover:bg-[var(--color-danger)]/90">Delete</button>
+            <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={onCancel} className="btn-secondary px-6 py-2">Cancel</motion.button>
+            <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={onConfirm} className="btn-primary px-6 py-2" style={{background:'var(--color-danger)'}}>Delete</motion.button>
           </div>
         </motion.div>
       </motion.div>
@@ -84,65 +92,72 @@ function CrudPage({ config }: { config: CrudConfig }) {
   return (
     <div className="max-w-5xl mx-auto">
       {/* Header */}
-      <div className="text-center mb-8">
+      <motion.div initial={{opacity:0,y:-10}} animate={{opacity:1,y:0}} className="text-center mb-8">
         <span className="section-label">{config.title}</span>
         <h1 className="section-title mt-2 text-3xl">{config.title}</h1>
-      </div>
-      <div className="flex justify-center mb-8">
-        <button onClick={() => { resetForm(); setShowForm(!showForm) }} className="btn-primary">
+      </motion.div>
+      <motion.div initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} transition={{delay:0.1}} className="flex justify-center mb-8">
+        <motion.button whileHover={{scale:1.03,y:-1}} whileTap={{scale:0.97}}
+          onClick={() => { resetForm(); setShowForm(!showForm) }} className="btn-primary">
           <Plus size={16}/> Add {config.singular}
-        </button>
-      </div>
+        </motion.button>
+      </motion.div>
 
       {/* Form */}
-      {showForm && (
-        <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} className="card p-6 mb-6">
-          <h3 className="text-[15px] font-bold text-[var(--color-navy)] mb-5 text-center" style={{ fontFamily: 'var(--font-display)' }}>
-            {editId ? `Edit ${config.singular}` : `Create ${config.singular}`}
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5 max-w-2xl mx-auto">
-            {config.fields.map(f => (
-              <div key={f.key} className={f.type === 'textarea' ? 'md:col-span-2' : ''}>
-                <label className="label">{f.label}</label>
-                {f.type === 'select' ? (
-                  <select value={formState[f.key] || ''} onChange={e => setFormState({ ...formState, [f.key]: e.target.value })} className="select">
-                    <option value="">Select...</option>
-                    {f.options?.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
-                  </select>
-                ) : f.type === 'textarea' ? (
-                  <textarea value={formState[f.key] || ''} onChange={e => setFormState({ ...formState, [f.key]: e.target.value })} className="textarea" rows={3} />
-                ) : f.type === 'boolean' ? (
-                  <select value={formState[f.key] || ''} onChange={e => setFormState({ ...formState, [f.key]: e.target.value })} className="select">
-                    <option value="false">No</option><option value="true">Yes</option>
-                  </select>
-                ) : (
-                  <input type={f.type} value={formState[f.key] || ''} onChange={e => setFormState({ ...formState, [f.key]: e.target.value })} className="input" />
-                )}
-              </div>
-            ))}
-          </div>
-          <div className="flex gap-3 justify-center">
-            <button onClick={handleSubmit} className="btn-primary px-6">{editId ? 'Update' : 'Create'}</button>
-            <button onClick={resetForm} className="btn-secondary px-6">Cancel</button>
-          </div>
-        </motion.div>
-      )}
+      <AnimatePresence>
+        {showForm && (
+          <motion.div initial={{ opacity: 0, y: -12, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.98 }} transition={{ duration: 0.35, ease: [0.22,1,0.36,1] }}
+            className="card p-6 mb-6">
+            <h3 className="text-[15px] font-bold text-[var(--color-navy)] mb-5 text-center" style={{ fontFamily: 'var(--font-display)' }}>
+              {editId ? `Edit ${config.singular}` : `Create ${config.singular}`}
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5 max-w-2xl mx-auto">
+              {config.fields.map(f => (
+                <div key={f.key} className={f.type === 'textarea' ? 'md:col-span-2' : ''}>
+                  <label className="label">{f.label}</label>
+                  {f.type === 'select' ? (
+                    <select value={formState[f.key] || ''} onChange={e => setFormState({ ...formState, [f.key]: e.target.value })} className="select">
+                      <option value="">Select...</option>
+                      {f.options?.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                    </select>
+                  ) : f.type === 'textarea' ? (
+                    <textarea value={formState[f.key] || ''} onChange={e => setFormState({ ...formState, [f.key]: e.target.value })} className="textarea" rows={3} />
+                  ) : f.type === 'boolean' ? (
+                    <select value={formState[f.key] || ''} onChange={e => setFormState({ ...formState, [f.key]: e.target.value })} className="select">
+                      <option value="false">No</option><option value="true">Yes</option>
+                    </select>
+                  ) : (
+                    <input type={f.type} value={formState[f.key] || ''} onChange={e => setFormState({ ...formState, [f.key]: e.target.value })} className="input" />
+                  )}
+                </div>
+              ))}
+            </div>
+            <div className="flex gap-3 justify-center">
+              <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={handleSubmit} className="btn-primary px-6">{editId ? 'Update' : 'Create'}</motion.button>
+              <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={resetForm} className="btn-secondary px-6">Cancel</motion.button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* List */}
       {loading ? (
-        <div className="space-y-3">
-          {Array.from({ length: 4 }).map((_, i) => <div key={i} className="skeleton h-14" />)}
+        <div className="space-y-2">
+          {Array.from({ length: 4 }).map((_, i) => <motion.div key={i} initial={{opacity:0}} animate={{opacity:1}} transition={{delay:i*0.05}} className="skeleton h-14" />)}
         </div>
       ) : items.length === 0 ? (
-        <div className="empty-state">
+        <motion.div initial={{opacity:0,scale:0.95}} animate={{opacity:1,scale:1}} className="empty-state">
           <div className="empty-state-icon">{config.icon}</div>
-          <p className="empty-state-text">No {config.title.toLowerCase()} yet.</p>
-        </div>
+          <p className="empty-state-text text-[var(--color-text-muted)]">No {config.title.toLowerCase()} yet.</p>
+        </motion.div>
       ) : (
-        <div className="space-y-2">
-          {items.map((item, i) => (
-            <motion.div key={item.id as string} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}
+        <motion.div variants={stagger} initial="hidden" animate="show" className="space-y-2">
+          {items.map((item) => (
+            <motion.div key={item.id as string} variants={fadeUp}
+              whileHover={{x:4,boxShadow:'var(--shadow-sm)'}}
               className="card card-interactive p-4 flex items-center gap-4">
+              <div className="w-1 h-10 rounded-full flex-shrink-0" style={{background:'var(--gradient-primary)'}}/>
               <div className="flex-1 min-w-0 text-center">
                 <h3 className="text-[13px] font-bold text-[var(--color-navy)] truncate" style={{ fontFamily: 'var(--font-display)' }}>
                   {String(item[config.displayFields[0]?.key] || 'Untitled')}
@@ -157,12 +172,12 @@ function CrudPage({ config }: { config: CrudConfig }) {
                 {config.badgeField && item[config.badgeField.key] != null && (
                   <span className="badge badge-navy">{String(item[config.badgeField.key])}</span>
                 )}
-                <button onClick={() => startEdit(item)} className="btn-ghost p-1.5"><Pencil size={14}/></button>
-                <button onClick={() => setDeleteId(item.id as string)} className="btn-ghost p-1.5 text-[var(--color-danger)] hover:bg-[var(--color-danger)]/8"><Trash2 size={14}/></button>
+                <motion.button whileHover={{scale:1.15}} whileTap={{scale:0.9}} onClick={() => startEdit(item)} className="btn-ghost p-1.5"><Pencil size={14}/></motion.button>
+                <motion.button whileHover={{scale:1.15}} whileTap={{scale:0.9}} onClick={() => setDeleteId(item.id as string)} className="btn-ghost p-1.5 text-[var(--color-danger)]" style={{color:'var(--color-danger)'}}><Trash2 size={14}/></motion.button>
               </div>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       )}
       <ConfirmModal open={!!deleteId} title={`Delete ${config.singular}`} message={`Are you sure? This will permanently delete this ${config.singular.toLowerCase()}.`} onConfirm={handleDelete} onCancel={() => setDeleteId(null)} />
     </div>
@@ -583,13 +598,11 @@ export function SettingsPage() {
   const [fontSize, setFontSize] = useState('medium')
   const [sidebarCompact, setSidebarCompact] = useState(false)
 
-  // Modal state
   const [modal, setModal] = useState<null | 'password' | 'email' | '2fa' | 'export' | 'delete'>(null)
   const [modalLoading, setModalLoading] = useState(false)
   const [modalMsg, setModalMsg] = useState('')
   const [modalError, setModalError] = useState('')
 
-  // Form fields
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [newEmail, setNewEmail] = useState('')
@@ -632,10 +645,8 @@ export function SettingsPage() {
   const handle2FA = async () => {
     setModalLoading(true); setModalError('')
     try {
-      // Supabase MFA enrollment — opens TOTP setup
       const { data, error } = await supabase.auth.mfa.enroll({ factorType: 'totp', issuer: 'Acaedu' })
       if (error) throw error
-      // Show QR code URI in a new tab as a simple fallback
       if (data?.totp?.qr_code) {
         setModalMsg(`Scan the QR code with your authenticator app.\n\nManual key: ${data.totp.secret}`)
       } else {
@@ -658,11 +669,7 @@ export function SettingsPage() {
         fetchTable('enrollments', { student_id: user.id }),
         fetchTable('attendance', { student_id: user.id }),
       ])
-      const exportData = {
-        exportedAt: new Date().toISOString(),
-        profile: profile[0] || {},
-        grades, enrollments, attendance,
-      }
+      const exportData = { exportedAt: new Date().toISOString(), profile: profile[0] || {}, grades, enrollments, attendance }
       const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' })
       const url = URL.createObjectURL(blob)
       const a = document.createElement('a'); a.href = url; a.download = `acaedu-data-${user.id.slice(0,8)}.json`
@@ -680,43 +687,30 @@ export function SettingsPage() {
     setModalLoading(true); setModalError('')
     try {
       const { error } = await supabase.auth.admin.deleteUser((await supabase.auth.getUser()).data.user?.id || '')
-      if (error) {
-        // Admin API not available client-side — sign out and show message
-        await supabase.auth.signOut()
-        window.location.href = '/login'
-        return
-      }
-      await supabase.auth.signOut()
-      window.location.href = '/login'
-    } catch {
-      // Graceful fallback: sign out since client can't call admin API
-      await supabase.auth.signOut()
-      window.location.href = '/login'
-    }
+      if (error) { await supabase.auth.signOut(); window.location.href = '/login'; return }
+      await supabase.auth.signOut(); window.location.href = '/login'
+    } catch { await supabase.auth.signOut(); window.location.href = '/login' }
   }
 
-  // Toggle helper
   const Toggle = ({ on, onToggle }: { on: boolean; onToggle: () => void }) => (
     <button onClick={onToggle} className="w-12 h-[26px] rounded-full relative transition-colors duration-200 flex-shrink-0"
-      style={{ background: on ? 'var(--color-navy)' : 'var(--color-bg-secondary)' }}>
+      style={{ background: on ? 'var(--color-primary)' : 'var(--color-bg-secondary)' }}>
       <div className="w-5 h-5 rounded-full bg-[var(--color-bg-card)] absolute top-[3px] transition-transform duration-200 shadow-sm"
         style={{ transform: on ? 'translateX(23px)' : 'translateX(3px)' }} />
     </button>
   )
 
-  // Reusable modal shell
   const Modal = ({ title, children }: { title: string; children: React.ReactNode }) => (
     <AnimatePresence>
       {modal && (
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm p-4"
-          onClick={closeModal}>
-          <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }}
-            className="bg-[var(--color-bg-card)] rounded-xl border border-[var(--color-border)] p-6 w-full max-w-sm shadow-2xl"
-            onClick={e => e.stopPropagation()}>
+          className="modal-backdrop" onClick={closeModal}>
+          <motion.div initial={{ scale: 0.92, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.92, opacity: 0 }}
+            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+            className="modal" onClick={e => e.stopPropagation()}>
             <h3 className="text-[15px] font-bold text-[var(--color-navy)] mb-4 text-center" style={{ fontFamily: 'var(--font-display)' }}>{title}</h3>
-            {modalError && <div className="mb-3 px-3 py-2 rounded-lg bg-red-50 border border-red-200 text-red-700 text-[12px]">{modalError}</div>}
-            {modalMsg && <div className="mb-3 px-3 py-2 rounded-lg bg-green-50 border border-green-200 text-green-700 text-[12px]">{modalMsg}</div>}
+            {modalError && <div className="mb-3 badge-danger px-3 py-2 text-[12px] rounded-lg">{modalError}</div>}
+            {modalMsg && <div className="mb-3 badge-success px-3 py-2 text-[12px] rounded-lg">{modalMsg}</div>}
             {children}
           </motion.div>
         </motion.div>
@@ -724,22 +718,39 @@ export function SettingsPage() {
     </AnimatePresence>
   )
 
+  const settingsGroup = (title: string, items: React.ReactNode) => (
+    <motion.div initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} className="mb-8">
+      <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'var(--font-display)' }}>{title}</h2>
+      <div className="space-y-2">{items}</div>
+    </motion.div>
+  )
+
+  const settingRow = (label: string, desc: string, control: React.ReactNode, danger?: boolean) => (
+    <motion.div whileHover={{x:2}} className={`card p-4 flex items-center justify-between ${danger ? 'border-[var(--color-danger)]/20' : ''}`}>
+      <div>
+        <h3 className={`text-[14px] font-bold ${danger ? 'text-[var(--color-danger)]' : 'text-[var(--color-navy)]'}`} style={{ fontFamily: 'var(--font-display)' }}>{label}</h3>
+        <p className="text-[12px] text-[var(--color-text-muted)]">{desc}</p>
+      </div>
+      {control}
+    </motion.div>
+  )
+
   return (
     <div className="max-w-2xl mx-auto">
-      <div className="text-center mb-10">
+      <motion.div initial={{opacity:0,y:-10}} animate={{opacity:1,y:0}} className="text-center mb-10">
         <span className="section-label">Settings</span>
         <h1 className="section-title mt-2 text-3xl">Settings</h1>
         <p className="text-[13px] text-[var(--color-text-muted)] mt-1.5">Manage your account preferences and app settings</p>
-      </div>
+      </motion.div>
 
       {/* Academic Theme */}
-      <div className="mb-8">
+      <motion.div initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} className="mb-8">
         <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'var(--font-display)' }}>Academic Theme</h2>
         <p className="text-[12px] text-[var(--color-text-muted)] mb-3">Choose a design inspired by leading academic platforms</p>
         <div className="grid grid-cols-2 gap-3">
           {(Object.entries(availablePresets) as [AcademicPreset, typeof availablePresets[AcademicPreset]][]).map(([key, preset]) => (
             <motion.button key={key}
-              whileHover={{ scale: 1.02, y: -1 }} whileTap={{ scale: 0.98 }}
+              whileHover={{ scale: 1.03, y: -2 }} whileTap={{ scale: 0.97 }}
               onClick={() => setAcademicPreset(key)}
               className={`preset-card ${academicPreset === key ? 'active' : ''}`}>
               <div className="w-9 h-9 rounded-[10px] mx-auto mb-2.5 flex items-center justify-center" style={{ background: preset.color }}>
@@ -750,104 +761,54 @@ export function SettingsPage() {
             </motion.button>
           ))}
         </div>
-      </div>
+      </motion.div>
 
-      {/* Appearance */}
-      <div className="mb-8">
-        <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'var(--font-display)' }}>Appearance</h2>
-        <div className="space-y-2">
-          <div className="card p-4 flex items-center justify-between">
-            <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]">Theme</h3><p className="text-[12px] text-[var(--color-text-muted)]">Current: {theme}</p></div>
-            <Toggle on={isDark} onToggle={toggleDark} />
-          </div>
-          <div className="card p-4 flex items-center justify-between">
-            <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]">Font Size</h3><p className="text-[12px] text-[var(--color-text-muted)]">Adjust text size across the app</p></div>
-            <select value={fontSize} onChange={e => setFontSize(e.target.value)} className="select w-auto text-[13px] min-w-[100px]">
-              <option value="small">Small</option><option value="medium">Medium</option><option value="large">Large</option>
-            </select>
-          </div>
-          <div className="card p-4 flex items-center justify-between">
-            <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]">Compact Sidebar</h3><p className="text-[12px] text-[var(--color-text-muted)]">Show icons only in sidebar navigation</p></div>
-            <Toggle on={sidebarCompact} onToggle={() => setSidebarCompact(!sidebarCompact)} />
-          </div>
-        </div>
-      </div>
+      {settingsGroup('Appearance', <>
+        {settingRow('Theme', `Current: ${theme}`, <Toggle on={isDark} onToggle={toggleDark} />)}
+        {settingRow('Font Size', 'Adjust text size across the app',
+          <select value={fontSize} onChange={e => setFontSize(e.target.value)} className="select w-auto text-[13px] min-w-[100px]">
+            <option value="small">Small</option><option value="medium">Medium</option><option value="large">Large</option>
+          </select>)}
+        {settingRow('Compact Sidebar', 'Show icons only in sidebar navigation', <Toggle on={sidebarCompact} onToggle={() => setSidebarCompact(!sidebarCompact)} />)}
+      </>)}
 
-      {/* Notifications */}
-      <div className="mb-8">
-        <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'var(--font-display)' }}>Notifications</h2>
-        <div className="space-y-2">
-          <div className="card p-4 flex items-center justify-between">
-            <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]">Email Notifications</h3><p className="text-[12px] text-[var(--color-text-muted)]">Receive email alerts for important updates</p></div>
-            <Toggle on={emailNotifs} onToggle={() => setEmailNotifs(!emailNotifs)} />
-          </div>
-          <div className="card p-4 flex items-center justify-between">
-            <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]">Push Notifications</h3><p className="text-[12px] text-[var(--color-text-muted)]">Browser push notifications for real-time alerts</p></div>
-            <Toggle on={pushNotifs} onToggle={() => setPushNotifs(!pushNotifs)} />
-          </div>
-          <div className="card p-4 flex items-center justify-between">
-            <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]">Weekly Digest</h3><p className="text-[12px] text-[var(--color-text-muted)]">Get a weekly summary of your academic activity</p></div>
-            <Toggle on={weeklyDigest} onToggle={() => setWeeklyDigest(!weeklyDigest)} />
-          </div>
-        </div>
-      </div>
+      {settingsGroup('Notifications', <>
+        {settingRow('Email Notifications', 'Receive email alerts for important updates', <Toggle on={emailNotifs} onToggle={() => setEmailNotifs(!emailNotifs)} />)}
+        {settingRow('Push Notifications', 'Browser push notifications for real-time alerts', <Toggle on={pushNotifs} onToggle={() => setPushNotifs(!pushNotifs)} />)}
+        {settingRow('Weekly Digest', 'Get a weekly summary of your academic activity', <Toggle on={weeklyDigest} onToggle={() => setWeeklyDigest(!weeklyDigest)} />)}
+      </>)}
 
-      {/* Sound */}
-      <div className="mb-8">
-        <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'var(--font-display)' }}>Sound & Media</h2>
-        <div className="space-y-2">
-          <div className="card p-4 flex items-center justify-between">
-            <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]">Sound Effects</h3><p className="text-[12px] text-[var(--color-text-muted)]">Play sounds on interactions and notifications</p></div>
-            <Toggle on={sound} onToggle={toggleSound} />
-          </div>
-        </div>
-      </div>
+      {settingsGroup('Sound & Media', <>
+        {settingRow('Sound Effects', 'Play sounds on interactions and notifications', <Toggle on={sound} onToggle={toggleSound} />)}
+      </>)}
 
-      {/* Regional */}
-      <div className="mb-8">
-        <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'var(--font-display)' }}>Regional</h2>
-        <div className="space-y-2">
-          <div className="card p-4 flex items-center justify-between">
-            <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]">Language</h3><p className="text-[12px] text-[var(--color-text-muted)]">Select your preferred language</p></div>
-            <select value={language} onChange={e => setLanguage(e.target.value)} className="select w-auto text-[13px] min-w-[140px]">
-              <option value="en">English</option><option value="fr">Français</option><option value="ha">Hausa</option><option value="yo">Yorùbá</option><option value="ig">Igbo</option>
-            </select>
-          </div>
-          <div className="card p-4 flex items-center justify-between">
-            <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]">Timezone</h3><p className="text-[12px] text-[var(--color-text-muted)]">Set your local timezone for schedules</p></div>
-            <select value={timezone} onChange={e => setTimezone(e.target.value)} className="select w-auto text-[13px] min-w-[180px]">
-              <option value="Africa/Lagos">West Africa (WAT)</option><option value="Africa/Nairobi">East Africa (EAT)</option>
-              <option value="Europe/London">London (GMT)</option><option value="America/New_York">New York (EST)</option><option value="Asia/Dubai">Dubai (GST)</option>
-            </select>
-          </div>
-        </div>
-      </div>
+      {settingsGroup('Regional', <>
+        {settingRow('Language', 'Select your preferred language',
+          <select value={language} onChange={e => setLanguage(e.target.value)} className="select w-auto text-[13px] min-w-[140px]">
+            <option value="en">English</option><option value="fr">Français</option><option value="ha">Hausa</option><option value="yo">Yorùbá</option><option value="ig">Igbo</option>
+          </select>)}
+        {settingRow('Timezone', 'Set your local timezone for schedules',
+          <select value={timezone} onChange={e => setTimezone(e.target.value)} className="select w-auto text-[13px] min-w-[180px]">
+            <option value="Africa/Lagos">West Africa (WAT)</option><option value="Africa/Nairobi">East Africa (EAT)</option>
+            <option value="Europe/London">London (GMT)</option><option value="America/New_York">New York (EST)</option><option value="Asia/Dubai">Dubai (GST)</option>
+          </select>)}
+      </>)}
 
-      {/* Privacy & Security */}
-      <div className="mb-8">
-        <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'var(--font-display)' }}>Privacy & Security</h2>
-        <div className="space-y-2">
-          <div className="card p-4 flex items-center justify-between">
-            <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]">Two-Factor Authentication</h3><p className="text-[12px] text-[var(--color-text-muted)]">Add an extra layer of security to your account</p></div>
-            <button onClick={() => { setModal('2fa'); setModalMsg(''); setModalError('') }} className="btn-secondary text-[12px] px-4 py-1.5">Enable</button>
-          </div>
-          <div className="card p-4 flex items-center justify-between">
-            <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]">Download My Data</h3><p className="text-[12px] text-[var(--color-text-muted)]">Export a copy of all your account data</p></div>
-            <button onClick={() => { setModal('export'); setModalMsg(''); setModalError('') }} className="btn-secondary text-[12px] px-4 py-1.5">Export</button>
-          </div>
-          <div className="card p-4 flex items-center justify-between border-[var(--color-danger)]/20">
-            <div><h3 className="text-[14px] font-bold text-[var(--color-danger)]">Delete Account</h3><p className="text-[12px] text-[var(--color-text-muted)]">Permanently delete your account and all data</p></div>
-            <button onClick={() => { setModal('delete'); setModalMsg(''); setModalError('') }} className="btn-secondary text-[12px] px-4 py-1.5 text-[var(--color-danger)] border-[var(--color-danger)]/30 hover:bg-[var(--color-danger)]/5">Delete</button>
-          </div>
-        </div>
-      </div>
+      {settingsGroup('Privacy & Security', <>
+        {settingRow('Two-Factor Authentication', 'Add an extra layer of security to your account',
+          <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={() => { setModal('2fa'); setModalMsg(''); setModalError('') }} className="btn-secondary text-[12px] px-4 py-1.5">Enable</motion.button>)}
+        {settingRow('Download My Data', 'Export a copy of all your account data',
+          <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={() => { setModal('export'); setModalMsg(''); setModalError('') }} className="btn-secondary text-[12px] px-4 py-1.5">Export</motion.button>)}
+        {settingRow('Delete Account', 'Permanently delete your account and all data',
+          <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={() => { setModal('delete'); setModalMsg(''); setModalError('') }} className="btn-secondary text-[12px] px-4 py-1.5 text-[var(--color-danger)] border-[var(--color-danger)]/30 hover:bg-[var(--color-danger)]/5">Delete</motion.button>, true)}
+      </>)}
 
       {/* Billing */}
-      <div className="mb-8">
+      <motion.div initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} className="mb-8">
         <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'var(--font-display)' }}>Billing & Subscription</h2>
         <div className="card p-5">
           <div className="flex items-center justify-between mb-4">
-            <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]">Current Plan</h3><p className="text-[12px] text-[var(--color-text-muted)]">Manage your subscription and billing</p></div>
+            <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>Current Plan</h3><p className="text-[12px] text-[var(--color-text-muted)]">Manage your subscription and billing</p></div>
             <span className="badge badge-success">Free</span>
           </div>
           <div className="grid grid-cols-3 gap-3 mb-4">
@@ -855,7 +816,7 @@ export function SettingsPage() {
               <div className="text-[15px] font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>Free</div>
               <div className="text-[11px] text-[var(--color-text-muted)] mt-0.5">Basic features</div>
             </div>
-            <div className="p-3 rounded-[10px] text-center border-2 border-[var(--color-navy)]/30 bg-[var(--color-navy)]/3">
+            <div className="p-3 rounded-[10px] text-center border-2 border-[var(--color-primary)]/30" style={{background:'color-mix(in srgb, var(--color-primary) 3%, transparent)'}}>
               <div className="text-[15px] font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>Pro</div>
               <div className="text-[11px] text-[var(--color-text-muted)] mt-0.5">$9.99/month</div>
             </div>
@@ -865,52 +826,32 @@ export function SettingsPage() {
             </div>
           </div>
           <div className="flex gap-3">
-            <button className="btn-primary flex-1 py-2.5 text-[13px]">Subscribe with Paystack</button>
-            <button className="btn-secondary flex-1 py-2.5 text-[13px]">Pay with PayPal</button>
+            <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} className="btn-primary flex-1 py-2.5 text-[13px]">Subscribe with Paystack</motion.button>
+            <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} className="btn-secondary flex-1 py-2.5 text-[13px]">Pay with PayPal</motion.button>
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      {/* Account */}
-      <div className="mb-8">
-        <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'var(--font-display)' }}>Account</h2>
-        <div className="space-y-2">
-          <div className="card p-4 flex items-center justify-between">
-            <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]">Change Password</h3><p className="text-[12px] text-[var(--color-text-muted)]">Update your account password</p></div>
-            <button onClick={() => { setModal('password'); setModalMsg(''); setModalError('') }} className="btn-secondary text-[12px] px-4 py-1.5">Change</button>
-          </div>
-          <div className="card p-4 flex items-center justify-between">
-            <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]">Update Email</h3><p className="text-[12px] text-[var(--color-text-muted)]">Change the email associated with your account</p></div>
-            <button onClick={() => { setModal('email'); setModalMsg(''); setModalError('') }} className="btn-secondary text-[12px] px-4 py-1.5">Update</button>
-          </div>
-        </div>
-      </div>
+      {settingsGroup('Account', <>
+        {settingRow('Change Password', 'Update your account password',
+          <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={() => { setModal('password'); setModalMsg(''); setModalError('') }} className="btn-secondary text-[12px] px-4 py-1.5">Change</motion.button>)}
+        {settingRow('Update Email', 'Change the email associated with your account',
+          <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={() => { setModal('email'); setModalMsg(''); setModalError('') }} className="btn-secondary text-[12px] px-4 py-1.5">Update</motion.button>)}
+      </>)}
 
-      {/* ── Modals ─────────────────────────────────────── */}
-
-      {/* Change Password */}
+      {/* Modals */}
       {modal === 'password' && (
         <Modal title="Change Password">
           <div className="space-y-3 mb-4">
-            <div>
-              <label className="label">New Password</label>
-              <input type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} className="input" placeholder="Min 8 characters" />
-            </div>
-            <div>
-              <label className="label">Confirm Password</label>
-              <input type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} className="input" placeholder="Repeat new password" />
-            </div>
+            <div><label className="label">New Password</label><input type="password" value={newPassword} onChange={e => setNewPassword(e.target.value)} className="input" placeholder="Min 8 characters" /></div>
+            <div><label className="label">Confirm Password</label><input type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} className="input" placeholder="Repeat new password" /></div>
           </div>
           <div className="flex gap-2">
-            <button onClick={closeModal} className="btn-secondary flex-1 py-2">Cancel</button>
-            <button onClick={handleChangePassword} disabled={modalLoading} className="btn-primary flex-1 py-2">
-              {modalLoading ? 'Saving...' : 'Update'}
-            </button>
+            <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={closeModal} className="btn-secondary flex-1 py-2">Cancel</motion.button>
+            <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={handleChangePassword} disabled={modalLoading} className="btn-primary flex-1 py-2">{modalLoading ? 'Saving...' : 'Update'}</motion.button>
           </div>
         </Modal>
       )}
-
-      {/* Update Email */}
       {modal === 'email' && (
         <Modal title="Update Email">
           <div className="mb-4">
@@ -919,68 +860,56 @@ export function SettingsPage() {
             <p className="text-[11px] text-[var(--color-text-muted)] mt-1.5">A confirmation link will be sent to the new address.</p>
           </div>
           <div className="flex gap-2">
-            <button onClick={closeModal} className="btn-secondary flex-1 py-2">Cancel</button>
-            <button onClick={handleUpdateEmail} disabled={modalLoading} className="btn-primary flex-1 py-2">
-              {modalLoading ? 'Sending...' : 'Send Link'}
-            </button>
+            <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={closeModal} className="btn-secondary flex-1 py-2">Cancel</motion.button>
+            <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={handleUpdateEmail} disabled={modalLoading} className="btn-primary flex-1 py-2">{modalLoading ? 'Sending...' : 'Send Link'}</motion.button>
           </div>
         </Modal>
       )}
-
-      {/* 2FA */}
       {modal === '2fa' && (
         <Modal title="Enable Two-Factor Authentication">
           {!modalMsg ? (
             <>
               <p className="text-[13px] text-[var(--color-text-muted)] mb-4 text-center">Use an authenticator app like Google Authenticator or Authy to add 2FA to your account.</p>
               <div className="flex gap-2">
-                <button onClick={closeModal} className="btn-secondary flex-1 py-2">Cancel</button>
-                <button onClick={handle2FA} disabled={modalLoading} className="btn-primary flex-1 py-2">
-                  {modalLoading ? 'Setting up...' : 'Enable 2FA'}
-                </button>
+                <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={closeModal} className="btn-secondary flex-1 py-2">Cancel</motion.button>
+                <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={handle2FA} disabled={modalLoading} className="btn-primary flex-1 py-2">{modalLoading ? 'Setting up...' : 'Enable 2FA'}</motion.button>
               </div>
             </>
           ) : (
             <>
-              <pre className="text-[11px] bg-[var(--color-cream)] rounded-lg p-3 mb-4 whitespace-pre-wrap break-all">{modalMsg}</pre>
-              <button onClick={closeModal} className="btn-primary w-full py-2">Done</button>
+              <pre className="text-[12px] text-[var(--color-text-muted)] mb-4 whitespace-pre-wrap text-center bg-[var(--color-bg-secondary)] p-3 rounded-lg">{modalMsg}</pre>
+              <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={closeModal} className="btn-primary w-full py-2">Done</motion.button>
             </>
           )}
         </Modal>
       )}
-
-      {/* Export Data */}
       {modal === 'export' && (
-        <Modal title="Export My Data">
+        <Modal title="Download My Data">
           {!modalMsg ? (
             <>
-              <p className="text-[13px] text-[var(--color-text-muted)] mb-4 text-center">Downloads a JSON file containing your profile, grades, enrollments, and attendance records.</p>
+              <p className="text-[13px] text-[var(--color-text-muted)] mb-4 text-center">Export your profile, grades, enrollments, and attendance data as a JSON file.</p>
               <div className="flex gap-2">
-                <button onClick={closeModal} className="btn-secondary flex-1 py-2">Cancel</button>
-                <button onClick={handleExportData} disabled={modalLoading} className="btn-primary flex-1 py-2">
-                  {modalLoading ? 'Exporting...' : 'Download'}
-                </button>
+                <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={closeModal} className="btn-secondary flex-1 py-2">Cancel</motion.button>
+                <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={handleExportData} disabled={modalLoading} className="btn-primary flex-1 py-2">{modalLoading ? 'Exporting...' : 'Export'}</motion.button>
               </div>
             </>
           ) : (
-            <button onClick={closeModal} className="btn-primary w-full py-2">Close</button>
+            <>
+              <div className="text-center mb-4"><div className="text-[13px] text-[var(--color-success)] font-medium">{modalMsg}</div></div>
+              <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={closeModal} className="btn-primary w-full py-2">Done</motion.button>
+            </>
           )}
         </Modal>
       )}
-
-      {/* Delete Account */}
       {modal === 'delete' && (
         <Modal title="Delete Account">
-          <p className="text-[13px] text-[var(--color-text-muted)] mb-3 text-center">This is permanent and cannot be undone. Type <strong>DELETE</strong> to confirm.</p>
+          <p className="text-[13px] text-[var(--color-text-muted)] mb-4 text-center">This action is irreversible. Type <strong>DELETE</strong> to confirm.</p>
           <div className="mb-4">
-            <input value={deleteConfirm} onChange={e => setDeleteConfirm(e.target.value)} className="input text-center font-mono" placeholder="DELETE" />
+            <input value={deleteConfirm} onChange={e => setDeleteConfirm(e.target.value)} className="input" placeholder='Type "DELETE" to confirm'/>
           </div>
           <div className="flex gap-2">
-            <button onClick={closeModal} className="btn-secondary flex-1 py-2">Cancel</button>
-            <button onClick={handleDeleteAccount} disabled={modalLoading || deleteConfirm !== 'DELETE'}
-              className="flex-1 py-2 rounded-[var(--radius-md)] bg-[var(--color-danger)] text-white font-semibold text-[13px] disabled:opacity-40 hover:bg-[var(--color-danger)]/90 transition">
-              {modalLoading ? 'Deleting...' : 'Delete Forever'}
-            </button>
+            <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={closeModal} className="btn-secondary flex-1 py-2">Cancel</motion.button>
+            <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={handleDeleteAccount} disabled={modalLoading} className="btn-primary flex-1 py-2" style={{background:'var(--color-danger)'}}>{modalLoading ? 'Deleting...' : 'Delete Account'}</motion.button>
           </div>
         </Modal>
       )}

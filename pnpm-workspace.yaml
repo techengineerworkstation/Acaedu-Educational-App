@@ -1,4 +1,5 @@
 allowBuilds:
+  '@sentry/cli': false
   esbuild: true
 minimumReleaseAgeExclude:
   - lucide-react@1.21.0

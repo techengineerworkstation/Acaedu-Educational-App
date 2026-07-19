@@ -119,6 +119,7 @@ interface PresetPalette {
   navy: string
   gold: string
   danger: string
+  success: string
   teal: string
   bg: string
   card: string
@@ -131,22 +132,22 @@ interface PresetPalette {
 const palettes: Record<AcademicPreset, Omit<PresetPalette, 'rgba'>> = {
   default: {
     primary: '#c1272d', secondary: '#00262b', accent: '#025e6b',
-    navy: '#00262b', gold: '#b8860b', danger: '#c1272d', teal: '#025e6b',
+    navy: '#00262b', gold: '#b8860b', danger: '#c1272d', success: '#1b7a42', teal: '#025e6b',
     bg: '#ffffff', card: '#ffffff', text: '#1c1e21', textMuted: '#6b6e76', border: '#ddd9d0',
   },
   blue: {
     primary: '#0056d2', secondary: '#002761', accent: '#a678f5',
-    navy: '#002761', gold: '#b8922a', danger: '#d30a28', teal: '#3587fc',
+    navy: '#002761', gold: '#b8922a', danger: '#d30a28', success: '#276a1a', teal: '#3587fc',
     bg: '#ffffff', card: '#ffffff', text: '#0f1114', textMuted: '#5b6780', border: '#dae1ed',
   },
   crimson: {
     primary: '#a51c30', secondary: '#1e1e1e', accent: '#f8c21c',
-    navy: '#a51c30', gold: '#b8860b', danger: '#c41e3a', teal: '#1565c0',
+    navy: '#a51c30', gold: '#b8860b', danger: '#c41e3a', success: '#2e7d32', teal: '#1565c0',
     bg: '#ffffff', card: '#ffffff', text: '#1e1e1e', textMuted: '#6c6c6c', border: '#c0c0c0',
   },
   institutional: {
     primary: '#e03c31', secondary: '#394b58', accent: '#1d6b9f',
-    navy: '#394b58', gold: '#c4960c', danger: '#e03c31', teal: '#1d6b9f',
+    navy: '#394b58', gold: '#c4960c', danger: '#e03c31', success: '#2b7a3e', teal: '#1d6b9f',
     bg: '#ffffff', card: '#ffffff', text: '#2d3b45', textMuted: '#8899a6', border: '#d0d8de',
   },
 }

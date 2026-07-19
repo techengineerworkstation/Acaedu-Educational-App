@@ -4,6 +4,9 @@ import { Video, Plus, Clock, ExternalLink, ClipboardList, User as UserIcon, Mail
 import { fetchTable, insertRow, updateRow } from '../lib/supabase'
 import type { User } from '../types'
 
+const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.05 } } }
+const fadeUp = { hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22,1,0.36,1] as [number,number,number,number] } } }
+
 export function LiveClassesPage() {
   const [meetings, setMeetings] = useState<Record<string, unknown>[]>([])
   const [loading, setLoading] = useState(true)
@@ -24,47 +27,62 @@ export function LiveClassesPage() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
+      <motion.div initial={{opacity:0,y:-10}} animate={{opacity:1,y:0}} className="flex justify-between items-center mb-6">
         <div>
-          <div className="text-xs font-semibold text-[var(--color-secondary)] uppercase tracking-[0.15em] mb-1">Live Classes</div>
-          <h1 className="text-2xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>Live Classes</h1>
+          <span className="section-label">Live Classes</span>
+          <h1 className="section-title mt-2 text-2xl">Live Classes</h1>
         </div>
-        <button onClick={() => setShowForm(!showForm)} className="px-4 py-2.5 rounded-lg bg-[var(--color-navy)] text-white font-semibold text-sm flex items-center gap-2 hover:bg-[var(--color-navy)]-light transition-all shadow-sm">
+        <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={() => setShowForm(!showForm)} className="btn-primary">
           <Plus size={16}/> Schedule Class
-        </button>
-      </div>
+        </motion.button>
+      </motion.div>
+
       {showForm && (
-        <motion.div initial={{opacity:0}} animate={{opacity:1}} className="mb-6 p-5 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-border)]">
-          <h3 className="font-bold text-[var(--color-navy)] mb-4" style={{ fontFamily: 'var(--font-display)' }}>Schedule Live Class</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div><label className="block text-xs font-semibold text-[var(--color-text-secondary)] mb-1.5 uppercase tracking-wider">Title</label><input value={title} onChange={e => setTitle(e.target.value)} className="w-full px-3 py-2.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-cream)] text-sm outline-none focus:border-[var(--color-navy)] transition"/></div>
-            <div><label className="block text-xs font-semibold text-[var(--color-text-secondary)] mb-1.5 uppercase tracking-wider">Course ID</label><input value={courseId} onChange={e => setCourseId(e.target.value)} className="w-full px-3 py-2.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-cream)] text-sm outline-none focus:border-[var(--color-navy)] transition"/></div>
-            <div><label className="block text-xs font-semibold text-[var(--color-text-secondary)] mb-1.5 uppercase tracking-wider">Start Time</label><input type="datetime-local" value={startTime} onChange={e => setStartTime(e.target.value)} className="w-full px-3 py-2.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-cream)] text-sm outline-none focus:border-[var(--color-navy)] transition"/></div>
-            <div><label className="block text-xs font-semibold text-[var(--color-text-secondary)] mb-1.5 uppercase tracking-wider">Meeting URL</label><input value={roomUrl} onChange={e => setRoomUrl(e.target.value)} className="w-full px-3 py-2.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-cream)] text-sm outline-none focus:border-[var(--color-navy)] transition" placeholder="https://meet.google.com/..."/></div>
+        <motion.div initial={{opacity:0,y:-12,scale:0.98}} animate={{opacity:1,y:0,scale:1}} transition={{duration:0.35,ease:[0.22,1,0.36,1]}}
+          className="card p-6 mb-6">
+          <h3 className="text-[15px] font-bold text-[var(--color-navy)] mb-5" style={{ fontFamily: 'var(--font-display)' }}>Schedule Live Class</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+            <div><label className="label">Title</label><input value={title} onChange={e => setTitle(e.target.value)} className="input"/></div>
+            <div><label className="label">Course ID</label><input value={courseId} onChange={e => setCourseId(e.target.value)} className="input"/></div>
+            <div><label className="label">Start Time</label><input type="datetime-local" value={startTime} onChange={e => setStartTime(e.target.value)} className="input"/></div>
+            <div><label className="label">Meeting URL</label><input value={roomUrl} onChange={e => setRoomUrl(e.target.value)} className="input" placeholder="https://meet.google.com/..."/></div>
           </div>
           <div className="flex gap-3">
-            <button onClick={handleCreate} className="px-4 py-2 rounded-lg bg-[var(--color-navy)] text-white font-semibold text-sm hover:bg-[var(--color-navy)]-light transition-all">Schedule</button>
-            <button onClick={() => setShowForm(false)} className="px-4 py-2 rounded-lg border border-[var(--color-border)] text-sm font-medium hover:bg-[var(--color-cream)] transition">Cancel</button>
+            <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={handleCreate} className="btn-primary px-6">Schedule</motion.button>
+            <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={() => setShowForm(false)} className="btn-secondary px-6">Cancel</motion.button>
           </div>
         </motion.div>
       )}
-      {loading ? <div className="h-32 bg-[var(--color-bg-secondary)]/50 rounded-xl animate-pulse"/> : meetings.length === 0 ? (
-        <div className="text-center py-16"><Video size={48} className="mx-auto mb-4 text-[var(--color-text-muted)]"/><p className="text-[var(--color-text-muted)]">No live classes scheduled.</p></div>
+
+      {loading ? (
+        <div className="space-y-3">{Array.from({length:4}).map((_,i) => <div key={i} className="skeleton h-20"/>)}</div>
+      ) : meetings.length === 0 ? (
+        <motion.div initial={{opacity:0,scale:0.95}} animate={{opacity:1,scale:1}} className="empty-state">
+          <div className="empty-state-icon"><Video size={28}/></div>
+          <p className="text-[var(--color-text-muted)]">No live classes scheduled.</p>
+        </motion.div>
       ) : (
-        <div className="space-y-3">
-          {meetings.map((m, i) => (
-            <motion.div key={m.id as string} initial={{opacity:0,x:-10}} animate={{opacity:1,x:0}} transition={{delay:i*0.05}} className="p-4 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-border)] flex justify-between items-center hover:border-[var(--color-navy)]/20 transition-all">
-              <div>
-                <h3 className="font-bold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>{m.title as string}</h3>
-                <p className="text-sm text-[var(--color-text-muted)]">{m.start_time ? new Date(m.start_time as string).toLocaleString() : 'TBD'}</p>
+        <motion.div variants={stagger} initial="hidden" animate="show" className="space-y-3">
+          {meetings.map((m) => (
+            <motion.div key={m.id as string} variants={fadeUp}
+              whileHover={{x:4,boxShadow:'var(--shadow-sm)'}}
+              className="card card-interactive p-4 flex justify-between items-center">
+              <div className="flex items-center gap-3">
+                <div className="w-11 h-11 rounded-xl flex items-center justify-center" style={{background:'color-mix(in srgb, var(--color-primary) 8%, transparent)'}}>
+                  <Video size={20} className="text-[var(--color-primary)]"/>
+                </div>
+                <div>
+                  <h3 className="font-bold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>{m.title as string}</h3>
+                  <p className="text-sm text-[var(--color-text-muted)]">{m.start_time ? new Date(m.start_time as string).toLocaleString() : 'TBD'}</p>
+                </div>
               </div>
               <div className="flex items-center gap-2">
-                <span className={`text-xs px-2 py-1 rounded-md font-medium ${m.status === 'scheduled' ? 'bg-[var(--color-navy)]/8 text-[var(--color-navy)]' : 'bg-[var(--color-success)]/10 text-[var(--color-success)]'}`}>{m.status as string}</span>
-                {m.room_url ? <a href={m.room_url as string} target="_blank" rel="noopener noreferrer" className="p-2 rounded-lg hover:bg-[var(--color-navy)]/5 transition text-[var(--color-navy)]/60 hover:text-[var(--color-navy)]"><ExternalLink size={16}/></a> : null}
+                <span className={`badge ${m.status === 'scheduled' ? 'badge-navy' : 'badge-success'}`}>{m.status as string}</span>
+                {m.room_url ? <a href={m.room_url as string} target="_blank" rel="noopener noreferrer" className="btn-ghost p-2"><ExternalLink size={16}/></a> : null}
               </div>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       )}
     </div>
   )
@@ -90,45 +108,63 @@ export function TestsPage() {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
+      <motion.div initial={{opacity:0,y:-10}} animate={{opacity:1,y:0}} className="flex justify-between items-center mb-6">
         <div>
-          <div className="text-xs font-semibold text-[var(--color-secondary)] uppercase tracking-[0.15em] mb-1">Tests</div>
-          <h1 className="text-2xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>Tests</h1>
+          <span className="section-label">Tests</span>
+          <h1 className="section-title mt-2 text-2xl">Tests</h1>
         </div>
-        <button onClick={() => setShowForm(!showForm)} className="px-4 py-2.5 rounded-lg bg-[var(--color-navy)] text-white font-semibold text-sm flex items-center gap-2 hover:bg-[var(--color-navy)]-light transition-all shadow-sm">
+        <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={() => setShowForm(!showForm)} className="btn-primary">
           <Plus size={16}/> Create Test
-        </button>
-      </div>
+        </motion.button>
+      </motion.div>
+
       {showForm && (
-        <motion.div initial={{opacity:0}} animate={{opacity:1}} className="mb-6 p-5 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-border)]">
-          <h3 className="font-bold text-[var(--color-navy)] mb-4" style={{ fontFamily: 'var(--font-display)' }}>Create Test</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-            <div><label className="block text-xs font-semibold text-[var(--color-text-secondary)] mb-1.5 uppercase tracking-wider">Title</label><input value={title} onChange={e => setTitle(e.target.value)} className="w-full px-3 py-2.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-cream)] text-sm outline-none focus:border-[var(--color-navy)] transition"/></div>
-            <div><label className="block text-xs font-semibold text-[var(--color-text-secondary)] mb-1.5 uppercase tracking-wider">Course ID</label><input value={courseId} onChange={e => setCourseId(e.target.value)} className="w-full px-3 py-2.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-cream)] text-sm outline-none focus:border-[var(--color-navy)] transition"/></div>
-            <div><label className="block text-xs font-semibold text-[var(--color-text-secondary)] mb-1.5 uppercase tracking-wider">Type</label>
-              <select value={testType} onChange={e => setTestType(e.target.value)} className="w-full px-3 py-2.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-cream)] text-sm outline-none focus:border-[var(--color-navy)] transition">
+        <motion.div initial={{opacity:0,y:-12,scale:0.98}} animate={{opacity:1,y:0,scale:1}} transition={{duration:0.35,ease:[0.22,1,0.36,1]}}
+          className="card p-6 mb-6">
+          <h3 className="text-[15px] font-bold text-[var(--color-navy)] mb-5" style={{ fontFamily: 'var(--font-display)' }}>Create Test</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
+            <div><label className="label">Title</label><input value={title} onChange={e => setTitle(e.target.value)} className="input"/></div>
+            <div><label className="label">Course ID</label><input value={courseId} onChange={e => setCourseId(e.target.value)} className="input"/></div>
+            <div><label className="label">Type</label>
+              <select value={testType} onChange={e => setTestType(e.target.value)} className="select">
                 <option value="quiz">Quiz</option><option value="pop_quiz">Pop Quiz</option><option value="practice">Practice</option><option value="assessment">Assessment</option>
               </select>
             </div>
-            <div><label className="block text-xs font-semibold text-[var(--color-text-secondary)] mb-1.5 uppercase tracking-wider">Date</label><input type="datetime-local" value={testDate} onChange={e => setTestDate(e.target.value)} className="w-full px-3 py-2.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-cream)] text-sm outline-none focus:border-[var(--color-navy)] transition"/></div>
+            <div><label className="label">Date</label><input type="datetime-local" value={testDate} onChange={e => setTestDate(e.target.value)} className="input"/></div>
           </div>
           <div className="flex gap-3">
-            <button onClick={handleCreate} className="px-4 py-2 rounded-lg bg-[var(--color-navy)] text-white font-semibold text-sm hover:bg-[var(--color-navy)]-light transition-all">Create</button>
-            <button onClick={() => setShowForm(false)} className="px-4 py-2 rounded-lg border border-[var(--color-border)] text-sm font-medium hover:bg-[var(--color-cream)] transition">Cancel</button>
+            <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={handleCreate} className="btn-primary px-6">Create</motion.button>
+            <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={() => setShowForm(false)} className="btn-secondary px-6">Cancel</motion.button>
           </div>
         </motion.div>
       )}
-      {loading ? <div className="h-32 bg-[var(--color-bg-secondary)]/50 rounded-xl animate-pulse"/> : tests.length === 0 ? (
-        <div className="text-center py-16"><ClipboardList size={48} className="mx-auto mb-4 text-[var(--color-text-muted)]"/><p className="text-[var(--color-text-muted)]">No tests yet.</p></div>
+
+      {loading ? (
+        <div className="space-y-3">{Array.from({length:4}).map((_,i) => <div key={i} className="skeleton h-20"/>)}</div>
+      ) : tests.length === 0 ? (
+        <motion.div initial={{opacity:0,scale:0.95}} animate={{opacity:1,scale:1}} className="empty-state">
+          <div className="empty-state-icon"><ClipboardList size={28}/></div>
+          <p className="text-[var(--color-text-muted)]">No tests yet.</p>
+        </motion.div>
       ) : (
-        <div className="space-y-3">
-          {tests.map((t, i) => (
-            <motion.div key={t.id as string} initial={{opacity:0,x:-10}} animate={{opacity:1,x:0}} transition={{delay:i*0.05}} className="p-4 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-border)] flex justify-between items-center hover:border-[var(--color-navy)]/20 transition-all">
-              <div><h3 className="font-bold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>{t.title as string}</h3><p className="text-sm text-[var(--color-text-muted)]">{t.test_type as string} · {t.duration_minutes as number} min · {t.test_date ? new Date(t.test_date as string).toLocaleDateString() : 'TBD'}</p></div>
-              <span className="text-xs px-2 py-1 rounded-md bg-[var(--color-navy)]/8 text-[var(--color-navy)] font-medium">{t.test_type as string}</span>
+        <motion.div variants={stagger} initial="hidden" animate="show" className="space-y-3">
+          {tests.map((t) => (
+            <motion.div key={t.id as string} variants={fadeUp}
+              whileHover={{x:4,boxShadow:'var(--shadow-sm)'}}
+              className="card card-interactive p-4 flex justify-between items-center">
+              <div className="flex items-center gap-3">
+                <div className="w-11 h-11 rounded-xl flex items-center justify-center" style={{background:'color-mix(in srgb, var(--color-accent) 10%, transparent)'}}>
+                  <ClipboardList size={20} className="text-[var(--color-accent)]"/>
+                </div>
+                <div>
+                  <h3 className="font-bold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>{t.title as string}</h3>
+                  <p className="text-sm text-[var(--color-text-muted)]">{t.test_type as string} · {t.duration_minutes as number} min · {t.test_date ? new Date(t.test_date as string).toLocaleDateString() : 'TBD'}</p>
+                </div>
+              </div>
+              <span className="badge badge-navy">{t.test_type as string}</span>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       )}
     </div>
   )
@@ -142,18 +178,30 @@ export function ClassRecordsPage() {
 
   return (
     <div>
-      <div className="mb-6">
-        <div className="text-xs font-semibold text-[var(--color-secondary)] uppercase tracking-[0.15em] mb-1">Class Records</div>
-        <h1 className="text-2xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>Class Records</h1>
-      </div>
-      {loading ? <div className="h-32 bg-[var(--color-bg-secondary)]/50 rounded-xl animate-pulse"/> : videos.length === 0 ? (
-        <div className="text-center py-16"><Video size={48} className="mx-auto mb-4 text-[var(--color-text-muted)]"/><p className="text-[var(--color-text-muted)]">No class records yet.</p></div>
+      <motion.div initial={{opacity:0,y:-10}} animate={{opacity:1,y:0}} className="mb-6">
+        <span className="section-label">Class Records</span>
+        <h1 className="section-title mt-2 text-2xl">Class Records</h1>
+      </motion.div>
+
+      {loading ? (
+        <motion.div variants={stagger} initial="hidden" animate="show" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {Array.from({length:6}).map((_,i) => <motion.div key={i} variants={fadeUp} className="skeleton h-56 rounded-xl"/>)}
+        </motion.div>
+      ) : videos.length === 0 ? (
+        <motion.div initial={{opacity:0,scale:0.95}} animate={{opacity:1,scale:1}} className="empty-state">
+          <div className="empty-state-icon"><Video size={28}/></div>
+          <p className="text-[var(--color-text-muted)]">No class records yet.</p>
+        </motion.div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {videos.map((v, i) => (
-            <motion.div key={v.id as string} initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{delay:i*0.06}} className="rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-border)] overflow-hidden hover:border-[var(--color-navy)]/20 hover:shadow-lg transition-all duration-300">
-              <div className="aspect-video bg-[var(--color-cream)] flex items-center justify-center">
-                <div className="w-14 h-14 rounded-full bg-[var(--color-navy)]/10 flex items-center justify-center"><Video size={24} className="text-[var(--color-navy)]"/></div>
+        <motion.div variants={stagger} initial="hidden" animate="show" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {videos.map((v) => (
+            <motion.div key={v.id as string} variants={fadeUp}
+              whileHover={{y:-4,boxShadow:'var(--shadow-card-hover)'}}
+              className="card-academic overflow-hidden glow-hover">
+              <div className="aspect-video bg-[var(--color-bg-secondary)] flex items-center justify-center">
+                <div className="w-14 h-14 rounded-full flex items-center justify-center" style={{background:'color-mix(in srgb, var(--color-primary) 10%, transparent)'}}>
+                  <Video size={24} className="text-[var(--color-primary)]"/>
+                </div>
               </div>
               <div className="p-4">
                 <h3 className="font-bold text-[var(--color-navy)] mb-1" style={{ fontFamily: 'var(--font-display)' }}>{v.title as string}</h3>
@@ -164,7 +212,7 @@ export function ClassRecordsPage() {
               </div>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       )}
     </div>
   )
@@ -177,14 +225,7 @@ export function ProfilePage({ user }: { user: User }) {
   const [saving, setSaving] = useState(false)
   const [saveMsg, setSaveMsg] = useState('')
   const [form, setForm] = useState({
-    full_name: '',
-    phone: '',
-    department: '',
-    faculty: '',
-    bio: '',
-    gender: '',
-    matric_number: '',
-    year_of_study: '',
+    full_name: '', phone: '', department: '', faculty: '', bio: '', gender: '', matric_number: '', year_of_study: '',
   })
 
   useEffect(() => {
@@ -209,18 +250,12 @@ export function ProfilePage({ user }: { user: User }) {
     setSaving(true); setSaveMsg('')
     try {
       await updateRow('profiles', (profile?.id as string) || user.id, {
-        full_name: form.full_name,
-        phone: form.phone,
-        department: form.department,
-        faculty: form.faculty,
-        bio: form.bio,
-        gender: form.gender,
-        matric_number: form.matric_number,
-        year_of_study: form.year_of_study,
+        full_name: form.full_name, phone: form.phone, department: form.department,
+        faculty: form.faculty, bio: form.bio, gender: form.gender,
+        matric_number: form.matric_number, year_of_study: form.year_of_study,
       })
       setProfile(prev => ({ ...prev, ...form }))
-      setEditing(false)
-      setSaveMsg('Profile updated successfully.')
+      setEditing(false); setSaveMsg('Profile updated successfully.')
       setTimeout(() => setSaveMsg(''), 3000)
     } catch (err) {
       setSaveMsg(err instanceof Error ? err.message : 'Save failed.')
@@ -230,17 +265,15 @@ export function ProfilePage({ user }: { user: User }) {
 
   const field = (key: keyof typeof form, label: string, type: string = 'text', opts?: { value: string; label: string }[]) => (
     <div key={key}>
-      <label className="block text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-1">{label}</label>
+      <label className="label">{label}</label>
       {editing ? (
         opts ? (
-          <select value={form[key]} onChange={e => setForm({ ...form, [key]: e.target.value })}
-            className="w-full px-3 py-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-cream)] text-sm outline-none focus:border-[var(--color-navy)] transition">
+          <select value={form[key]} onChange={e => setForm({ ...form, [key]: e.target.value })} className="select">
             <option value="">Select...</option>
             {opts.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
           </select>
         ) : (
-          <input type={type} value={form[key]} onChange={e => setForm({ ...form, [key]: e.target.value })}
-            className="w-full px-3 py-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-cream)] text-sm outline-none focus:border-[var(--color-navy)] transition" />
+          <input type={type} value={form[key]} onChange={e => setForm({ ...form, [key]: e.target.value })} className="input"/>
         )
       ) : (
         <div className="px-3 py-2 rounded-lg bg-[var(--color-cream)] text-sm text-[var(--color-navy)] font-medium min-h-[36px]">
@@ -250,82 +283,71 @@ export function ProfilePage({ user }: { user: User }) {
     </div>
   )
 
-  if (loading) return <div className="h-64 bg-[var(--color-bg-secondary)]/50 rounded-xl animate-pulse"/>
+  if (loading) return <div className="skeleton h-64"/>
 
   return (
     <div>
-      <div className="mb-6 flex items-center justify-between">
+      <motion.div initial={{opacity:0,y:-10}} animate={{opacity:1,y:0}} className="mb-6 flex items-center justify-between">
         <div>
-          <div className="text-xs font-semibold text-[var(--color-secondary)] uppercase tracking-[0.15em] mb-1">Profile</div>
-          <h1 className="text-2xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>My Profile</h1>
+          <span className="section-label">Profile</span>
+          <h1 className="section-title mt-2 text-2xl">My Profile</h1>
         </div>
         <div className="flex items-center gap-2">
           {editing ? (
             <>
-              <button onClick={() => setEditing(false)} className="px-4 py-2 rounded-lg border border-[var(--color-border)] text-sm font-medium hover:bg-[var(--color-cream)] transition">Cancel</button>
-              <button onClick={handleSave} disabled={saving}
-                className="px-4 py-2 rounded-lg bg-[var(--color-navy)] text-white font-semibold text-sm hover:bg-[var(--color-navy)]/90 transition flex items-center gap-2">
+              <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={() => setEditing(false)} className="btn-secondary">Cancel</motion.button>
+              <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={handleSave} disabled={saving} className="btn-primary flex items-center gap-2">
                 {saving ? <><div className="w-3.5 h-3.5 border-2 border-white/40 border-t-white rounded-full animate-spin"/>Saving...</> : 'Save Changes'}
-              </button>
+              </motion.button>
             </>
           ) : (
-            <button onClick={() => setEditing(true)}
-              className="px-4 py-2 rounded-lg border border-[var(--color-border)] text-sm font-medium hover:bg-[var(--color-cream)] transition flex items-center gap-2">
+            <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={() => setEditing(true)} className="btn-secondary flex items-center gap-2">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
               Edit Profile
-            </button>
+            </motion.button>
           )}
         </div>
-      </div>
+      </motion.div>
 
       {saveMsg && (
-        <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }}
-          className={`mb-4 px-4 py-3 rounded-lg text-sm font-medium ${saveMsg.includes('success') ? 'bg-green-50 text-green-700 border border-green-200' : 'bg-red-50 text-red-700 border border-red-200'}`}>
+        <motion.div initial={{opacity:0,y:-8}} animate={{opacity:1,y:0}}
+          className={`mb-4 px-4 py-3 rounded-lg text-sm font-medium ${saveMsg.includes('success') ? 'badge-success' : 'badge-danger'}`}>
           {saveMsg}
         </motion.div>
       )}
 
-      <div className="max-w-2xl space-y-5">
+      <motion.div initial={{opacity:0,y:16}} animate={{opacity:1,y:0}} transition={{delay:0.1}} className="max-w-2xl space-y-5">
         {/* Avatar + identity */}
-        <div className="p-6 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-border)]">
+        <div className="card p-6">
           <div className="flex items-center gap-4 mb-6">
-            <div className="w-20 h-20 rounded-full bg-[var(--color-navy)]/10 flex items-center justify-center text-[var(--color-navy)] font-bold text-3xl flex-shrink-0"
-              style={{ fontFamily: 'var(--font-display)' }}>
+            <div className="w-20 h-20 rounded-full flex items-center justify-center text-white font-bold text-3xl flex-shrink-0"
+              style={{ fontFamily: 'var(--font-display)', background: 'var(--gradient-primary)' }}>
               {(form.full_name || user.full_name)?.[0]?.toUpperCase() || '?'}
             </div>
             <div>
               {editing ? (
                 <input value={form.full_name} onChange={e => setForm({ ...form, full_name: e.target.value })}
-                  className="text-xl font-extrabold text-[var(--color-navy)] w-full px-2 py-1 rounded-lg border border-[var(--color-border)] bg-[var(--color-cream)] outline-none focus:border-[var(--color-navy)] transition"
-                  style={{ fontFamily: 'var(--font-display)' }} />
+                  className="input text-xl font-extrabold w-full" style={{ fontFamily: 'var(--font-display)' }}/>
               ) : (
                 <h2 className="text-xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>{form.full_name || user.full_name}</h2>
               )}
               <p className="text-sm text-[var(--color-text-muted)] mt-0.5">{user.email}</p>
-              <span className="text-xs px-2 py-1 rounded-md bg-[var(--color-navy)]/8 text-[var(--color-navy)] font-medium capitalize mt-1 inline-block">{user.role}</span>
+              <span className="badge badge-navy capitalize mt-1 inline-block">{user.role}</span>
             </div>
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {field('phone', 'Phone', 'tel')}
-            {field('gender', 'Gender', 'text', [
-              { value: 'male', label: 'Male' },
-              { value: 'female', label: 'Female' },
-              { value: 'other', label: 'Other / Prefer not to say' },
-            ])}
+            {field('gender', 'Gender', 'text', [{value:'male',label:'Male'},{value:'female',label:'Female'},{value:'other',label:'Other'}])}
             {field('department', 'Department')}
             {field('faculty', 'Faculty')}
             {field('matric_number', 'Matric / Staff Number')}
             {field('year_of_study', 'Year of Study')}
           </div>
-
-          {/* Bio */}
           <div className="mt-4">
-            <label className="block text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-1">Bio</label>
+            <label className="label">Bio</label>
             {editing ? (
               <textarea value={form.bio} onChange={e => setForm({ ...form, bio: e.target.value })} rows={3}
-                className="w-full px-3 py-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-cream)] text-sm outline-none focus:border-[var(--color-navy)] transition resize-none"
-                placeholder="Tell us a bit about yourself..." />
+                className="textarea" placeholder="Tell us a bit about yourself..." />
             ) : (
               <div className="px-3 py-2 rounded-lg bg-[var(--color-cream)] text-sm text-[var(--color-navy)] min-h-[60px]">
                 {form.bio || <span className="text-[var(--color-text-muted)] italic">No bio yet.</span>}
@@ -335,30 +357,26 @@ export function ProfilePage({ user }: { user: User }) {
         </div>
 
         {/* Read-only account info */}
-        <div className="p-5 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-border)]">
-          <h3 className="text-xs font-bold text-[var(--color-navy)] uppercase tracking-wider mb-3">Account Info</h3>
+        <motion.div initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} transition={{delay:0.2}} className="card p-5">
+          <h3 className="text-xs font-bold text-[var(--color-navy)] uppercase tracking-wider mb-3" style={{ fontFamily: 'var(--font-display)' }}>Account Info</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div className="flex items-center gap-3 p-3 rounded-lg bg-[var(--color-cream)]">
-              <Mail size={16} className="text-[var(--color-navy)] flex-shrink-0"/>
-              <div><div className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider">Email</div><div className="font-medium text-sm">{user.email}</div></div>
-            </div>
-            <div className="flex items-center gap-3 p-3 rounded-lg bg-[var(--color-cream)]">
-              <UserIcon size={16} className="text-[var(--color-navy)] flex-shrink-0"/>
-              <div><div className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider">Role</div><div className="font-medium text-sm capitalize">{user.role}</div></div>
-            </div>
-            <div className="flex items-center gap-3 p-3 rounded-lg bg-[var(--color-cream)]">
-              <BookOpen size={16} className="text-[var(--color-navy)] flex-shrink-0"/>
-              <div><div className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider">Member Since</div>
-                <div className="font-medium text-sm">{user.created_at ? new Date(user.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : 'N/A'}</div>
-              </div>
-            </div>
-            <div className="flex items-center gap-3 p-3 rounded-lg bg-[var(--color-cream)]">
-              <Phone size={16} className="text-[var(--color-navy)] flex-shrink-0"/>
-              <div><div className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider">User ID</div><div className="font-medium text-[11px] font-mono truncate">{user.id}</div></div>
-            </div>
+            {[
+              { icon: Mail, label: 'Email', value: user.email },
+              { icon: UserIcon, label: 'Role', value: user.role },
+              { icon: BookOpen, label: 'Member Since', value: user.created_at ? new Date(user.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : 'N/A' },
+              { icon: Phone, label: 'User ID', value: user.id, mono: true },
+            ].map((item, i) => (
+              <motion.div key={i} whileHover={{scale:1.01}} className="flex items-center gap-3 p-3 rounded-lg bg-[var(--color-cream)]">
+                <item.icon size={16} className="text-[var(--color-navy)] flex-shrink-0"/>
+                <div>
+                  <div className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider">{item.label}</div>
+                  <div className={`font-medium text-sm capitalize ${item.mono ? 'font-mono truncate' : ''}`}>{item.value}</div>
+                </div>
+              </motion.div>
+            ))}
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
     </div>
   )
 }

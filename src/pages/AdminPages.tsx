@@ -2,8 +2,7 @@ import { useEffect, useState, useRef } from 'react'
 import { motion, useInView, animate } from 'framer-motion'
 import { Users, Search, UserCheck, BookOpen, CreditCard, GraduationCap } from 'lucide-react'
 import { fetchTable } from '../lib/supabase'
-
-// ── Shared chart helpers (scoped to AdminPages) ───────────────
+import { usePresetPalette } from '../lib/theme'
 
 function AdminBarChart({ data, colors }: { data: { label: string; value: number }[]; colors: string[] }) {
   const ref = useRef<HTMLDivElement>(null)
@@ -71,6 +70,7 @@ function AnimatedStat({ value }: { value: number }) {
 export function AdminDashboard() {
   const [stats, setStats] = useState<Record<string, number>>({})
   const [loading, setLoading] = useState(true)
+  const palette = usePresetPalette()
 
   useEffect(() => {
     async function load() {
@@ -112,34 +112,36 @@ export function AdminDashboard() {
   }, [])
 
   const cards = [
-    { label: 'Total Users', value: stats.users || 0, icon: Users, color: '#1B3A5C' },
-    { label: 'Students', value: stats.students || 0, icon: UserCheck, color: '#3D8B60' },
-    { label: 'Lecturers', value: stats.lecturers || 0, icon: Users, color: '#B8976A' },
-    { label: 'Active Subjects', value: stats.courses || 0, icon: BookOpen, color: '#6B5CE7' },
-    { label: 'Enrollments', value: stats.enrollments || 0, icon: GraduationCap, color: '#2A5580' },
-    { label: 'Exams', value: stats.exams || 0, icon: BookOpen, color: '#C49840' },
-    { label: 'Assignments', value: stats.assignments || 0, icon: BookOpen, color: '#C44040' },
-    { label: 'Revenue (₦)', value: stats.totalRevenue || 0, icon: CreditCard, color: '#3D8B60' },
+    { label: 'Total Users', value: stats.users || 0, icon: Users, color: palette.navy },
+    { label: 'Students', value: stats.students || 0, icon: UserCheck, color: palette.success },
+    { label: 'Lecturers', value: stats.lecturers || 0, icon: Users, color: palette.gold },
+    { label: 'Active Subjects', value: stats.courses || 0, icon: BookOpen, color: palette.accent },
+    { label: 'Enrollments', value: stats.enrollments || 0, icon: GraduationCap, color: palette.primary },
+    { label: 'Exams', value: stats.exams || 0, icon: BookOpen, color: palette.teal },
+    { label: 'Assignments', value: stats.assignments || 0, icon: BookOpen, color: palette.danger },
+    { label: 'Revenue (₦)', value: stats.totalRevenue || 0, icon: CreditCard, color: palette.gold },
   ]
+
+  const barColors = [palette.success, palette.accent, palette.danger, palette.navy, palette.gold, palette.teal]
 
   return (
     <div>
       <div className="mb-6">
-        <div className="text-xs font-semibold text-[var(--color-secondary)] uppercase tracking-[0.15em] mb-1">Admin</div>
-        <h1 className="text-2xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>Admin Dashboard</h1>
+        <span className="section-label">Admin</span>
+        <h1 className="section-title mt-2 text-2xl">Admin Dashboard</h1>
       </div>
 
       {/* Stat cards */}
       {loading ? (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          {Array.from({length: 8}).map((_,i) => <div key={i} className="h-28 rounded-xl bg-[var(--color-bg-secondary)]/50 animate-pulse"/>)}
+          {Array.from({length: 8}).map((_,i) => <div key={i} className="skeleton h-28"/>)}
         </div>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           {cards.map((card, i) => (
             <motion.div key={i} initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{delay:i*0.05}}
-              className="p-5 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-border)] hover:shadow-lg transition-shadow duration-300">
-              <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-3" style={{background:`${card.color}15`}}>
+              className="card p-5">
+              <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-3" style={{background: palette.rgba(card.color, 0.1)}}>
                 <card.icon size={20} style={{color:card.color}}/>
               </div>
               <div className="text-2xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>
@@ -155,10 +157,11 @@ export function AdminDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         {/* Enrollment Trends bar chart */}
         <motion.div initial={{opacity:0,x:-20}} animate={{opacity:1,x:0}} transition={{delay:0.3}}
-          className="p-6 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-border)]">
-          <div className="text-xs font-semibold text-[var(--color-secondary)] uppercase tracking-[0.15em] mb-1">Enrollment Trends</div>
+          className="card p-6">
+          <span className="section-label">Enrollment Trends</span>
+          <h2 className="text-lg font-bold text-[var(--color-navy)] mt-1 mb-1" style={{ fontFamily: 'var(--font-display)' }}>Enrollment Trends</h2>
           <p className="text-xs text-[var(--color-text-muted)] mb-4">Breakdown by status</p>
-          {loading ? <div className="h-36 bg-[var(--color-bg-secondary)]/50 rounded-lg animate-pulse"/> : (
+          {loading ? <div className="skeleton h-36"/> : (
             <AdminBarChart
               data={[
                 { label: 'Active', value: stats.activeEnrollments || 0 },
@@ -168,23 +171,24 @@ export function AdminDashboard() {
                 { label: 'Exams', value: stats.exams || 0 },
                 { label: 'Assignments', value: stats.assignments || 0 },
               ]}
-              colors={['#3D8B60', '#6B5CE7', '#C44040', '#1B3A5C', '#B8976A', '#C49840']}
+              colors={barColors}
             />
           )}
         </motion.div>
 
         {/* Revenue / Payments pie chart */}
         <motion.div initial={{opacity:0,x:20}} animate={{opacity:1,x:0}} transition={{delay:0.4}}
-          className="p-6 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-border)] flex flex-col">
-          <div className="text-xs font-semibold text-[var(--color-secondary)] uppercase tracking-[0.15em] mb-1">Revenue Overview</div>
+          className="card p-6 flex flex-col">
+          <span className="section-label">Revenue Overview</span>
+          <h2 className="text-lg font-bold text-[var(--color-navy)] mt-1 mb-1" style={{ fontFamily: 'var(--font-display)' }}>Revenue Overview</h2>
           <p className="text-xs text-[var(--color-text-muted)] mb-4">Payment status distribution</p>
-          {loading ? <div className="h-36 bg-[var(--color-bg-secondary)]/50 rounded-lg animate-pulse"/> : (
+          {loading ? <div className="skeleton h-36"/> : (
             <div className="flex-1 flex items-center justify-center">
               <AdminPieChart
                 segments={[
-                  { value: stats.completedPayments || 0, color: '#3D8B60', label: 'Completed' },
-                  { value: stats.pendingPayments || 0, color: '#C49840', label: 'Pending' },
-                  { value: Math.max((stats.enrollments || 0) - (stats.completedPayments || 0) - (stats.pendingPayments || 0), 0), color: '#E2DDD5', label: 'No Payment' },
+                  { value: stats.completedPayments || 0, color: palette.success, label: 'Completed' },
+                  { value: stats.pendingPayments || 0, color: palette.gold, label: 'Pending' },
+                  { value: Math.max((stats.enrollments || 0) - (stats.completedPayments || 0) - (stats.pendingPayments || 0), 0), color: palette.border, label: 'No Payment' },
                 ]}
                 size={130}
               />
@@ -201,24 +205,25 @@ export function AdminDashboard() {
 
       {/* User role distribution */}
       <motion.div initial={{opacity:0,y:16}} animate={{opacity:1,y:0}} transition={{delay:0.5}}
-        className="p-6 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-border)]">
-        <div className="text-xs font-semibold text-[var(--color-secondary)] uppercase tracking-[0.15em] mb-1">User Distribution</div>
+        className="card p-6">
+        <span className="section-label">User Distribution</span>
+        <h2 className="text-lg font-bold text-[var(--color-navy)] mt-1 mb-1" style={{ fontFamily: 'var(--font-display)' }}>User Distribution</h2>
         <p className="text-xs text-[var(--color-text-muted)] mb-4">Breakdown by role</p>
-        {loading ? <div className="h-36 bg-[var(--color-bg-secondary)]/50 rounded-lg animate-pulse"/> : (
+        {loading ? <div className="skeleton h-36"/> : (
           <div className="flex flex-col md:flex-row items-center gap-8">
             <AdminPieChart
               segments={[
-                { value: stats.students || 0, color: '#1B3A5C', label: 'Students' },
-                { value: stats.lecturers || 0, color: '#B8976A', label: 'Lecturers' },
-                { value: stats.admins || 0, color: '#C44040', label: 'Admins' },
+                { value: stats.students || 0, color: palette.navy, label: 'Students' },
+                { value: stats.lecturers || 0, color: palette.gold, label: 'Lecturers' },
+                { value: stats.admins || 0, color: palette.danger, label: 'Admins' },
               ]}
               size={140}
             />
             <div className="flex-1 grid grid-cols-3 gap-4 w-full">
               {[
-                { label: 'Students', value: stats.students || 0, color: '#1B3A5C' },
-                { label: 'Lecturers', value: stats.lecturers || 0, color: '#B8976A' },
-                { label: 'Admins', value: stats.admins || 0, color: '#C44040' },
+                { label: 'Students', value: stats.students || 0, color: palette.navy },
+                { label: 'Lecturers', value: stats.lecturers || 0, color: palette.gold },
+                { label: 'Admins', value: stats.admins || 0, color: palette.danger },
               ].map((item, i) => (
                 <div key={i} className="p-4 rounded-lg bg-[var(--color-cream)] text-center">
                   <div className="text-2xl font-extrabold" style={{ color: item.color, fontFamily: 'var(--font-display)' }}>
@@ -253,15 +258,15 @@ export function UserManagementPage() {
     <div>
       <div className="flex justify-between items-center mb-6">
         <div>
-          <div className="text-xs font-semibold text-[var(--color-secondary)] uppercase tracking-[0.15em] mb-1">User Management</div>
-          <h1 className="text-2xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>Users</h1>
+          <span className="section-label">User Management</span>
+          <h1 className="section-title mt-2 text-2xl">Users</h1>
         </div>
         <div className="flex gap-3">
           <div className="relative">
             <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]"/>
-            <input value={search} onChange={e => setSearch(e.target.value)} className="pl-9 pr-3 py-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-cream)] text-sm outline-none focus:border-[var(--color-navy)] transition" placeholder="Search users..."/>
+            <input value={search} onChange={e => setSearch(e.target.value)} className="input pl-9" placeholder="Search users..."/>
           </div>
-          <select value={roleFilter} onChange={e => setRoleFilter(e.target.value)} className="px-3 py-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-cream)] text-sm outline-none focus:border-[var(--color-navy)] transition">
+          <select value={roleFilter} onChange={e => setRoleFilter(e.target.value)} className="select w-auto">
             <option value="all">All Roles</option>
             <option value="student">Students</option>
             <option value="lecturer">Lecturers</option>
@@ -270,35 +275,35 @@ export function UserManagementPage() {
         </div>
       </div>
 
-      {loading ? <div className="h-32 bg-[var(--color-bg-secondary)]/50 rounded-xl animate-pulse"/> : (
-        <div className="bg-[var(--color-bg-card)] rounded-xl border border-[var(--color-border)] overflow-hidden">
-          <table className="w-full">
+      {loading ? <div className="skeleton h-32"/> : (
+        <div className="table-container">
+          <table className="table">
             <thead>
-              <tr className="border-b border-[var(--color-border)]">
-                <th className="text-left px-4 py-3 text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Name</th>
-                <th className="text-left px-4 py-3 text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Email</th>
-                <th className="text-left px-4 py-3 text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Role</th>
-                <th className="text-left px-4 py-3 text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Joined</th>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Joined</th>
               </tr>
             </thead>
             <tbody>
               {filtered.map((u) => (
-                <tr key={u.id as string} className="border-b border-[var(--color-border)]/50 hover:bg-[var(--color-cream)]/50 transition">
-                  <td className="px-4 py-3">
+                <tr key={u.id as string}>
+                  <td>
                     <div className="flex items-center gap-2">
                       <div className="w-8 h-8 rounded-full bg-[var(--color-navy)]/10 flex items-center justify-center text-[var(--color-navy)] font-bold text-xs">{(u.full_name as string)?.[0] || '?'}</div>
                       <span className="font-medium text-sm text-[var(--color-navy)]">{u.full_name as string}</span>
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-sm text-[var(--color-text-muted)]">{u.email as string}</td>
-                  <td className="px-4 py-3">
-                    <span className={`text-xs px-2 py-1 rounded-md font-semibold ${
-                      u.role === 'admin' ? 'bg-danger/10 text-[var(--color-danger)]' :
-                      u.role === 'lecturer' ? 'bg-[var(--color-navy)]/8 text-[var(--color-navy)]' :
-                      'bg-[var(--color-success)]/10 text-[var(--color-success)]'
+                  <td className="text-[var(--color-text-muted)]">{u.email as string}</td>
+                  <td>
+                    <span className={`badge ${
+                      u.role === 'admin' ? 'badge-danger' :
+                      u.role === 'lecturer' ? 'badge-navy' :
+                      'badge-success'
                     }`}>{u.role as string}</span>
                   </td>
-                  <td className="px-4 py-3 text-sm text-[var(--color-text-muted)]">{u.created_at ? new Date(u.created_at as string).toLocaleDateString() : ''}</td>
+                  <td className="text-[var(--color-text-muted)]">{u.created_at ? new Date(u.created_at as string).toLocaleDateString() : ''}</td>
                 </tr>
               ))}
             </tbody>
@@ -333,15 +338,15 @@ export function PopulationCensusPage() {
     <div>
       <div className="flex justify-between items-center mb-6">
         <div>
-          <div className="text-xs font-semibold text-[var(--color-secondary)] uppercase tracking-[0.15em] mb-1">Population Census</div>
-          <h1 className="text-2xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>Student & Lecturer Directory</h1>
+          <span className="section-label">Population Census</span>
+          <h1 className="section-title mt-2 text-2xl">Student & Lecturer Directory</h1>
         </div>
         <div className="flex gap-3">
           <div className="relative">
             <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]"/>
-            <input value={search} onChange={e => setSearch(e.target.value)} className="pl-9 pr-3 py-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-cream)] text-sm outline-none focus:border-[var(--color-navy)] transition" placeholder="Search name, email, matric..."/>
+            <input value={search} onChange={e => setSearch(e.target.value)} className="input pl-9" placeholder="Search name, email, matric..."/>
           </div>
-          <select value={department} onChange={e => setDepartment(e.target.value)} className="px-3 py-2 rounded-lg border border-[var(--color-border)] bg-[var(--color-cream)] text-sm outline-none focus:border-[var(--color-navy)] transition">
+          <select value={department} onChange={e => setDepartment(e.target.value)} className="select w-auto">
             <option value="all">All Departments</option>
             {departments.map(d => <option key={d} value={d}>{d}</option>)}
           </select>
@@ -349,7 +354,7 @@ export function PopulationCensusPage() {
       </div>
 
       {selectedUser && (
-        <motion.div initial={{opacity:0}} animate={{opacity:1}} className="mb-6 p-6 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-border)]">
+        <motion.div initial={{opacity:0}} animate={{opacity:1}} className="card mb-6 p-6">
           <div className="flex justify-between items-start mb-4">
             <div className="flex items-center gap-4">
               <div className="w-16 h-16 rounded-full bg-[var(--color-navy)]/10 flex items-center justify-center text-[var(--color-navy)] font-bold text-2xl" style={{ fontFamily: 'var(--font-display)' }}>{(selectedUser.full_name as string)?.[0]}</div>
@@ -358,53 +363,53 @@ export function PopulationCensusPage() {
                 <p className="text-sm text-[var(--color-text-muted)]">{selectedUser.email as string}</p>
               </div>
             </div>
-            <button onClick={() => setSelectedUser(null)} className="text-[var(--color-text-muted)] hover:text-[var(--color-navy)] transition p-2 rounded-lg hover:bg-[var(--color-cream)]">✕</button>
+            <button onClick={() => setSelectedUser(null)} className="btn-ghost p-2">✕</button>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div><div className="text-xs text-[var(--color-text-muted)] uppercase tracking-wider font-medium">Role</div><div className="font-medium text-sm capitalize">{selectedUser.role as string}</div></div>
-            <div><div className="text-xs text-[var(--color-text-muted)] uppercase tracking-wider font-medium">Department</div><div className="font-medium text-sm">{(selectedUser.department as string) || 'N/A'}</div></div>
-            <div><div className="text-xs text-[var(--color-text-muted)] uppercase tracking-wider font-medium">Faculty</div><div className="font-medium text-sm">{(selectedUser.faculty as string) || 'N/A'}</div></div>
-            <div><div className="text-xs text-[var(--color-text-muted)] uppercase tracking-wider font-medium">Gender</div><div className="font-medium text-sm">{(selectedUser.gender as string) || 'N/A'}</div></div>
-            <div><div className="text-xs text-[var(--color-text-muted)] uppercase tracking-wider font-medium">Matric No</div><div className="font-medium text-sm font-mono">{(selectedUser.matric_number as string) || 'N/A'}</div></div>
-            <div><div className="text-xs text-[var(--color-text-muted)] uppercase tracking-wider font-medium">Phone</div><div className="font-medium text-sm">{(selectedUser.phone as string) || 'N/A'}</div></div>
-            <div><div className="text-xs text-[var(--color-text-muted)] uppercase tracking-wider font-medium">Year</div><div className="font-medium text-sm">{(selectedUser.year_of_study as string) || 'N/A'}</div></div>
-            <div><div className="text-xs text-[var(--color-text-muted)] uppercase tracking-wider font-medium">Joined</div><div className="font-medium text-sm">{selectedUser.created_at ? new Date(selectedUser.created_at as string).toLocaleDateString() : ''}</div></div>
+            <div><div className="data-label">Role</div><div className="text-sm font-medium capitalize">{selectedUser.role as string}</div></div>
+            <div><div className="data-label">Department</div><div className="text-sm font-medium">{(selectedUser.department as string) || 'N/A'}</div></div>
+            <div><div className="data-label">Faculty</div><div className="text-sm font-medium">{(selectedUser.faculty as string) || 'N/A'}</div></div>
+            <div><div className="data-label">Gender</div><div className="text-sm font-medium">{(selectedUser.gender as string) || 'N/A'}</div></div>
+            <div><div className="data-label">Matric No</div><div className="text-sm font-medium font-mono">{(selectedUser.matric_number as string) || 'N/A'}</div></div>
+            <div><div className="data-label">Phone</div><div className="text-sm font-medium">{(selectedUser.phone as string) || 'N/A'}</div></div>
+            <div><div className="data-label">Year</div><div className="text-sm font-medium">{(selectedUser.year_of_study as string) || 'N/A'}</div></div>
+            <div><div className="data-label">Joined</div><div className="text-sm font-medium">{selectedUser.created_at ? new Date(selectedUser.created_at as string).toLocaleDateString() : ''}</div></div>
           </div>
         </motion.div>
       )}
 
-      <div className="bg-[var(--color-bg-card)] rounded-xl border border-[var(--color-border)] overflow-hidden">
-        <table className="w-full">
+      <div className="table-container">
+        <table className="table">
           <thead>
-            <tr className="border-b border-[var(--color-border)]">
-              <th className="text-left px-4 py-3 text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Name</th>
-              <th className="text-left px-4 py-3 text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Email</th>
-              <th className="text-left px-4 py-3 text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Role</th>
-              <th className="text-left px-4 py-3 text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Department</th>
-              <th className="text-left px-4 py-3 text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Gender</th>
-              <th className="text-left px-4 py-3 text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Matric</th>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Department</th>
+              <th>Gender</th>
+              <th>Matric</th>
             </tr>
           </thead>
           <tbody>
             {filtered.map((u) => (
-              <tr key={u.id as string} className="border-b border-[var(--color-border)]/50 hover:bg-[var(--color-cream)]/50 transition cursor-pointer" onClick={() => setSelectedUser(u)}>
-                <td className="px-4 py-3">
+              <tr key={u.id as string} className="cursor-pointer" onClick={() => setSelectedUser(u)}>
+                <td>
                   <div className="flex items-center gap-2">
                     <div className="w-8 h-8 rounded-full bg-[var(--color-navy)]/10 flex items-center justify-center text-[var(--color-navy)] font-bold text-xs">{(u.full_name as string)?.[0] || '?'}</div>
                     <span className="font-medium text-sm text-[var(--color-navy)]">{u.full_name as string}</span>
                   </div>
                 </td>
-                <td className="px-4 py-3 text-sm text-[var(--color-text-muted)]">{u.email as string}</td>
-                <td className="px-4 py-3">
-                  <span className={`text-xs px-2 py-1 rounded-md font-semibold ${
-                    u.role === 'admin' ? 'bg-danger/10 text-[var(--color-danger)]' :
-                    u.role === 'lecturer' ? 'bg-[var(--color-navy)]/8 text-[var(--color-navy)]' :
-                    'bg-[var(--color-success)]/10 text-[var(--color-success)]'
+                <td className="text-[var(--color-text-muted)]">{u.email as string}</td>
+                <td>
+                  <span className={`badge ${
+                    u.role === 'admin' ? 'badge-danger' :
+                    u.role === 'lecturer' ? 'badge-navy' :
+                    'badge-success'
                   }`}>{u.role as string}</span>
                 </td>
-                <td className="px-4 py-3 text-sm text-[var(--color-text-muted)]">{(u.department as string) || '-'}</td>
-                <td className="px-4 py-3 text-sm text-[var(--color-text-muted)]">{(u.gender as string) || '-'}</td>
-                <td className="px-4 py-3 text-sm text-[var(--color-text-muted)] font-mono">{(u.matric_number as string) || '-'}</td>
+                <td className="text-[var(--color-text-muted)]">{(u.department as string) || '-'}</td>
+                <td className="text-[var(--color-text-muted)]">{(u.gender as string) || '-'}</td>
+                <td className="text-[var(--color-text-muted)] font-mono">{(u.matric_number as string) || '-'}</td>
               </tr>
             ))}
           </tbody>
