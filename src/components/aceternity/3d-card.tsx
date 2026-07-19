@@ -11,7 +11,7 @@ export function CardContainer({ children, className }: { children: React.ReactNo
   )
 }
 
-export function CardBody({ children, className }: { children: React.ReactNode; className?: string }) {
+export function CardBody({ children, className, style: externalStyle }: { children: React.ReactNode; className?: string; style?: React.CSSProperties }) {
   const ref = useRef<HTMLDivElement>(null)
   const [style, setStyle] = useState<React.CSSProperties>({
     transform: 'perspective(1200px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)',
@@ -50,7 +50,7 @@ export function CardBody({ children, className }: { children: React.ReactNode; c
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={handleMouseLeave}
       className={cn('[transform-style:preserve-3d] relative', className)}
-      style={style}
+      style={{ ...style, ...externalStyle }}
     >
       {/* Depth shine layer */}
       {hovered && (
