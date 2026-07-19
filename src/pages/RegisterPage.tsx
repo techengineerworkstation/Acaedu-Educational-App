@@ -1,10 +1,16 @@
-import { useState, Suspense, lazy } from 'react'
+import { useState, Suspense, lazy, Component, type ReactNode } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { signUp, signInWithGoogle, signInWithApple } from '../lib/supabase'
 import { GraduationCap, BookOpen, Shield } from 'lucide-react'
 
 const SparklesComponent = lazy(() => import('@/components/aceternity/sparkles').then(m => ({ default: m.Sparkles })))
+
+class SilentErrorBoundary extends Component<{ children: ReactNode }, { crashed: boolean }> {
+  state = { crashed: false }
+  static getDerivedStateFromError() { return { crashed: true } }
+  render() { return this.state.crashed ? null : this.props.children }
+}
 
 const ease = [0.22, 1, 0.36, 1] as [number, number, number, number]
 
@@ -57,9 +63,11 @@ export function RegisterPage() {
 
         {/* Sparkles overlay */}
         <div className="absolute inset-0 z-[1] pointer-events-none opacity-35">
-          <Suspense fallback={null}>
-            <SparklesComponent count={35} speed={0.25} colors={['#c1272d', '#e8535a', '#025e6b', '#4dd0d8', '#ffffff']} />
-          </Suspense>
+          <SilentErrorBoundary>
+            <Suspense fallback={null}>
+              <SparklesComponent count={35} speed={0.25} colors={['#c1272d', '#e8535a', '#025e6b', '#4dd0d8', '#ffffff']} />
+            </Suspense>
+          </SilentErrorBoundary>
         </div>
 
         <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, ease }}

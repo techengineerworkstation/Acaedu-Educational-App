@@ -1,13 +1,18 @@
 import { Link } from 'react-router-dom'
 import { motion, useInView, useScroll, useTransform } from 'framer-motion'
-import { useRef, Suspense, lazy } from 'react'
+import { useRef, Suspense, lazy, Component, type ReactNode } from 'react'
 import { ArrowRight, Zap, Shield, Users, Brain, BookOpen, Bell, Sparkles, Search } from 'lucide-react'
 import { NumberTicker, TextReveal } from '@/components/aceternity/text-reveal'
 import { CardContainer, CardBody } from '@/components/aceternity/3d-card'
 import { useTheme } from '@/lib/theme'
 
 const SparklesComponent = lazy(() => import('@/components/aceternity/sparkles').then(m => ({ default: m.Sparkles })))
-const FractalBackground = lazy(() => import('@/components/FractalBackground').then(m => ({ default: m.FractalBackground })))
+
+class SilentErrorBoundary extends Component<{ children: ReactNode }, { crashed: boolean }> {
+  state = { crashed: false }
+  static getDerivedStateFromError() { return { crashed: true } }
+  render() { return this.state.crashed ? null : this.props.children }
+}
 
 /* ─── Animation variants ─────────────────────────────────────── */
 const ease = [0.22, 1, 0.36, 1] as [number, number, number, number]
@@ -123,16 +128,13 @@ export function LandingPage() {
 
         {/* ── Hero — edX full-width dark with fractal + sparkles ─── */}
         <section ref={heroRef} className="relative min-h-[calc(100vh-60px)] flex items-center overflow-hidden bg-[var(--color-secondary)]">
-          {/* 3D fractal background */}
-          <Suspense fallback={null}>
-            <FractalBackground />
-          </Suspense>
-
           {/* Sparkles particle overlay */}
           <div className="absolute inset-0 z-[1] pointer-events-none opacity-60">
-            <Suspense fallback={null}>
-              <SparklesComponent count={70} speed={0.4} colors={['#c1272d', '#e8535a', '#025e6b', '#4dd0d8', '#ffffff']} />
-            </Suspense>
+            <SilentErrorBoundary>
+              <Suspense fallback={null}>
+                <SparklesComponent count={70} speed={0.4} colors={['#c1272d', '#e8535a', '#025e6b', '#4dd0d8', '#ffffff']} />
+              </Suspense>
+            </SilentErrorBoundary>
           </div>
 
           {/* Dark overlay gradient */}
