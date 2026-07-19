@@ -52,7 +52,7 @@ export function AnnouncementsPage() {
       <div className="flex justify-between items-center mb-6">
         <div>
           <div className="text-xs font-semibold text-[var(--color-secondary)] uppercase tracking-[0.15em] mb-1">Announcements</div>
-          <h1 className="text-2xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Announcements</h1>
+          <h1 className="text-2xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>Announcements</h1>
         </div>
         <button onClick={() => setShowForm(!showForm)} className="px-4 py-2.5 rounded-lg bg-[var(--color-navy)] text-white font-semibold text-sm flex items-center gap-2 hover:bg-[var(--color-navy)]-light transition-all shadow-sm">
           <Plus size={16}/> Create Announcement
@@ -61,7 +61,7 @@ export function AnnouncementsPage() {
 
       {showForm && (
         <motion.div initial={{opacity:0}} animate={{opacity:1}} className="mb-6 p-5 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-border)]">
-          <h3 className="font-bold text-[var(--color-navy)] mb-4" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Create Announcement</h3>
+          <h3 className="font-bold text-[var(--color-navy)] mb-4" style={{ fontFamily: 'var(--font-display)' }}>Create Announcement</h3>
           <div className="space-y-4 mb-4">
             <div>
               <label className="block text-xs font-semibold text-[var(--color-text-secondary)] mb-1.5 uppercase tracking-wider">Title</label>
@@ -94,7 +94,7 @@ export function AnnouncementsPage() {
         </motion.div>
       )}
 
-      {loading ? <div className="h-32 bg-[var(--color-beige)]/50 rounded-xl animate-pulse"/> : items.length === 0 ? (
+      {loading ? <div className="h-32 bg-[var(--color-bg-secondary)]/50 rounded-xl animate-pulse"/> : items.length === 0 ? (
         <div className="text-center py-16"><Megaphone size={48} className="mx-auto mb-4 text-[var(--color-text-muted)]"/><p className="text-[var(--color-text-muted)]">No announcements yet.</p></div>
       ) : (
         <div className="space-y-3">
@@ -110,7 +110,7 @@ export function AnnouncementsPage() {
                   </div>
                   <div className="flex-1">
                     <div className="flex justify-between items-start">
-                      <h3 className="font-bold text-[var(--color-navy)]" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>{a.title as string}</h3>
+                      <h3 className="font-bold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>{a.title as string}</h3>
                       <span className={`text-xs px-2 py-1 rounded-md ${config.bg} ${config.color} font-medium`}>{a.priority as string}</span>
                     </div>
                     <p className="text-sm text-[var(--color-text-muted)] mt-1">{a.content as string}</p>

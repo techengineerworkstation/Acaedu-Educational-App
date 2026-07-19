@@ -65,11 +65,11 @@ export function GlowingEffect({ children, className }: { children: React.ReactNo
           className="absolute inset-0 rounded-[inherit] pointer-events-none z-0"
           style={{
             background: `linear-gradient(${gradientAngle}deg,
-              rgba(74,126,196,0.0),
-              rgba(201,164,84,0.12),
-              rgba(107,159,212,0.08),
-              rgba(232,201,106,0.10),
-              rgba(74,126,196,0.0))`,
+              rgba(10,138,153,0.0),
+              rgba(192,80,40,0.12),
+              rgba(32,164,180,0.08),
+              rgba(240,204,90,0.10),
+              rgba(10,138,153,0.0))`,
           }}
         />
       )}
@@ -79,8 +79,8 @@ export function GlowingEffect({ children, className }: { children: React.ReactNo
           className="absolute inset-0 z-0 pointer-events-none rounded-[inherit]"
           style={{
             background: `radial-gradient(360px circle at ${mouse.x}px ${mouse.y}px,
-              rgba(74,126,196,0.13) 0%,
-              rgba(201,164,84,0.07) 45%,
+              rgba(10,138,153,0.13) 0%,
+              rgba(192,80,40,0.07) 45%,
               transparent 70%)`,
           }}
         />

@@ -30,7 +30,7 @@ export function AttendancePage() {
       <div className="flex justify-between items-center mb-6">
         <div>
           <div className="text-xs font-semibold text-[var(--color-secondary)] uppercase tracking-[0.15em] mb-1">Attendance</div>
-          <h1 className="text-2xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Attendance Register</h1>
+          <h1 className="text-2xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>Attendance Register</h1>
         </div>
         <button onClick={() => setShowForm(!showForm)} className="px-4 py-2.5 rounded-lg bg-[var(--color-navy)] text-white font-semibold text-sm flex items-center gap-2 hover:bg-[var(--color-navy)]-light transition-all shadow-sm">
           <Plus size={16}/> Create Session
@@ -39,7 +39,7 @@ export function AttendancePage() {
 
       {showForm && (
         <motion.div initial={{opacity:0}} animate={{opacity:1}} className="mb-6 p-5 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-border)]">
-          <h3 className="font-bold text-[var(--color-navy)] mb-4" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Create Attendance Session</h3>
+          <h3 className="font-bold text-[var(--color-navy)] mb-4" style={{ fontFamily: 'var(--font-display)' }}>Create Attendance Session</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
             <div>
               <label className="block text-xs font-semibold text-[var(--color-text-secondary)] mb-1.5 uppercase tracking-wider">Course ID</label>
@@ -68,7 +68,7 @@ export function AttendancePage() {
               <Users size={20} className="text-[var(--color-navy)]"/>
             </div>
             <div>
-              <div className="text-xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>{sessions.length}</div>
+              <div className="text-xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>{sessions.length}</div>
               <div className="text-xs text-[var(--color-text-muted)] font-medium">Total Records</div>
             </div>
           </div>
@@ -79,7 +79,7 @@ export function AttendancePage() {
               <CheckSquare size={20} className="text-[var(--color-success)]"/>
             </div>
             <div>
-              <div className="text-xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>{sessions.filter(s => s.status === 'present').length}</div>
+              <div className="text-xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>{sessions.filter(s => s.status === 'present').length}</div>
               <div className="text-xs text-[var(--color-text-muted)] font-medium">Present</div>
             </div>
           </div>
@@ -90,14 +90,14 @@ export function AttendancePage() {
               <Clock size={20} className="text-[var(--color-danger)]"/>
             </div>
             <div>
-              <div className="text-xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>{sessions.filter(s => s.status === 'absent').length}</div>
+              <div className="text-xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>{sessions.filter(s => s.status === 'absent').length}</div>
               <div className="text-xs text-[var(--color-text-muted)] font-medium">Absent</div>
             </div>
           </div>
         </div>
       </div>
 
-      {loading ? <div className="h-32 bg-[var(--color-beige)]/50 rounded-xl animate-pulse"/> : sessions.length === 0 ? (
+      {loading ? <div className="h-32 bg-[var(--color-bg-secondary)]/50 rounded-xl animate-pulse"/> : sessions.length === 0 ? (
         <div className="text-center py-16"><CheckSquare size={48} className="mx-auto mb-4 text-[var(--color-text-muted)]"/><p className="text-[var(--color-text-muted)]">No attendance records yet.</p></div>
       ) : (
         <div className="space-y-2">

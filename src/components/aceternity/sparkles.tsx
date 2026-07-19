@@ -11,7 +11,7 @@ interface Star {
   trail: { x: number; y: number }[]
 }
 
-const COLORS = ['#7BAAD4', '#C9A454', '#4A7EC4', '#E8C96A', '#FFFFFF']
+const COLORS = ['#20A4B4', '#D4704E', '#0A8A99', '#F0CC5A', '#FFFFFF']
 
 export function Sparkles({ count = 55, className }: { count?: number; className?: string }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)

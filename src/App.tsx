@@ -38,7 +38,7 @@ function Loader() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-[var(--color-bg)]">
       <div className="flex flex-col items-center gap-3">
-        <div className="w-8 h-8 border-[3px] border-[var(--color-navy)] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-[3px] border-[var(--color-primary)] border-t-transparent rounded-full animate-spin" />
         <span className="text-xs text-[var(--color-text-muted)] font-medium tracking-wide">Loading…</span>
       </div>
     </div>

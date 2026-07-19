@@ -27,7 +27,7 @@ export function LiveClassesPage() {
       <div className="flex justify-between items-center mb-6">
         <div>
           <div className="text-xs font-semibold text-[var(--color-secondary)] uppercase tracking-[0.15em] mb-1">Live Classes</div>
-          <h1 className="text-2xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Live Classes</h1>
+          <h1 className="text-2xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>Live Classes</h1>
         </div>
         <button onClick={() => setShowForm(!showForm)} className="px-4 py-2.5 rounded-lg bg-[var(--color-navy)] text-white font-semibold text-sm flex items-center gap-2 hover:bg-[var(--color-navy)]-light transition-all shadow-sm">
           <Plus size={16}/> Schedule Class
@@ -35,7 +35,7 @@ export function LiveClassesPage() {
       </div>
       {showForm && (
         <motion.div initial={{opacity:0}} animate={{opacity:1}} className="mb-6 p-5 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-border)]">
-          <h3 className="font-bold text-[var(--color-navy)] mb-4" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Schedule Live Class</h3>
+          <h3 className="font-bold text-[var(--color-navy)] mb-4" style={{ fontFamily: 'var(--font-display)' }}>Schedule Live Class</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div><label className="block text-xs font-semibold text-[var(--color-text-secondary)] mb-1.5 uppercase tracking-wider">Title</label><input value={title} onChange={e => setTitle(e.target.value)} className="w-full px-3 py-2.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-cream)] text-sm outline-none focus:border-[var(--color-navy)] transition"/></div>
             <div><label className="block text-xs font-semibold text-[var(--color-text-secondary)] mb-1.5 uppercase tracking-wider">Course ID</label><input value={courseId} onChange={e => setCourseId(e.target.value)} className="w-full px-3 py-2.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-cream)] text-sm outline-none focus:border-[var(--color-navy)] transition"/></div>
@@ -48,14 +48,14 @@ export function LiveClassesPage() {
           </div>
         </motion.div>
       )}
-      {loading ? <div className="h-32 bg-[var(--color-beige)]/50 rounded-xl animate-pulse"/> : meetings.length === 0 ? (
+      {loading ? <div className="h-32 bg-[var(--color-bg-secondary)]/50 rounded-xl animate-pulse"/> : meetings.length === 0 ? (
         <div className="text-center py-16"><Video size={48} className="mx-auto mb-4 text-[var(--color-text-muted)]"/><p className="text-[var(--color-text-muted)]">No live classes scheduled.</p></div>
       ) : (
         <div className="space-y-3">
           {meetings.map((m, i) => (
             <motion.div key={m.id as string} initial={{opacity:0,x:-10}} animate={{opacity:1,x:0}} transition={{delay:i*0.05}} className="p-4 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-border)] flex justify-between items-center hover:border-[var(--color-navy)]/20 transition-all">
               <div>
-                <h3 className="font-bold text-[var(--color-navy)]" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>{m.title as string}</h3>
+                <h3 className="font-bold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>{m.title as string}</h3>
                 <p className="text-sm text-[var(--color-text-muted)]">{m.start_time ? new Date(m.start_time as string).toLocaleString() : 'TBD'}</p>
               </div>
               <div className="flex items-center gap-2">
@@ -93,7 +93,7 @@ export function TestsPage() {
       <div className="flex justify-between items-center mb-6">
         <div>
           <div className="text-xs font-semibold text-[var(--color-secondary)] uppercase tracking-[0.15em] mb-1">Tests</div>
-          <h1 className="text-2xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Tests</h1>
+          <h1 className="text-2xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>Tests</h1>
         </div>
         <button onClick={() => setShowForm(!showForm)} className="px-4 py-2.5 rounded-lg bg-[var(--color-navy)] text-white font-semibold text-sm flex items-center gap-2 hover:bg-[var(--color-navy)]-light transition-all shadow-sm">
           <Plus size={16}/> Create Test
@@ -101,7 +101,7 @@ export function TestsPage() {
       </div>
       {showForm && (
         <motion.div initial={{opacity:0}} animate={{opacity:1}} className="mb-6 p-5 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-border)]">
-          <h3 className="font-bold text-[var(--color-navy)] mb-4" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Create Test</h3>
+          <h3 className="font-bold text-[var(--color-navy)] mb-4" style={{ fontFamily: 'var(--font-display)' }}>Create Test</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div><label className="block text-xs font-semibold text-[var(--color-text-secondary)] mb-1.5 uppercase tracking-wider">Title</label><input value={title} onChange={e => setTitle(e.target.value)} className="w-full px-3 py-2.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-cream)] text-sm outline-none focus:border-[var(--color-navy)] transition"/></div>
             <div><label className="block text-xs font-semibold text-[var(--color-text-secondary)] mb-1.5 uppercase tracking-wider">Course ID</label><input value={courseId} onChange={e => setCourseId(e.target.value)} className="w-full px-3 py-2.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-cream)] text-sm outline-none focus:border-[var(--color-navy)] transition"/></div>
@@ -118,13 +118,13 @@ export function TestsPage() {
           </div>
         </motion.div>
       )}
-      {loading ? <div className="h-32 bg-[var(--color-beige)]/50 rounded-xl animate-pulse"/> : tests.length === 0 ? (
+      {loading ? <div className="h-32 bg-[var(--color-bg-secondary)]/50 rounded-xl animate-pulse"/> : tests.length === 0 ? (
         <div className="text-center py-16"><ClipboardList size={48} className="mx-auto mb-4 text-[var(--color-text-muted)]"/><p className="text-[var(--color-text-muted)]">No tests yet.</p></div>
       ) : (
         <div className="space-y-3">
           {tests.map((t, i) => (
             <motion.div key={t.id as string} initial={{opacity:0,x:-10}} animate={{opacity:1,x:0}} transition={{delay:i*0.05}} className="p-4 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-border)] flex justify-between items-center hover:border-[var(--color-navy)]/20 transition-all">
-              <div><h3 className="font-bold text-[var(--color-navy)]" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>{t.title as string}</h3><p className="text-sm text-[var(--color-text-muted)]">{t.test_type as string} · {t.duration_minutes as number} min · {t.test_date ? new Date(t.test_date as string).toLocaleDateString() : 'TBD'}</p></div>
+              <div><h3 className="font-bold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>{t.title as string}</h3><p className="text-sm text-[var(--color-text-muted)]">{t.test_type as string} · {t.duration_minutes as number} min · {t.test_date ? new Date(t.test_date as string).toLocaleDateString() : 'TBD'}</p></div>
               <span className="text-xs px-2 py-1 rounded-md bg-[var(--color-navy)]/8 text-[var(--color-navy)] font-medium">{t.test_type as string}</span>
             </motion.div>
           ))}
@@ -144,9 +144,9 @@ export function ClassRecordsPage() {
     <div>
       <div className="mb-6">
         <div className="text-xs font-semibold text-[var(--color-secondary)] uppercase tracking-[0.15em] mb-1">Class Records</div>
-        <h1 className="text-2xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Class Records</h1>
+        <h1 className="text-2xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>Class Records</h1>
       </div>
-      {loading ? <div className="h-32 bg-[var(--color-beige)]/50 rounded-xl animate-pulse"/> : videos.length === 0 ? (
+      {loading ? <div className="h-32 bg-[var(--color-bg-secondary)]/50 rounded-xl animate-pulse"/> : videos.length === 0 ? (
         <div className="text-center py-16"><Video size={48} className="mx-auto mb-4 text-[var(--color-text-muted)]"/><p className="text-[var(--color-text-muted)]">No class records yet.</p></div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -156,7 +156,7 @@ export function ClassRecordsPage() {
                 <div className="w-14 h-14 rounded-full bg-[var(--color-navy)]/10 flex items-center justify-center"><Video size={24} className="text-[var(--color-navy)]"/></div>
               </div>
               <div className="p-4">
-                <h3 className="font-bold text-[var(--color-navy)] mb-1" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>{v.title as string}</h3>
+                <h3 className="font-bold text-[var(--color-navy)] mb-1" style={{ fontFamily: 'var(--font-display)' }}>{v.title as string}</h3>
                 <p className="text-xs text-[var(--color-text-muted)]">{v.description as string}</p>
                 <div className="flex items-center gap-3 mt-2 text-xs text-[var(--color-text-muted)]">
                   <Clock size={12}/> {v.duration_seconds ? `${Math.floor((v.duration_seconds as number)/60)}:${String((v.duration_seconds as number)%60).padStart(2,'0')}` : 'N/A'}
@@ -250,14 +250,14 @@ export function ProfilePage({ user }: { user: User }) {
     </div>
   )
 
-  if (loading) return <div className="h-64 bg-[var(--color-beige)]/50 rounded-xl animate-pulse"/>
+  if (loading) return <div className="h-64 bg-[var(--color-bg-secondary)]/50 rounded-xl animate-pulse"/>
 
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
         <div>
           <div className="text-xs font-semibold text-[var(--color-secondary)] uppercase tracking-[0.15em] mb-1">Profile</div>
-          <h1 className="text-2xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>My Profile</h1>
+          <h1 className="text-2xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>My Profile</h1>
         </div>
         <div className="flex items-center gap-2">
           {editing ? (
@@ -290,16 +290,16 @@ export function ProfilePage({ user }: { user: User }) {
         <div className="p-6 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-border)]">
           <div className="flex items-center gap-4 mb-6">
             <div className="w-20 h-20 rounded-full bg-[var(--color-navy)]/10 flex items-center justify-center text-[var(--color-navy)] font-bold text-3xl flex-shrink-0"
-              style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+              style={{ fontFamily: 'var(--font-display)' }}>
               {(form.full_name || user.full_name)?.[0]?.toUpperCase() || '?'}
             </div>
             <div>
               {editing ? (
                 <input value={form.full_name} onChange={e => setForm({ ...form, full_name: e.target.value })}
                   className="text-xl font-extrabold text-[var(--color-navy)] w-full px-2 py-1 rounded-lg border border-[var(--color-border)] bg-[var(--color-cream)] outline-none focus:border-[var(--color-navy)] transition"
-                  style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }} />
+                  style={{ fontFamily: 'var(--font-display)' }} />
               ) : (
-                <h2 className="text-xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>{form.full_name || user.full_name}</h2>
+                <h2 className="text-xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>{form.full_name || user.full_name}</h2>
               )}
               <p className="text-sm text-[var(--color-text-muted)] mt-0.5">{user.email}</p>
               <span className="text-xs px-2 py-1 rounded-md bg-[var(--color-navy)]/8 text-[var(--color-navy)] font-medium capitalize mt-1 inline-block">{user.role}</span>

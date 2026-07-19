@@ -44,19 +44,20 @@ export function RegisterPage() {
   return (
     <div className="min-h-screen flex bg-[var(--color-bg)]">
       {/* Left panel */}
-      <div className="hidden lg:flex lg:w-[44%] bg-[var(--color-navy)] relative overflow-hidden items-center justify-center">
+      <div className="hidden lg:flex lg:w-[44%] relative overflow-hidden items-center justify-center"
+        style={{ background: 'linear-gradient(160deg, #001a4d 0%, #0056d2 50%, #002761 100%)' }}>
         <div className="absolute inset-0">
           <img src="/images/students-group.jpg" alt="" className="w-full h-full object-cover opacity-15" />
         </div>
-        <div className="absolute inset-0 bg-gradient-to-b from-[var(--color-navy)]/90 via-[var(--color-navy)]/80 to-[var(--color-navy)]/95" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[var(--color-navy)]/90 via-[var(--color-primary-dark)]/80 to-[var(--color-navy)]/95" />
         <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }} className="relative z-10 px-14 max-w-md text-center">
           <div className="flex items-center justify-center gap-2.5 mb-10">
             <div className="w-10 h-10 rounded-[12px] bg-white/10 flex items-center justify-center">
-              <span className="text-white font-extrabold text-lg" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>A</span>
+              <span className="text-white font-extrabold text-lg" style={{ fontFamily: 'var(--font-display)' }}>A</span>
             </div>
-            <span className="text-xl font-bold text-white" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Acaedu</span>
+            <span className="text-xl font-bold text-white" style={{ fontFamily: 'var(--font-display)' }}>Acaedu</span>
           </div>
-          <h2 className="text-3xl font-extrabold text-white leading-tight mb-4" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+          <h2 className="text-3xl font-extrabold text-white leading-tight mb-4" style={{ fontFamily: 'var(--font-display)', letterSpacing: '-0.025em' }}>
             Start your academic journey today
           </h2>
           <p className="text-[14px] text-white/35 leading-relaxed">
@@ -69,7 +70,7 @@ export function RegisterPage() {
               { label: 'Institutions', value: '50+' },
             ].map((s, i) => (
               <div key={i} className="text-center">
-                <div className="text-xl font-extrabold text-white" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>{s.value}</div>
+                <div className="text-xl font-extrabold text-white" style={{ fontFamily: 'var(--font-display)' }}>{s.value}</div>
                 <div className="text-[11px] text-white/25 mt-1">{s.label}</div>
               </div>
             ))}
@@ -81,14 +82,14 @@ export function RegisterPage() {
       <div className="flex-1 flex items-center justify-center px-6 py-12">
         <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }} className="w-full max-w-[400px]">
           <div className="lg:hidden flex items-center justify-center gap-2.5 mb-10">
-            <div className="w-9 h-9 rounded-[10px] bg-[var(--color-navy)] flex items-center justify-center shadow-sm">
-              <span className="text-white font-extrabold text-sm" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>A</span>
+            <div className="w-9 h-9 rounded-[10px] bg-[var(--color-primary)] flex items-center justify-center shadow-sm">
+              <span className="text-white font-extrabold text-sm" style={{ fontFamily: 'var(--font-display)' }}>A</span>
             </div>
-            <span className="text-lg font-bold text-[var(--color-navy)]" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Acaedu</span>
+            <span className="text-lg font-bold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>Acaedu</span>
           </div>
 
           <div className="text-center mb-8">
-            <h1 className="text-2xl font-extrabold text-[var(--color-navy)] tracking-tight mb-1.5" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+            <h1 className="text-2xl font-extrabold text-[var(--color-navy)] tracking-tight mb-1.5" style={{ fontFamily: 'var(--font-display)' }}>
               {step === 1 ? 'Create your account' : 'Complete your profile'}
             </h1>
             <p className="text-[13px] text-[var(--color-text-muted)]">
@@ -105,8 +106,8 @@ export function RegisterPage() {
               {roles.map(r => (
                 <motion.button key={r.value} whileHover={{ scale: 1.01 }} whileTap={{ scale: 0.99 }}
                   onClick={() => { setRole(r.value); setStep(2) }}
-                  className={`w-full p-4 rounded-[var(--radius-lg)] border-2 text-left flex items-center gap-4 transition-all duration-200 ${role === r.value ? 'border-[var(--color-navy)] bg-[var(--color-navy)]/4' : 'border-[var(--color-beige)] bg-white hover:border-[var(--color-navy)]/20'}`}>
-                  <div className={`w-11 h-11 rounded-[12px] flex items-center justify-center flex-shrink-0 ${role === r.value ? 'bg-[var(--color-navy)]' : 'bg-[var(--color-bg)]'}`}>
+                  className={`w-full p-4 rounded-[var(--radius-lg)] border-2 text-left flex items-center gap-4 transition-all duration-200 ${role === r.value ? 'border-[var(--color-primary)] bg-[var(--color-primary-muted)]' : 'border-[var(--color-border)] bg-[var(--color-bg-card)] hover:border-[var(--color-primary)]/30'}`}>
+                  <div className={`w-11 h-11 rounded-[12px] flex items-center justify-center flex-shrink-0 ${role === r.value ? 'bg-[var(--color-primary)]' : 'bg-[var(--color-bg-secondary)]'}`}>
                     <r.icon size={20} className={role === r.value ? 'text-white' : 'text-[var(--color-text-muted)]'}/>
                   </div>
                   <div>
@@ -117,9 +118,9 @@ export function RegisterPage() {
               ))}
 
               <div className="flex items-center gap-3 my-5">
-                <div className="flex-1 h-px bg-[var(--color-beige)]" />
+                <div className="flex-1 h-px bg-[var(--color-border-light)]" />
                 <span className="text-[11px] font-medium text-[var(--color-text-muted)]">or continue with</span>
-                <div className="flex-1 h-px bg-[var(--color-beige)]" />
+                <div className="flex-1 h-px bg-[var(--color-border-light)]" />
               </div>
 
               <div className="grid grid-cols-2 gap-2.5">
@@ -167,7 +168,7 @@ export function RegisterPage() {
           )}
 
           <p className="text-center text-[13px] text-[var(--color-text-muted)] mt-8">
-            Already have an account? <Link to="/login" className="font-semibold text-[var(--color-navy)] hover:underline">Sign in</Link>
+            Already have an account? <Link to="/login" className="font-semibold text-[var(--color-primary)] hover:underline">Sign in</Link>
           </p>
         </motion.div>
       </div>

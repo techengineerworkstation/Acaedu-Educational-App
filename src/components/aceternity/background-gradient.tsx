@@ -38,28 +38,29 @@ export function BackgroundGradient({ children, className }: { children: React.Re
       ctx.clearRect(0, 0, w, h)
 
       // Navy aurora orb — top-left drift
+      // Teal aurora orb — top-left drift
       drawOrb(
         w * (0.25 + Math.sin(time * 0.7) * 0.12),
         h * (0.30 + Math.cos(time * 0.5) * 0.12),
-        w * 0.55, 15, 45, 92, 0.18
+        w * 0.55, 2, 94, 107, 0.18
       )
-      // Gold aurora orb — bottom-right drift
+      // Terracotta aurora orb — bottom-right drift
       drawOrb(
         w * (0.75 + Math.cos(time * 0.6) * 0.10),
         h * (0.65 + Math.sin(time * 0.4) * 0.10),
-        w * 0.45, 201, 164, 84, 0.13
+        w * 0.45, 192, 80, 40, 0.13
       )
-      // Accent blue orb — centre roaming
+      // Accent teal orb — centre roaming
       drawOrb(
         w * (0.50 + Math.sin(time * 0.9 + 1) * 0.18),
         h * (0.45 + Math.cos(time * 0.8 + 1) * 0.15),
-        w * 0.38, 74, 126, 196, 0.10
+        w * 0.38, 10, 138, 153, 0.10
       )
       // Subtle warm highlight — top-right
       drawOrb(
         w * (0.82 + Math.cos(time * 0.5) * 0.07),
         h * (0.18 + Math.sin(time * 0.6) * 0.08),
-        w * 0.30, 184, 151, 106, 0.08
+        w * 0.30, 212, 112, 78, 0.08
       )
 
       animationId = requestAnimationFrame(animate)

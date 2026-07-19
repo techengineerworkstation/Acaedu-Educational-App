@@ -37,7 +37,7 @@ function AdminPieChart({ segments, size = 120 }: { segments: { value: number; co
       <div className="rounded-full relative" style={{ width: size, height: size, background: `conic-gradient(${gradients.join(', ')})` }}>
         <div className="absolute rounded-full bg-[var(--color-bg-card)] flex items-center justify-center"
           style={{ width: size * 0.55, height: size * 0.55, top: '50%', left: '50%', transform: 'translate(-50%,-50%)' }}>
-          <span className="text-sm font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>{total}</span>
+          <span className="text-sm font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>{total}</span>
         </div>
       </div>
       <div className="flex flex-wrap justify-center gap-2">
@@ -126,13 +126,13 @@ export function AdminDashboard() {
     <div>
       <div className="mb-6">
         <div className="text-xs font-semibold text-[var(--color-secondary)] uppercase tracking-[0.15em] mb-1">Admin</div>
-        <h1 className="text-2xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Admin Dashboard</h1>
+        <h1 className="text-2xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>Admin Dashboard</h1>
       </div>
 
       {/* Stat cards */}
       {loading ? (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          {Array.from({length: 8}).map((_,i) => <div key={i} className="h-28 rounded-xl bg-[var(--color-beige)]/50 animate-pulse"/>)}
+          {Array.from({length: 8}).map((_,i) => <div key={i} className="h-28 rounded-xl bg-[var(--color-bg-secondary)]/50 animate-pulse"/>)}
         </div>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
@@ -142,7 +142,7 @@ export function AdminDashboard() {
               <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-3" style={{background:`${card.color}15`}}>
                 <card.icon size={20} style={{color:card.color}}/>
               </div>
-              <div className="text-2xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+              <div className="text-2xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>
                 <AnimatedStat value={card.value} />
               </div>
               <div className="text-xs text-[var(--color-text-muted)] mt-1 uppercase tracking-wider font-medium">{card.label}</div>
@@ -158,7 +158,7 @@ export function AdminDashboard() {
           className="p-6 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-border)]">
           <div className="text-xs font-semibold text-[var(--color-secondary)] uppercase tracking-[0.15em] mb-1">Enrollment Trends</div>
           <p className="text-xs text-[var(--color-text-muted)] mb-4">Breakdown by status</p>
-          {loading ? <div className="h-36 bg-[var(--color-beige)]/50 rounded-lg animate-pulse"/> : (
+          {loading ? <div className="h-36 bg-[var(--color-bg-secondary)]/50 rounded-lg animate-pulse"/> : (
             <AdminBarChart
               data={[
                 { label: 'Active', value: stats.activeEnrollments || 0 },
@@ -178,7 +178,7 @@ export function AdminDashboard() {
           className="p-6 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-border)] flex flex-col">
           <div className="text-xs font-semibold text-[var(--color-secondary)] uppercase tracking-[0.15em] mb-1">Revenue Overview</div>
           <p className="text-xs text-[var(--color-text-muted)] mb-4">Payment status distribution</p>
-          {loading ? <div className="h-36 bg-[var(--color-beige)]/50 rounded-lg animate-pulse"/> : (
+          {loading ? <div className="h-36 bg-[var(--color-bg-secondary)]/50 rounded-lg animate-pulse"/> : (
             <div className="flex-1 flex items-center justify-center">
               <AdminPieChart
                 segments={[
@@ -192,7 +192,7 @@ export function AdminDashboard() {
           )}
           <div className="mt-4 pt-4 border-t border-[var(--color-border)] flex items-center justify-between">
             <span className="text-xs text-[var(--color-text-muted)]">Total Revenue</span>
-            <span className="text-sm font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+            <span className="text-sm font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>
               ₦{(stats.totalRevenue || 0).toLocaleString()}
             </span>
           </div>
@@ -204,7 +204,7 @@ export function AdminDashboard() {
         className="p-6 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-border)]">
         <div className="text-xs font-semibold text-[var(--color-secondary)] uppercase tracking-[0.15em] mb-1">User Distribution</div>
         <p className="text-xs text-[var(--color-text-muted)] mb-4">Breakdown by role</p>
-        {loading ? <div className="h-36 bg-[var(--color-beige)]/50 rounded-lg animate-pulse"/> : (
+        {loading ? <div className="h-36 bg-[var(--color-bg-secondary)]/50 rounded-lg animate-pulse"/> : (
           <div className="flex flex-col md:flex-row items-center gap-8">
             <AdminPieChart
               segments={[
@@ -221,7 +221,7 @@ export function AdminDashboard() {
                 { label: 'Admins', value: stats.admins || 0, color: '#C44040' },
               ].map((item, i) => (
                 <div key={i} className="p-4 rounded-lg bg-[var(--color-cream)] text-center">
-                  <div className="text-2xl font-extrabold" style={{ color: item.color, fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+                  <div className="text-2xl font-extrabold" style={{ color: item.color, fontFamily: 'var(--font-display)' }}>
                     <AnimatedStat value={item.value} />
                   </div>
                   <div className="text-xs text-[var(--color-text-muted)] mt-1">{item.label}</div>
@@ -254,7 +254,7 @@ export function UserManagementPage() {
       <div className="flex justify-between items-center mb-6">
         <div>
           <div className="text-xs font-semibold text-[var(--color-secondary)] uppercase tracking-[0.15em] mb-1">User Management</div>
-          <h1 className="text-2xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Users</h1>
+          <h1 className="text-2xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>Users</h1>
         </div>
         <div className="flex gap-3">
           <div className="relative">
@@ -270,7 +270,7 @@ export function UserManagementPage() {
         </div>
       </div>
 
-      {loading ? <div className="h-32 bg-[var(--color-beige)]/50 rounded-xl animate-pulse"/> : (
+      {loading ? <div className="h-32 bg-[var(--color-bg-secondary)]/50 rounded-xl animate-pulse"/> : (
         <div className="bg-[var(--color-bg-card)] rounded-xl border border-[var(--color-border)] overflow-hidden">
           <table className="w-full">
             <thead>
@@ -334,7 +334,7 @@ export function PopulationCensusPage() {
       <div className="flex justify-between items-center mb-6">
         <div>
           <div className="text-xs font-semibold text-[var(--color-secondary)] uppercase tracking-[0.15em] mb-1">Population Census</div>
-          <h1 className="text-2xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Student & Lecturer Directory</h1>
+          <h1 className="text-2xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>Student & Lecturer Directory</h1>
         </div>
         <div className="flex gap-3">
           <div className="relative">
@@ -352,9 +352,9 @@ export function PopulationCensusPage() {
         <motion.div initial={{opacity:0}} animate={{opacity:1}} className="mb-6 p-6 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-border)]">
           <div className="flex justify-between items-start mb-4">
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-full bg-[var(--color-navy)]/10 flex items-center justify-center text-[var(--color-navy)] font-bold text-2xl" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>{(selectedUser.full_name as string)?.[0]}</div>
+              <div className="w-16 h-16 rounded-full bg-[var(--color-navy)]/10 flex items-center justify-center text-[var(--color-navy)] font-bold text-2xl" style={{ fontFamily: 'var(--font-display)' }}>{(selectedUser.full_name as string)?.[0]}</div>
               <div>
-                <h2 className="text-xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>{selectedUser.full_name as string}</h2>
+                <h2 className="text-xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>{selectedUser.full_name as string}</h2>
                 <p className="text-sm text-[var(--color-text-muted)]">{selectedUser.email as string}</p>
               </div>
             </div>

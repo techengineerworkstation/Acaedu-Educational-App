@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom'
 import { motion, useInView, useScroll, useTransform } from 'framer-motion'
-import { useRef, useState } from 'react'
-import { Sun, Moon, ArrowRight, Zap, Shield, Users, Brain, BookOpen, Bell } from 'lucide-react'
+import { useRef } from 'react'
+import { ArrowRight, Zap, Shield, Users, Brain, BookOpen, Bell, Sparkles } from 'lucide-react'
 import { NumberTicker } from '@/components/aceternity/text-reveal'
+import { useTheme } from '@/lib/theme'
 
 /* ─── Animation variants ─────────────────────────────────────── */
 const ease = [0.22, 1, 0.36, 1] as [number, number, number, number]
@@ -36,7 +37,7 @@ const features = [
 ]
 
 const testimonials = [
-  { name: 'Sarah M.',       role: 'Student',       quote: 'Acaedu transformed how I manage my studies. Every deadline, every grade — all in one place.' },
+  { name: 'Sarah M.',       role: 'Student',       quote: 'Acaedu transformed how I manage my studies. Every deadline, every grade, all in one place.' },
   { name: 'Dr. James K.',   role: 'Lecturer',      quote: 'The AI summaries save me hours each week and the attendance system is completely effortless.' },
   { name: 'Prof. Amina H.', role: 'Administrator', quote: 'Real-time analytics across all departments. Decision-making has never been this data-driven.' },
 ]
@@ -46,24 +47,19 @@ const disciplines = [
   'Healthcare', 'Engineering', 'Computer Science', 'Law', 'Architecture',
 ]
 
+const themeIcons: Record<string, React.ReactNode> = {
+  light: <span className="text-[var(--color-text-muted)]"><Sparkles size={16} /></span>,
+  dark: <span className="text-[var(--color-text-muted)]"><Sparkles size={16} /></span>,
+  midnight: <span className="text-[var(--color-text-muted)]"><Sparkles size={16} /></span>,
+}
+
 /* ─── Component ──────────────────────────────────────────────── */
 export function LandingPage() {
   const heroRef = useRef(null)
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] })
   const heroY       = useTransform(scrollYProgress, [0, 1], ['0%', '18%'])
   const heroOpacity = useTransform(scrollYProgress, [0, 0.75], [1, 0])
-
-  const [dark, setDark] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('theme')
-      if (saved === 'dark') { document.documentElement.classList.add('dark'); return true }
-    }
-    return false
-  })
-  const toggleDark = () => {
-    document.documentElement.classList.toggle('dark')
-    setDark(d => { localStorage.setItem('theme', !d ? 'dark' : 'light'); return !d })
-  }
+  const { theme, cycle } = useTheme()
 
   return (
     <div className="min-h-screen bg-[var(--color-bg)]">
@@ -73,7 +69,7 @@ export function LandingPage() {
         <div className="max-w-6xl mx-auto px-6 h-15 flex items-center justify-between" style={{ height: '60px' }}>
           {/* Brand */}
           <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="w-8 h-8 rounded-[9px] bg-[var(--color-navy)] flex items-center justify-center shadow-sm group-hover:shadow-[var(--shadow-glow-navy)] transition-shadow duration-300">
+            <div className="w-8 h-8 rounded-[9px] bg-[var(--color-primary)] flex items-center justify-center shadow-sm group-hover:shadow-[var(--shadow-glow-navy)] transition-shadow duration-300">
               <span className="text-white font-extrabold text-xs" style={{ fontFamily: 'var(--font-display)' }}>A</span>
             </div>
             <span className="text-[15px] font-bold text-[var(--color-navy)] tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
@@ -94,10 +90,11 @@ export function LandingPage() {
 
           {/* Actions */}
           <div className="flex items-center gap-2.5">
-            <button onClick={toggleDark}
-              className="p-2 rounded-lg hover:bg-[var(--color-bg-secondary)] transition-colors text-[var(--color-text-muted)] hover:text-[var(--color-navy)]"
-              aria-label="Toggle theme">
-              {dark ? <Sun size={16} /> : <Moon size={16} />}
+            <button onClick={cycle}
+              className="p-2 rounded-lg hover:bg-[var(--color-bg-secondary)] transition-colors"
+              aria-label="Toggle theme"
+              title={`Current: ${theme}`}>
+              {themeIcons[theme]}
             </button>
             <Link to="/login" className="btn-ghost text-[13px] px-4 py-2">Sign In</Link>
             <Link to="/register" className="btn-primary text-[13px] px-4 py-2">Get Started</Link>
@@ -108,112 +105,89 @@ export function LandingPage() {
       <main className="pt-[60px]">
 
         {/* ── Hero ───────────────────────────────────────────────── */}
-        <section ref={heroRef} className="relative min-h-[calc(100vh-60px)] flex items-center justify-center overflow-hidden">
-          {/* Background */}
-          <div className="absolute inset-0 hero-gradient" />
-
-          {/* Subtle dot grid */}
-          <div className="absolute inset-0 opacity-[0.035]"
-            style={{
-              backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.9) 1px, transparent 0)',
-              backgroundSize: '32px 32px',
-            }} />
-
-          {/* Faint diagonal stripes — institutional motif */}
-          <div className="absolute inset-0 opacity-[0.025]"
-            style={{
-              backgroundImage: 'repeating-linear-gradient(-45deg, rgba(255,255,255,0.8) 0px, rgba(255,255,255,0.8) 1px, transparent 1px, transparent 24px)',
-            }} />
-
+        <section ref={heroRef} className="relative min-h-[calc(100vh-60px)] flex items-center overflow-hidden bg-[var(--color-bg)]">
           <motion.div style={{ y: heroY, opacity: heroOpacity }}
             className="max-w-6xl mx-auto px-6 w-full relative z-10">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-center">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
 
-              {/* Left — copy */}
+              {/* Left — navy callout card (Coursera pattern) */}
               <motion.div initial="hidden" animate="visible" variants={stagger}>
-                {/* Eyebrow */}
-                <motion.div variants={fadeUp}>
-                  <span className="inline-flex items-center gap-2 px-3.5 py-1.5 text-[10px] font-bold tracking-[0.13em] uppercase text-[var(--color-gold-light)] bg-white/5 border border-white/10 rounded-full mb-8">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-gold-bright)] animate-pulse" />
-                    Professional Academic Platform
-                  </span>
-                </motion.div>
+                <div className="rounded-[16px] p-10 bg-[var(--color-navy)] text-white relative overflow-hidden">
+                  {/* Subtle pattern overlay */}
+                  <div className="absolute inset-0 opacity-[0.04]"
+                    style={{
+                      backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.9) 1px, transparent 0)',
+                      backgroundSize: '24px 24px',
+                    }} />
 
-                {/* Headline */}
-                <div className="mb-6">
-                  {['Smart', 'Academic', 'Scheduling'].map((word, i) => (
-                    <motion.div key={i} variants={fadeUp} className="overflow-hidden leading-none mb-1">
-                      <span className={`block text-display-xl ${i === 1 ? 'gold-text' : 'text-white'}`}>
-                        {word}
+                  <div className="relative z-10">
+                    {/* Headline */}
+                    <div className="mb-5">
+                      <span className="inline-flex items-center gap-2 px-3 py-1.5 text-[10px] font-bold tracking-[0.13em] uppercase text-white/60 bg-white/8 border border-white/10 rounded-full mb-6">
+                        <span className="w-1.5 h-1.5 rounded-full bg-white/60 animate-pulse" />
+                        Professional Academic Platform
                       </span>
-                    </motion.div>
-                  ))}
+                      <h1 className="text-[32px] md:text-[40px] font-bold leading-[1.05] tracking-tight mb-4">
+                        Start, switch, or advance your academic career
+                      </h1>
+                    </div>
+
+                    <p className="text-[15px] text-white/50 max-w-[440px] leading-relaxed mb-7">
+                      AI-powered scheduling, real-time notifications, and seamless collaboration for students, lecturers, and administrators.
+                    </p>
+
+                    {/* CTAs */}
+                    <div className="flex items-center gap-3 flex-wrap">
+                      <Link to="/register" className="btn-primary group flex items-center gap-2 text-[13px] h-[40px] px-6">
+                        Get Started Free
+                        <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+                      </Link>
+                      <Link to="/contact"
+                        className="inline-flex items-center gap-2 px-5 py-2 text-[13px] font-semibold text-white/50 border border-white/12 rounded-[var(--radius-md)] hover:border-white/30 hover:text-white/80 transition-all duration-200">
+                        Learn More
+                      </Link>
+                    </div>
+
+                    {/* Trust strip */}
+                    <div className="flex items-center gap-3 mt-8 pt-6 border-t border-white/8">
+                      {['SOC 2', 'FERPA', 'GDPR'].map(badge => (
+                        <span key={badge}
+                          className="text-[10px] font-bold tracking-[0.1em] uppercase text-white/30 border border-white/10 px-2.5 py-1 rounded-full">
+                          {badge}
+                        </span>
+                      ))}
+                      <span className="text-[11px] text-white/20 ml-1">Certified &amp; Compliant</span>
+                    </div>
+                  </div>
                 </div>
-
-                {/* Subheadline */}
-                <motion.p variants={fadeUp}
-                  className="text-[15px] text-white/50 max-w-[440px] leading-relaxed mb-9">
-                  AI-powered scheduling, real-time notifications, and seamless collaboration — for students, lecturers, and administrators.
-                </motion.p>
-
-                {/* CTAs */}
-                <motion.div variants={fadeUp} className="flex items-center gap-3 flex-wrap">
-                  <Link to="/register" className="btn-gold group flex items-center gap-2 text-[13px]">
-                    Get Started Free
-                    <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
-                  </Link>
-                  <Link to="/contact"
-                    className="inline-flex items-center gap-2 px-5 py-2 text-[13px] font-semibold text-white/60 border border-white/12 rounded-[var(--radius-md)] hover:border-white/30 hover:text-white/90 transition-all duration-200">
-                    Learn More
-                  </Link>
-                </motion.div>
-
-                {/* Trust strip */}
-                <motion.div variants={fadeUp}
-                  className="flex items-center gap-3 mt-9 pt-7 border-t border-white/8">
-                  {['SOC 2', 'FERPA', 'GDPR'].map(badge => (
-                    <span key={badge}
-                      className="text-[10px] font-bold tracking-[0.1em] uppercase text-white/25 border border-white/10 px-2.5 py-1 rounded-full">
-                      {badge}
-                    </span>
-                  ))}
-                  <span className="text-[11px] text-white/20 ml-1">Certified &amp; Compliant</span>
-                </motion.div>
               </motion.div>
 
-              {/* Right — image card */}
+              {/* Right — course tiles (Coursera pattern) */}
               <motion.div
-                initial={{ opacity: 0, scale: 0.94 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8, ease }}
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.7, ease }}
                 className="hidden lg:block">
-                <div className="relative">
-                  <div className="absolute inset-0 rounded-[24px] bg-[var(--color-primary)]/25 blur-2xl scale-105" />
-                  <div className="relative rounded-[24px] overflow-hidden shadow-2xl border border-white/10">
-                    <img src="/images/hero-graduation.jpg" alt="Graduation ceremony"
-                      className="w-full h-[400px] object-cover" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[var(--color-navy-dark)]/50 via-transparent to-transparent" />
-                  </div>
-                  {/* Floating cards */}
-                  <motion.div
-                    animate={{ y: [0, -7, 0] }}
-                    transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-                    className="absolute -bottom-4 -left-4 rounded-[14px] overflow-hidden shadow-xl border border-white/12 w-40">
-                    <img src="/images/studying.jpg" alt="Students studying"
-                      className="w-full h-24 object-cover" />
-                  </motion.div>
-                  <motion.div
-                    animate={{ y: [0, 7, 0] }}
-                    transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-                    className="absolute -top-4 -right-4 rounded-[14px] overflow-hidden shadow-xl border border-white/12 w-32 h-20">
-                    <img src="/images/books.jpg" alt="Academic books"
-                      className="w-full h-full object-cover" />
-                  </motion.div>
-                  {/* Live badge */}
-                  <div className="absolute top-4 left-4 flex items-center gap-1.5 bg-black/30 backdrop-blur px-3 py-1.5 rounded-full border border-white/12">
-                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-success)] animate-pulse" />
-                    <span className="text-[10px] font-bold text-white/75 tracking-wide">LIVE PLATFORM</span>
-                  </div>
+                <div className="space-y-3">
+                  {[
+                    { img: '/images/hero-graduation.jpg', title: 'Smart Academic Scheduling', meta: 'AI-Powered', tag: 'New' },
+                    { img: '/images/studying.jpg', title: 'Real-Time Grade Analytics', meta: 'Dashboard', tag: 'Popular' },
+                    { img: '/images/library.jpg', title: 'Live Class Collaboration', meta: 'Video + Chat', tag: 'Beta' },
+                  ].map((course, i) => (
+                    <motion.div key={i}
+                      initial={{ opacity: 0, y: 16 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: 0.2 + i * 0.12, ease }}
+                      className="flex items-center gap-4 p-3 rounded-[16px] border border-[var(--color-border)] bg-[var(--color-bg-card)] hover:shadow-md hover:border-[var(--color-primary)]/20 transition-all duration-200 cursor-pointer group">
+                      <img src={course.img} alt={course.title}
+                        className="w-20 h-16 rounded-[10px] object-cover flex-shrink-0" />
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-[13px] font-bold text-[var(--color-text)] truncate group-hover:text-[var(--color-primary)] transition-colors">{course.title}</h3>
+                        <p className="text-[11px] text-[var(--color-text-muted)] mt-0.5">{course.meta}</p>
+                      </div>
+                      <span className="badge badge-navy text-[9px] flex-shrink-0">{course.tag}</span>
+                    </motion.div>
+                  ))}
                 </div>
               </motion.div>
 
@@ -224,9 +198,9 @@ export function LandingPage() {
           <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.8 }}
             className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5">
-            <span className="text-[10px] font-semibold tracking-[0.14em] uppercase text-white/25">Scroll</span>
+            <span className="text-[10px] font-semibold tracking-[0.14em] uppercase text-[var(--color-text-muted)]">Scroll</span>
             <motion.div animate={{ y: [0, 5, 0] }} transition={{ duration: 1.6, repeat: Infinity }}
-              className="w-px h-7 bg-gradient-to-b from-white/25 to-transparent" />
+              className="w-px h-7 bg-gradient-to-b from-[var(--color-border)] to-transparent" />
           </motion.div>
         </section>
 
@@ -261,7 +235,7 @@ export function LandingPage() {
                 Everything your institution needs
               </h2>
               <p className="text-[14px] text-[var(--color-text-muted)] max-w-md mx-auto leading-relaxed">
-                One platform for every academic workflow — from enrollment to graduation.
+                One platform for every academic workflow, from enrollment to graduation.
               </p>
             </motion.div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -269,7 +243,7 @@ export function LandingPage() {
                 <motion.div key={i} variants={fadeUp}>
                   <div className="card-academic p-6 h-full flex flex-col cursor-default">
                     <div className="flex items-start justify-between mb-4">
-                      <div className="w-10 h-10 rounded-[10px] bg-[var(--color-navy-pale)] flex items-center justify-center">
+                      <div className="w-10 h-10 rounded-[10px] bg-[var(--color-primary-muted)] flex items-center justify-center">
                         <f.icon size={19} className="text-[var(--color-primary)]" />
                       </div>
                       <span className="feature-number">{f.num}</span>
@@ -343,16 +317,14 @@ export function LandingPage() {
 
         {/* ── CTA ────────────────────────────────────────────────── */}
         <Section className="py-24 relative overflow-hidden">
-          <div className="absolute inset-0 hero-gradient" />
+          <div className="absolute inset-0 bg-[var(--color-navy)]" />
           <div className="absolute inset-0 opacity-[0.06]">
             <img src="/images/campus.jpg" alt="" className="w-full h-full object-cover" />
           </div>
-          <div className="absolute inset-0 opacity-[0.03]"
-            style={{ backgroundImage: 'repeating-linear-gradient(-45deg, rgba(255,255,255,0.9) 0px, rgba(255,255,255,0.9) 1px, transparent 1px, transparent 24px)' }} />
           <div className="page-section text-center relative z-10">
             <motion.div variants={fadeUp}>
               <span className="trust-badge mb-7 inline-flex gap-1.5">
-                <Zap size={10} className="text-[var(--color-gold-bright)]" />
+                <Zap size={10} className="text-[var(--color-primary-light)]" />
                 Start Today — Free Forever
               </span>
             </motion.div>
@@ -363,12 +335,12 @@ export function LandingPage() {
               Join thousands of students, lecturers, and administrators already streamlining their academic experience.
             </motion.p>
             <motion.div variants={fadeUp} className="flex items-center justify-center gap-3 flex-wrap">
-              <Link to="/register" className="btn-gold group flex items-center gap-2 text-[13px] px-7 py-3">
+              <Link to="/register" className="btn-primary group flex items-center gap-2 text-[13px] h-[40px] px-7">
                 Create Free Account
                 <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
               </Link>
               <Link to="/contact"
-                className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold text-white/55 border border-white/12 rounded-[var(--radius-md)] hover:border-white/28 hover:text-white/85 transition-all duration-200">
+                className="inline-flex items-center gap-2 px-6 py-3 text-[13px] font-semibold text-white/50 border border-white/12 rounded-[var(--radius-md)] hover:border-white/28 hover:text-white/80 transition-all duration-200">
                 Contact Sales
               </Link>
             </motion.div>
@@ -380,18 +352,18 @@ export function LandingPage() {
           <div className="page-section">
             <div className="flex flex-col md:flex-row items-center justify-between gap-5">
               <div className="flex items-center gap-2.5">
-                <div className="w-7 h-7 rounded-[8px] bg-white/8 flex items-center justify-center">
+                <div className="w-7 h-7 rounded-[8px] bg-white/10 flex items-center justify-center">
                   <span className="text-white font-extrabold text-[10px]"
                     style={{ fontFamily: 'var(--font-display)' }}>A</span>
                 </div>
                 <span className="text-[14px] font-bold text-white"
                   style={{ fontFamily: 'var(--font-display)' }}>Acaedu</span>
-                <span className="text-white/18 text-[11px] ml-2">© 2026. All rights reserved.</span>
+                <span className="text-white/20 text-[11px] ml-2">&copy; 2026. All rights reserved.</span>
               </div>
               <div className="flex items-center gap-5">
                 {['Terms', 'Privacy', 'Contact'].map(item => (
                   <Link key={item} to={`/${item.toLowerCase()}`}
-                    className="text-[12px] text-white/28 hover:text-white/65 transition-colors">{item}</Link>
+                    className="text-[12px] text-white/30 hover:text-white/60 transition-colors">{item}</Link>
                 ))}
               </div>
             </div>

@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { fetchTable, insertRow, updateRow, deleteRow, supabase } from '../lib/supabase'
+import { useTheme } from '../lib/theme'
+import type { AcademicPreset } from '../lib/theme'
 import {
   Plus, Pencil, Trash2, BookOpen, FileText, Calendar, ClipboardList,
   CheckCircle, Bell, MapPin, Megaphone, Upload, Video, Users, Building2,
@@ -16,7 +18,7 @@ function ConfirmModal({ open, title, message, onConfirm, onCancel }: {
     <AnimatePresence>
       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="modal-backdrop" onClick={onCancel}>
         <motion.div initial={{ scale: 0.96, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.96, opacity: 0 }} className="modal" onClick={e => e.stopPropagation()}>
-          <h3 className="text-[16px] font-bold text-[var(--color-navy)] mb-2 text-center" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>{title}</h3>
+          <h3 className="text-[16px] font-bold text-[var(--color-navy)] mb-2 text-center" style={{ fontFamily: 'var(--font-display)' }}>{title}</h3>
           <p className="text-[13px] text-[var(--color-text-muted)] mb-6 text-center">{message}</p>
           <div className="flex gap-3 justify-center">
             <button onClick={onCancel} className="btn-secondary px-6 py-2">Cancel</button>
@@ -95,7 +97,7 @@ function CrudPage({ config }: { config: CrudConfig }) {
       {/* Form */}
       {showForm && (
         <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} className="card p-6 mb-6">
-          <h3 className="text-[15px] font-bold text-[var(--color-navy)] mb-5 text-center" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+          <h3 className="text-[15px] font-bold text-[var(--color-navy)] mb-5 text-center" style={{ fontFamily: 'var(--font-display)' }}>
             {editId ? `Edit ${config.singular}` : `Create ${config.singular}`}
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5 max-w-2xl mx-auto">
@@ -142,7 +144,7 @@ function CrudPage({ config }: { config: CrudConfig }) {
             <motion.div key={item.id as string} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}
               className="card card-interactive p-4 flex items-center gap-4">
               <div className="flex-1 min-w-0 text-center">
-                <h3 className="text-[13px] font-bold text-[var(--color-navy)] truncate" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+                <h3 className="text-[13px] font-bold text-[var(--color-navy)] truncate" style={{ fontFamily: 'var(--font-display)' }}>
                   {String(item[config.displayFields[0]?.key] || 'Untitled')}
                 </h3>
                 <div className="flex flex-wrap justify-center gap-3 mt-1">
@@ -567,10 +569,8 @@ export function SearchQueriesPage() {
 }
 
 export function SettingsPage() {
-  const [dark, setDark] = useState(() => {
-    if (typeof window !== 'undefined') return localStorage.getItem('theme') === 'dark'
-    return false
-  })
+  const { theme, cycle, academicPreset, setAcademicPreset, availablePresets } = useTheme()
+  const isDark = theme !== 'light'
   const [sound, setSound] = useState(() => {
     if (typeof window !== 'undefined') return localStorage.getItem('sound') !== 'off'
     return true
@@ -597,7 +597,7 @@ export function SettingsPage() {
 
   const closeModal = () => { setModal(null); setModalMsg(''); setModalError(''); setNewPassword(''); setConfirmPassword(''); setNewEmail(''); setDeleteConfirm('') }
 
-  const toggleDark = () => { document.documentElement.classList.toggle('dark'); setDark(!dark); localStorage.setItem('theme', dark ? 'light' : 'dark') }
+  const toggleDark = () => cycle()
   const toggleSound = () => { setSound(!sound); localStorage.setItem('sound', sound ? 'off' : 'on') }
 
   const handleChangePassword = async () => {
@@ -698,7 +698,7 @@ export function SettingsPage() {
   // Toggle helper
   const Toggle = ({ on, onToggle }: { on: boolean; onToggle: () => void }) => (
     <button onClick={onToggle} className="w-12 h-[26px] rounded-full relative transition-colors duration-200 flex-shrink-0"
-      style={{ background: on ? 'var(--color-navy)' : 'var(--color-beige)' }}>
+      style={{ background: on ? 'var(--color-navy)' : 'var(--color-bg-secondary)' }}>
       <div className="w-5 h-5 rounded-full bg-[var(--color-bg-card)] absolute top-[3px] transition-transform duration-200 shadow-sm"
         style={{ transform: on ? 'translateX(23px)' : 'translateX(3px)' }} />
     </button>
@@ -714,7 +714,7 @@ export function SettingsPage() {
           <motion.div initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }}
             className="bg-[var(--color-bg-card)] rounded-xl border border-[var(--color-border)] p-6 w-full max-w-sm shadow-2xl"
             onClick={e => e.stopPropagation()}>
-            <h3 className="text-[15px] font-bold text-[var(--color-navy)] mb-4 text-center" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>{title}</h3>
+            <h3 className="text-[15px] font-bold text-[var(--color-navy)] mb-4 text-center" style={{ fontFamily: 'var(--font-display)' }}>{title}</h3>
             {modalError && <div className="mb-3 px-3 py-2 rounded-lg bg-red-50 border border-red-200 text-red-700 text-[12px]">{modalError}</div>}
             {modalMsg && <div className="mb-3 px-3 py-2 rounded-lg bg-green-50 border border-green-200 text-green-700 text-[12px]">{modalMsg}</div>}
             {children}
@@ -732,13 +732,30 @@ export function SettingsPage() {
         <p className="text-[13px] text-[var(--color-text-muted)] mt-1.5">Manage your account preferences and app settings</p>
       </div>
 
+      {/* Academic Theme */}
+      <div className="mb-8">
+        <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'var(--font-display)' }}>Academic Theme</h2>
+        <p className="text-[12px] text-[var(--color-text-muted)] mb-3">Choose a design inspired by leading academic platforms</p>
+        <div className="grid grid-cols-2 gap-3">
+          {(Object.entries(availablePresets) as [AcademicPreset, typeof availablePresets[AcademicPreset]][]).map(([key, preset]) => (
+            <button key={key}
+              onClick={() => setAcademicPreset(key)}
+              className={`preset-card ${academicPreset === key ? 'active' : ''}`}>
+              <div className="w-8 h-8 rounded-full mx-auto mb-2" style={{ background: preset.color }} />
+              <div className="text-[13px] font-bold text-[var(--color-navy)]">{preset.label}</div>
+              <div className="text-[11px] text-[var(--color-text-muted)] mt-0.5">{preset.desc}</div>
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Appearance */}
       <div className="mb-8">
-        <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Appearance</h2>
+        <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'var(--font-display)' }}>Appearance</h2>
         <div className="space-y-2">
           <div className="card p-4 flex items-center justify-between">
-            <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]">Dark Mode</h3><p className="text-[12px] text-[var(--color-text-muted)]">Switch between light and dark themes</p></div>
-            <Toggle on={dark} onToggle={toggleDark} />
+            <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]">Theme</h3><p className="text-[12px] text-[var(--color-text-muted)]">Current: {theme}</p></div>
+            <Toggle on={isDark} onToggle={toggleDark} />
           </div>
           <div className="card p-4 flex items-center justify-between">
             <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]">Font Size</h3><p className="text-[12px] text-[var(--color-text-muted)]">Adjust text size across the app</p></div>
@@ -755,7 +772,7 @@ export function SettingsPage() {
 
       {/* Notifications */}
       <div className="mb-8">
-        <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Notifications</h2>
+        <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'var(--font-display)' }}>Notifications</h2>
         <div className="space-y-2">
           <div className="card p-4 flex items-center justify-between">
             <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]">Email Notifications</h3><p className="text-[12px] text-[var(--color-text-muted)]">Receive email alerts for important updates</p></div>
@@ -774,7 +791,7 @@ export function SettingsPage() {
 
       {/* Sound */}
       <div className="mb-8">
-        <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Sound & Media</h2>
+        <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'var(--font-display)' }}>Sound & Media</h2>
         <div className="space-y-2">
           <div className="card p-4 flex items-center justify-between">
             <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]">Sound Effects</h3><p className="text-[12px] text-[var(--color-text-muted)]">Play sounds on interactions and notifications</p></div>
@@ -785,7 +802,7 @@ export function SettingsPage() {
 
       {/* Regional */}
       <div className="mb-8">
-        <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Regional</h2>
+        <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'var(--font-display)' }}>Regional</h2>
         <div className="space-y-2">
           <div className="card p-4 flex items-center justify-between">
             <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]">Language</h3><p className="text-[12px] text-[var(--color-text-muted)]">Select your preferred language</p></div>
@@ -805,7 +822,7 @@ export function SettingsPage() {
 
       {/* Privacy & Security */}
       <div className="mb-8">
-        <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Privacy & Security</h2>
+        <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'var(--font-display)' }}>Privacy & Security</h2>
         <div className="space-y-2">
           <div className="card p-4 flex items-center justify-between">
             <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]">Two-Factor Authentication</h3><p className="text-[12px] text-[var(--color-text-muted)]">Add an extra layer of security to your account</p></div>
@@ -824,23 +841,23 @@ export function SettingsPage() {
 
       {/* Billing */}
       <div className="mb-8">
-        <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Billing & Subscription</h2>
+        <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'var(--font-display)' }}>Billing & Subscription</h2>
         <div className="card p-5">
           <div className="flex items-center justify-between mb-4">
             <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]">Current Plan</h3><p className="text-[12px] text-[var(--color-text-muted)]">Manage your subscription and billing</p></div>
             <span className="badge badge-success">Free</span>
           </div>
           <div className="grid grid-cols-3 gap-3 mb-4">
-            <div className="p-3 rounded-[10px] bg-[var(--color-bg)] text-center border border-[var(--color-beige)]">
-              <div className="text-[15px] font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Free</div>
+            <div className="p-3 rounded-[10px] bg-[var(--color-bg)] text-center border border-[var(--color-bg-secondary)]">
+              <div className="text-[15px] font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>Free</div>
               <div className="text-[11px] text-[var(--color-text-muted)] mt-0.5">Basic features</div>
             </div>
             <div className="p-3 rounded-[10px] text-center border-2 border-[var(--color-navy)]/30 bg-[var(--color-navy)]/3">
-              <div className="text-[15px] font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Pro</div>
+              <div className="text-[15px] font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>Pro</div>
               <div className="text-[11px] text-[var(--color-text-muted)] mt-0.5">$9.99/month</div>
             </div>
-            <div className="p-3 rounded-[10px] bg-[var(--color-bg)] text-center border border-[var(--color-beige)]">
-              <div className="text-[15px] font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Enterprise</div>
+            <div className="p-3 rounded-[10px] bg-[var(--color-bg)] text-center border border-[var(--color-bg-secondary)]">
+              <div className="text-[15px] font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>Enterprise</div>
               <div className="text-[11px] text-[var(--color-text-muted)] mt-0.5">Custom pricing</div>
             </div>
           </div>
@@ -853,7 +870,7 @@ export function SettingsPage() {
 
       {/* Account */}
       <div className="mb-8">
-        <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Account</h2>
+        <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'var(--font-display)' }}>Account</h2>
         <div className="space-y-2">
           <div className="card p-4 flex items-center justify-between">
             <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]">Change Password</h3><p className="text-[12px] text-[var(--color-text-muted)]">Update your account password</p></div>

@@ -41,15 +41,12 @@ export function LoginPage() {
 
       {/* ── Left panel — institutional identity ──────────────────── */}
       <div className="hidden lg:flex lg:w-[44%] relative overflow-hidden flex-col">
-        {/* Background image */}
         <div className="absolute inset-0">
           <img src="/images/campus.jpg" alt="" className="w-full h-full object-cover" />
         </div>
-        {/* Overlay */}
         <div className="absolute inset-0"
-          style={{ background: 'linear-gradient(160deg, rgba(6,15,30,0.92) 0%, rgba(15,42,82,0.88) 50%, rgba(15,42,82,0.95) 100%)' }} />
+          style={{ background: 'linear-gradient(160deg, rgba(0,26,77,0.95) 0%, rgba(0,86,210,0.90) 50%, rgba(0,39,97,0.95) 100%)' }} />
 
-        {/* Content */}
         <motion.div
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
@@ -68,15 +65,15 @@ export function LoginPage() {
 
           {/* Main copy */}
           <div className="py-16">
-            <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-[var(--color-gold-light)] mb-5">
-              Academic Platform
+            <p className="text-[11px] font-bold tracking-[0.14em] uppercase text-[var(--color-secondary-light)] mb-5">
+              Professional Academic Platform
             </p>
             <h2 className="text-3xl font-extrabold text-white leading-tight mb-4"
-              style={{ fontFamily: 'var(--font-display)', letterSpacing: '-0.02em' }}>
+              style={{ fontFamily: 'var(--font-display)', letterSpacing: '-0.025em' }}>
               Welcome back to your academic workspace
             </h2>
             <p className="text-[14px] text-white/38 leading-relaxed max-w-sm">
-              Access your courses, grades, schedule, and institution tools — all in one place.
+              Access your courses, grades, schedule, and institution tools, all in one place.
             </p>
           </div>
 
@@ -107,7 +104,7 @@ export function LoginPage() {
 
           {/* Mobile brand */}
           <div className="lg:hidden flex items-center justify-center gap-2.5 mb-10">
-            <div className="w-9 h-9 rounded-[10px] bg-[var(--color-navy)] flex items-center justify-center shadow-sm">
+            <div className="w-9 h-9 rounded-[10px] bg-[var(--color-primary)] flex items-center justify-center shadow-sm">
               <span className="text-white font-extrabold text-sm"
                 style={{ fontFamily: 'var(--font-display)' }}>A</span>
             </div>
@@ -180,7 +177,7 @@ export function LoginPage() {
               {loading ? (
                 <span className="flex items-center gap-2">
                   <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Signing in…
+                  Signing in...
                 </span>
               ) : 'Sign In'}
             </button>
@@ -198,27 +195,22 @@ export function LoginPage() {
             <button onClick={handleGoogle} className="btn-secondary w-full py-2.5 text-[13px]">
               <svg width="15" height="15" viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.5 12.25c0-.75-.075-1.5-.2-2.25H12v4.25h5.4c-.225 1.2-.9 2.225-1.95 2.925v2.325h3.15c1.85-1.7 2.9-4.2 2.9-7.25z"/>
-                <path fill="#34A853" d="M12 23c2.7 0 5-.9 6.65-2.475l-3.15-2.325c-.875.6-2 .95-3.5.95-2.7 0-4.975-1.825-5.8-4.275H2.9v2.4C4.55 20.825 8.05 23 12 23z"/>
-                <path fill="#FBBC05" d="M6.2 14.875A6.54 6.54 0 0 1 5.85 13c0-.65.125-1.275.35-1.875V8.725H2.9A11.01 11.01 0 0 0 1.75 13c0 1.475.3 2.875.825 4.15l3.625-2.275z"/>
-                <path fill="#EA4335" d="M12 5.75c1.525 0 2.875.525 3.95 1.55l2.95-2.95C17 2.7 14.7 1.75 12 1.75 8.05 1.75 4.55 3.925 2.9 7.15l3.3 2.575C7.025 7.575 9.3 5.75 12 5.75z"/>
+                <path fill="#34A853" d="M12 23c2.7 0 5-.9 6.65-2.475l-2.5-1.95c-.7.475-1.575.75-2.65.75-1.95 0-3.6-1.275-4.2-3.05H3.45v1.65C5.15 20.125 8.3 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.8 14.25c-.225-.6-.35-1.225-.35-1.875 0-.65.125-1.275.35-1.875v-1.65H3.45v1.65C3.45 12.7 3.6 13.35 3.9 13.9z"/>
+                <path fill="#EA4335" d="M12 5.25c1.55 0 2.975.525 4.05 1.4l2.975-2.975C17.2 2.1 14.7 1.25 12 1.25 8.3 1.25 5.15 4.125 3.45 8.1l1.65 1.25C5.4 9.525 5.8 8.4 5.8 7.2c0-1.3.525-2.475 1.4-3.325L5.8 5.25z"/>
               </svg>
-              Continue with Google
+              Google
             </button>
             <button onClick={handleApple} className="btn-secondary w-full py-2.5 text-[13px]">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
               </svg>
-              Continue with Apple
+              Apple
             </button>
           </div>
 
-          {/* Register link */}
-          <p className="text-center text-[13px] text-[var(--color-text-muted)] mt-7">
-            Don&apos;t have an account?{' '}
-            <Link to="/register"
-              className="font-semibold text-[var(--color-primary)] hover:underline">
-              Create one
-            </Link>
+          <p className="text-center text-[13px] text-[var(--color-text-muted)] mt-8">
+            Don't have an account? <Link to="/register" className="font-semibold text-[var(--color-primary)] hover:underline">Create one</Link>
           </p>
         </motion.div>
       </div>

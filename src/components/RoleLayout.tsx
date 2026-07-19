@@ -1,13 +1,14 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { signOut } from '../lib/supabase'
+import { useTheme } from '../lib/theme'
 import type { User } from '../types'
 import {
   Home, BookOpen, Calendar, Video, CheckSquare, Megaphone, FileText,
   ClipboardList, GraduationCap, Upload, MapPin, Bell, User as UserIcon,
   Settings, LogOut, Menu, Moon, Sun, Users, CreditCard,
   Brain, Search, Building2, GitBranch, Shield, Mail, Clock, CalendarOff, X,
-  ChevronRight,
+  ChevronRight, Sparkles,
 } from 'lucide-react'
 import { useState } from 'react'
 
@@ -76,17 +77,17 @@ function getBreadcrumb(pathname: string): string {
   return seg.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())
 }
 
+const themeIcons: Record<string, React.ReactNode> = {
+  light: <Sun size={16} />,
+  dark: <Moon size={16} />,
+  midnight: <Sparkles size={16} />,
+}
+
 export function RoleLayout({ user, children }: { user: User; children: React.ReactNode }) {
   const location = useLocation()
   const navigate = useNavigate()
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [dark, setDark] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('theme')
-      if (saved === 'dark') { document.documentElement.classList.add('dark'); return true }
-    }
-    return false
-  })
+  const { theme, cycle, academicPreset, availablePresets } = useTheme()
 
   const visibleNav = user.role === 'admin'
     ? allNav
@@ -97,11 +98,6 @@ export function RoleLayout({ user, children }: { user: User; children: React.Rea
     acc[item.group].push(item)
     return acc
   }, {})
-
-  const toggleDark = () => {
-    document.documentElement.classList.toggle('dark')
-    setDark(d => { localStorage.setItem('theme', !d ? 'dark' : 'light'); return !d })
-  }
 
   const handleLogout = async () => { await signOut(); navigate('/login') }
   const breadcrumb = getBreadcrumb(location.pathname)
@@ -132,7 +128,7 @@ export function RoleLayout({ user, children }: { user: User; children: React.Rea
 
         {/* Brand */}
         <div className="h-[56px] flex items-center gap-2.5 px-4 border-b border-[var(--color-border)] flex-shrink-0">
-          <div className="w-7 h-7 rounded-[8px] bg-[var(--color-navy)] flex items-center justify-center shadow-sm">
+          <div className="w-7 h-7 rounded-[8px] bg-[var(--color-primary)] flex items-center justify-center shadow-sm">
             <span className="text-white font-extrabold text-[11px]"
               style={{ fontFamily: 'var(--font-display)' }}>A</span>
           </div>
@@ -241,10 +237,16 @@ export function RoleLayout({ user, children }: { user: User; children: React.Rea
           </div>
 
           <div className="flex items-center gap-1.5">
-            <button onClick={toggleDark}
+            <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border border-[var(--color-border)] text-[var(--color-text-muted)]"
+              style={{ borderColor: availablePresets[academicPreset]?.color + '40', color: availablePresets[academicPreset]?.color }}>
+              <span className="w-1.5 h-1.5 rounded-full" style={{ background: availablePresets[academicPreset]?.color }} />
+              {availablePresets[academicPreset]?.label}
+            </span>
+            <button onClick={cycle}
               className="p-2 rounded-[var(--radius-md)] hover:bg-[var(--color-bg-secondary)] transition-colors text-[var(--color-text-muted)] hover:text-[var(--color-navy)]"
-              aria-label="Toggle theme">
-              {dark ? <Sun size={16} /> : <Moon size={16} />}
+              aria-label="Toggle theme"
+              title={`Current: ${theme}`}>
+              {themeIcons[theme]}
             </button>
             <button onClick={handleLogout}
               className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--radius-md)] text-[12px] font-medium text-[var(--color-danger)] hover:bg-[var(--color-danger)]/8 transition-colors">

@@ -6,7 +6,7 @@ export function TermsPage() {
   return (
     <div className="max-w-3xl mx-auto">
       <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}}>
-        <h1 className="text-3xl font-extrabold text-[var(--color-navy)] mb-6" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Terms of Service</h1>
+        <h1 className="text-3xl font-extrabold text-[var(--color-navy)] mb-6" style={{ fontFamily: 'var(--font-display)' }}>Terms of Service</h1>
         <div className="prose prose-sm max-w-none text-[var(--color-text-secondary)] space-y-6">
           <section>
             <h2 className="text-lg font-bold text-[var(--color-navy)] mb-2">1. Acceptance of Terms</h2>
@@ -49,7 +49,7 @@ export function PrivacyPage() {
   return (
     <div className="max-w-3xl mx-auto">
       <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}}>
-        <h1 className="text-3xl font-extrabold text-[var(--color-navy)] mb-6" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Privacy Policy</h1>
+        <h1 className="text-3xl font-extrabold text-[var(--color-navy)] mb-6" style={{ fontFamily: 'var(--font-display)' }}>Privacy Policy</h1>
         <div className="prose prose-sm max-w-none text-[var(--color-text-secondary)] space-y-6">
           <section>
             <h2 className="text-lg font-bold text-[var(--color-navy)] mb-2">1. Information We Collect</h2>
@@ -127,7 +127,7 @@ export function ContactPage() {
   return (
     <div className="max-w-2xl mx-auto">
       <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}}>
-        <h1 className="text-3xl font-extrabold text-[var(--color-navy)] mb-6" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>Contact Us</h1>
+        <h1 className="text-3xl font-extrabold text-[var(--color-navy)] mb-6" style={{ fontFamily: 'var(--font-display)' }}>Contact Us</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
           <div className="p-5 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-border)] hover:border-[var(--color-navy)]/20 transition-colors">
             <h3 className="font-bold text-[var(--color-navy)] mb-2 text-sm">Email</h3>
