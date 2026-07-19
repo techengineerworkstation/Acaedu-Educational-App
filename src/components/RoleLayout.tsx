@@ -111,7 +111,7 @@ export function RoleLayout({ user, children }: { user: User; children: React.Rea
           <motion.div key="overlay"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             transition={{ duration: 0.18 }}
-            className="fixed inset-0 bg-[var(--color-navy)]/40 backdrop-blur-sm z-40 lg:hidden"
+            className="fixed inset-0 bg-[var(--color-secondary)]/40 backdrop-blur-sm z-40 lg:hidden"
             onClick={() => setSidebarOpen(false)}
           />
         )}
@@ -120,18 +120,21 @@ export function RoleLayout({ user, children }: { user: User; children: React.Rea
       {/* ── Sidebar ──────────────────────────────────────────────── */}
       <aside className={`
         fixed top-0 left-0 h-full w-[248px] z-50 flex flex-col
-        bg-[var(--color-bg-card)] border-r border-[var(--color-border)]
+        bg-[var(--color-bg-card)] border-r border-[var(--color-border-light)]
         lg:shadow-none shadow-[var(--shadow-xl)]
-        transition-transform duration-250 ease-out lg:translate-x-0
+        transition-transform duration-300 ease-out lg:translate-x-0
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
 
         {/* Brand */}
-        <div className="h-[56px] flex items-center gap-2.5 px-4 border-b border-[var(--color-border)] flex-shrink-0">
-          <div className="w-7 h-7 rounded-[8px] bg-[var(--color-primary)] flex items-center justify-center shadow-sm">
+        <div className="h-[56px] flex items-center gap-2.5 px-4 border-b border-[var(--color-border-light)] flex-shrink-0">
+          <motion.div
+            whileHover={{ rotate: [0, -6, 6, 0] }}
+            transition={{ duration: 0.4 }}
+            className="w-7 h-7 rounded-[9px] bg-[var(--color-primary)] flex items-center justify-center shadow-sm">
             <span className="text-white font-extrabold text-[11px]"
               style={{ fontFamily: 'var(--font-display)' }}>A</span>
-          </div>
+          </motion.div>
           <span className="text-[14px] font-bold text-[var(--color-navy)] tracking-tight flex-1"
             style={{ fontFamily: 'var(--font-display)' }}>
             Acaedu
@@ -194,7 +197,7 @@ export function RoleLayout({ user, children }: { user: User; children: React.Rea
         </motion.nav>
 
         {/* User footer */}
-        <div className="border-t border-[var(--color-border)] p-2.5 flex-shrink-0">
+        <div className="border-t border-[var(--color-border-light)] p-2.5 flex-shrink-0">
           <div className="flex items-center gap-2.5 px-2 py-2 rounded-[var(--radius-md)] hover:bg-[var(--color-bg-secondary)] transition-colors group cursor-default">
             <div className="avatar w-7 h-7 text-[10px] flex-shrink-0">{user.full_name[0]}</div>
             <div className="flex-1 min-w-0">

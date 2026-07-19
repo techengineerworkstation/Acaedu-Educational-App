@@ -738,13 +738,16 @@ export function SettingsPage() {
         <p className="text-[12px] text-[var(--color-text-muted)] mb-3">Choose a design inspired by leading academic platforms</p>
         <div className="grid grid-cols-2 gap-3">
           {(Object.entries(availablePresets) as [AcademicPreset, typeof availablePresets[AcademicPreset]][]).map(([key, preset]) => (
-            <button key={key}
+            <motion.button key={key}
+              whileHover={{ scale: 1.02, y: -1 }} whileTap={{ scale: 0.98 }}
               onClick={() => setAcademicPreset(key)}
               className={`preset-card ${academicPreset === key ? 'active' : ''}`}>
-              <div className="w-8 h-8 rounded-full mx-auto mb-2" style={{ background: preset.color }} />
+              <div className="w-9 h-9 rounded-[10px] mx-auto mb-2.5 flex items-center justify-center" style={{ background: preset.color }}>
+                <span className="text-white text-[11px] font-bold" style={{ fontFamily: 'var(--font-display)' }}>{preset.label[0]}</span>
+              </div>
               <div className="text-[13px] font-bold text-[var(--color-navy)]">{preset.label}</div>
               <div className="text-[11px] text-[var(--color-text-muted)] mt-0.5">{preset.desc}</div>
-            </button>
+            </motion.button>
           ))}
         </div>
       </div>

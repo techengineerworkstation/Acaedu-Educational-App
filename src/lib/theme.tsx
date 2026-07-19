@@ -1,13 +1,13 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 
 type Theme = 'light' | 'dark' | 'midnight'
-export type AcademicPreset = 'coursera' | 'harvard' | 'edx' | 'canvas'
+export type AcademicPreset = 'edx' | 'coursera' | 'harvard' | 'canvas'
 
 const academicPresets: Record<AcademicPreset, { label: string; desc: string; color: string }> = {
-  coursera: { label: 'Coursera', desc: 'Clean voltage-blue CTAs, border-first cards', color: '#0056d2' },
-  harvard:  { label: 'Harvard',  desc: 'Crimson prestige, gold accents, classical',   color: '#a51c30' },
-  edx:      { label: 'edX',      desc: 'Deep teal + terracotta warmth, scholarly',    color: '#025e6b' },
-  canvas:   { label: 'Canvas',   desc: 'Institutional red-gray, data-dense',          color: '#e03c31' },
+  edx:      { label: 'edX',      desc: 'Dark teal-black, maroon accents, shadow-elevated cards', color: '#c1272d' },
+  coursera: { label: 'Coursera', desc: 'Voltage-blue CTAs, border-first cards, capsule pills',    color: '#0056d2' },
+  harvard:  { label: 'Harvard',  desc: 'Crimson prestige, gold accents, classical warmth',        color: '#a51c30' },
+  canvas:   { label: 'Canvas',   desc: 'Institutional red-gray, data-dense hierarchy',            color: '#e03c31' },
 }
 
 interface ThemeContextValue {
@@ -24,7 +24,7 @@ interface ThemeContextValue {
 const ThemeContext = createContext<ThemeContextValue>({
   theme: 'light',
   isDark: false,
-  academicPreset: 'coursera',
+  academicPreset: 'edx',
   availablePresets: academicPresets,
   toggle: () => {},
   cycle: () => {},
@@ -42,7 +42,7 @@ function applyTheme(theme: Theme, preset: AcademicPreset) {
   } else if (theme === 'midnight') {
     root.setAttribute('data-theme', 'midnight')
   }
-  if (preset !== 'coursera') {
+  if (preset !== 'edx') {
     root.setAttribute('data-academic', preset)
   }
 }
@@ -61,7 +61,7 @@ function resolveInitialPreset(): AcademicPreset {
     const stored = localStorage.getItem('acaedu-academic') as AcademicPreset | null
     if (stored && academicPresets[stored]) return stored
   } catch {}
-  return 'coursera'
+  return 'edx'
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {

@@ -22,7 +22,7 @@ function ConstellationGrid({ count = 100 }: { count?: number }) {
     }
 
     const ptGeo = new THREE.BufferGeometry().setFromPoints(verts)
-    const ptMat = new THREE.PointsMaterial({ color: '#20A4B4', size: 0.07, transparent: true, opacity: 0.50, sizeAttenuation: true })
+    const ptMat = new THREE.PointsMaterial({ color: '#025e6b', size: 0.07, transparent: true, opacity: 0.50, sizeAttenuation: true })
     const points = new THREE.Points(ptGeo, ptMat)
 
     const lineVerts: THREE.Vector3[] = []
@@ -35,7 +35,7 @@ function ConstellationGrid({ count = 100 }: { count?: number }) {
       }
     }
     const lnGeo = new THREE.BufferGeometry().setFromPoints(lineVerts)
-    const lnMat = new THREE.LineBasicMaterial({ color: '#0A8A99', transparent: true, opacity: 0.06 })
+    const lnMat = new THREE.LineBasicMaterial({ color: '#4dd0d8', transparent: true, opacity: 0.06 })
     const lines = new THREE.LineSegments(lnGeo, lnMat)
 
     return { points, lines }
@@ -104,15 +104,15 @@ function DNAHelix({ strands = 72 }: { strands?: number }) {
     <group ref={groupRef}>
       <instancedMesh ref={meshARef} args={[undefined, undefined, strands]}>
         <sphereGeometry args={[1, 8, 8]} />
-        <meshBasicMaterial color="#0A8A99" transparent opacity={0.38} />
+        <meshBasicMaterial color="#025e6b" transparent opacity={0.38} />
       </instancedMesh>
       <instancedMesh ref={meshBRef} args={[undefined, undefined, strands]}>
         <sphereGeometry args={[1, 8, 8]} />
-        <meshBasicMaterial color="#D4704E" transparent opacity={0.38} />
+        <meshBasicMaterial color="#c1272d" transparent opacity={0.38} />
       </instancedMesh>
       <instancedMesh ref={connRef} args={[undefined, undefined, connCount]}>
         <boxGeometry args={[1, 1, 1]} />
-        <meshBasicMaterial color="#48BED0" transparent opacity={0.15} />
+        <meshBasicMaterial color="#e8535a" transparent opacity={0.15} />
       </instancedMesh>
     </group>
   )
@@ -151,10 +151,10 @@ function MorphingSphere() {
   return (
     <group position={[7, 1.5, -8]}>
       <mesh ref={meshRef} geometry={solidGeo}>
-        <meshBasicMaterial color="#013B44" transparent opacity={0.04} />
+        <meshBasicMaterial color="#00262b" transparent opacity={0.04} />
       </mesh>
       <mesh ref={wireRef} geometry={wireGeo}>
-        <meshBasicMaterial color="#0A8A99" wireframe transparent opacity={0.06} />
+        <meshBasicMaterial color="#4dd0d8" wireframe transparent opacity={0.06} />
       </mesh>
     </group>
   )
@@ -176,12 +176,12 @@ function AcademicGeometry() {
       {[4.4, 3.1, 2.0, 1.1].map((r, i) => (
         <mesh key={i} rotation={[Math.PI * i * 0.25, Math.PI * i * 0.15, 0]}>
           <torusGeometry args={[r, 0.013, 16, 120]} />
-          <meshBasicMaterial color={i % 2 === 0 ? '#B8922A' : '#025E6B'} transparent opacity={0.05 + i * 0.01} />
+          <meshBasicMaterial color={i % 2 === 0 ? '#b8860b' : '#025e6b'} transparent opacity={0.05 + i * 0.01} />
         </mesh>
       ))}
       <mesh>
         <octahedronGeometry args={[0.65, 0]} />
-        <meshBasicMaterial color="#D4704E" wireframe transparent opacity={0.14} />
+        <meshBasicMaterial color="#c1272d" wireframe transparent opacity={0.14} />
       </mesh>
     </group>
   )
@@ -219,7 +219,7 @@ function FloatingParticles({ count = 180 }: { count?: number }) {
   return (
     <instancedMesh ref={meshRef} args={[undefined, undefined, count]}>
       <sphereGeometry args={[1, 6, 6]} />
-      <meshBasicMaterial color="#20A4B4" transparent opacity={0.24} />
+      <meshBasicMaterial color="#4dd0d8" transparent opacity={0.24} />
     </instancedMesh>
   )
 }

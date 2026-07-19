@@ -11,25 +11,28 @@ interface Star {
   trail: { x: number; y: number }[]
 }
 
-const COLORS = ['#20A4B4', '#D4704E', '#0A8A99', '#F0CC5A', '#FFFFFF']
+const DEFAULT_COLORS = ['#20A4B4', '#D4704E', '#0A8A99', '#F0CC5A', '#FFFFFF']
 
-export function Sparkles({ count = 55, className }: { count?: number; className?: string }) {
+export function Sparkles({ count = 55, className, colors, speed }: { count?: number; className?: string; colors?: string[]; speed?: number }) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
+
+  const palette = colors && colors.length > 0 ? colors : DEFAULT_COLORS
+  const spd = speed ?? 1
 
   const stars = useMemo<Star[]>(() => {
     return Array.from({ length: count }, (_, i) => ({
       x: Math.random(),
       y: Math.random(),
-      vx: (Math.random() - 0.5) * 0.00018,
-      vy: (Math.random() - 0.5) * 0.00018,
+      vx: (Math.random() - 0.5) * 0.00018 * spd,
+      vy: (Math.random() - 0.5) * 0.00018 * spd,
       size: Math.random() * 1.8 + 0.5,
       opacity: Math.random() * 0.7 + 0.2,
-      twinkleSpeed: 0.6 + Math.random() * 1.4,
+      twinkleSpeed: (0.6 + Math.random() * 1.4) * spd,
       twinklePhase: Math.random() * Math.PI * 2,
-      color: COLORS[i % COLORS.length],
+      color: palette[i % palette.length],
       trail: [],
     }))
-  }, [count])
+  }, [count, palette, spd])
 
   useEffect(() => {
     const canvas = canvasRef.current
@@ -46,7 +49,7 @@ export function Sparkles({ count = 55, className }: { count?: number; className?
     }
 
     const animate = () => {
-      t += 0.016
+      t += 0.016 * spd
       const w = canvas.offsetWidth
       const h = canvas.offsetHeight
       ctx.clearRect(0, 0, w, h)

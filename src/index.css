@@ -4,120 +4,120 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ═══════════════════════════════════════════════════════════════
-   ACAEDU — Coursera-Inspired Academic Design System v3
-   Primary: Coursera voltage-blue CTAs, border-first cards,
-            navy callout bands, 50px capsule pills
-   Presets: Coursera | Harvard | edX | Canvas
+   ACAEDU — edX-Inspired Academic Design System v4
+   Dark teal-black header, maroon accents, shadow-elevated cards,
+   warm editorial palette, generous radii
+   Presets: edX | Coursera | Harvard | Canvas
    ═══════════════════════════════════════════════════════════════ */
 
-/* ─── Design Tokens (Coursera Default) ──────────────────────── */
+/* ─── Design Tokens (edX Default) ──────────────────────────── */
 @theme {
-  /* Primary — voltage blue (Coursera signature) */
-  --color-primary:        #0056d2;
-  --color-primary-hover:  #0048b0;
-  --color-primary-light:  #3587fc;
-  --color-primary-dark:   #002761;
-  --color-primary-muted:  #e3eeff;
+  /* Primary — maroon/burgundy (edX signature) */
+  --color-primary:        #c1272d;
+  --color-primary-hover:  #a82025;
+  --color-primary-light:  #e8535a;
+  --color-primary-dark:   #8b181c;
+  --color-primary-muted:  #fdf0f0;
 
-  /* Secondary — navy callout (Coursera depth) */
-  --color-secondary:      #002761;
-  --color-secondary-hover:#003b8f;
-  --color-secondary-light:#3587fc;
+  /* Secondary — dark teal-black (edX header) */
+  --color-secondary:      #00262b;
+  --color-secondary-hover:#00383f;
+  --color-secondary-light:#005e6b;
 
-  /* Accent — purple (Coursera accent) */
-  --color-accent:         #a678f5;
-  --color-accent-warm:    #3587fc;
+  /* Accent — warm teal */
+  --color-accent:         #025e6b;
+  --color-accent-warm:    #d4724e;
 
-  /* Backgrounds — clean white canvas (Coursera clarity) */
+  /* Backgrounds — warm off-white (edX warmth) */
   --color-bg:             #ffffff;
-  --color-bg-secondary:   #f7f8fa;
-  --color-bg-tertiary:    #e8eef7;
+  --color-bg-secondary:   #f5f5f0;
+  --color-bg-tertiary:    #eae8e1;
   --color-bg-card:        #ffffff;
-  --color-bg-hover:       #f0f3f8;
+  --color-bg-hover:       #f0efe9;
 
-  /* Text — ink scale (Coursera neutral) */
-  --color-text:           #0f1114;
-  --color-text-secondary: #1e2229;
-  --color-text-muted:     #5b6780;
+  /* Text — warm charcoal scale */
+  --color-text:           #1c1e21;
+  --color-text-secondary: #3d4047;
+  --color-text-muted:     #6b6e76;
   --color-text-inverse:   #ffffff;
 
-  /* Borders — hairline (Coursera border-first) */
-  --color-border:         #dae1ed;
-  --color-border-light:   #e8eef7;
-  --color-border-strong:  #b0b8c9;
+  /* Borders — soft warm grays (shadow-primary, not border-primary) */
+  --color-border:         #ddd9d0;
+  --color-border-light:   #e8e5de;
+  --color-border-strong:  #c4c0b8;
 
   /* Semantic */
-  --color-danger:         #d30a28;
-  --color-warning:        #a32e00;
-  --color-success:        #276a1a;
-  --color-info:           #0056d2;
+  --color-danger:         #c1272d;
+  --color-warning:        #c47a10;
+  --color-success:        #1b7a42;
+  --color-info:           #025e6b;
 
   /* Institutional palette — academic tones */
-  --color-navy:           #002761;
-  --color-navy-mid:       #003b8f;
-  --color-navy-light:     #3587fc;
-  --color-navy-pale:      #e3eeff;
-  --color-gold:           #b8922a;
-  --color-gold-mid:       #d4ad4b;
+  --color-navy:           #00262b;
+  --color-navy-mid:       #00383f;
+  --color-navy-light:     #005e6b;
+  --color-navy-pale:      #e8f4f5;
+  --color-gold:           #b8860b;
+  --color-gold-mid:       #d4a017;
   --color-gold-light:     #f0cc5a;
   --color-gold-bright:    #f5d76e;
   --color-gold-pale:      #fdf6e3;
-  --color-cream:          #f7f8fa;
-  --color-slate:          #1e2229;
+  --color-cream:          #f5f5f0;
+  --color-slate:          #1c1e21;
 }
 
 :root {
-  /* Gradients */
-  --gradient-primary:   linear-gradient(135deg, #002761 0%, #0056d2 55%, #3587fc 100%);
-  --gradient-warm:      linear-gradient(135deg, #002761 0%, #0056d2 60%, #3587fc 100%);
-  --gradient-mixed:     linear-gradient(135deg, #002761 0%, #0056d2 50%, #a678f5 100%);
-  --gradient-hero:      linear-gradient(160deg, #001a4d 0%, #002761 35%, #0056d2 75%, #002761 100%);
-  --gradient-hero-alt:  linear-gradient(160deg, #00112e 0%, #002761 50%, #0056d2 100%);
-  --gradient-cream:     linear-gradient(180deg, #ffffff 0%, #f7f8fa 100%);
-  --gradient-gold:      linear-gradient(135deg, #b8922a, #f0cc5a, #b8922a);
-  --gradient-card:      linear-gradient(145deg, #ffffff 0%, #f7f8fa 100%);
+  /* Gradients — edX dark teal → maroon language */
+  --gradient-primary:   linear-gradient(135deg, #8b181c 0%, #c1272d 50%, #e8535a 100%);
+  --gradient-warm:      linear-gradient(135deg, #c1272d 0%, #d4724e 60%, #e8a070 100%);
+  --gradient-mixed:     linear-gradient(135deg, #00262b 0%, #025e6b 50%, #c1272d 100%);
+  --gradient-hero:      linear-gradient(160deg, #001214 0%, #00262b 30%, #00383f 65%, #00262b 100%);
+  --gradient-hero-alt:  linear-gradient(160deg, #000a0c 0%, #001a1e 50%, #00262b 100%);
+  --gradient-cream:     linear-gradient(180deg, #ffffff 0%, #f5f5f0 100%);
+  --gradient-gold:      linear-gradient(135deg, #b8860b, #f0cc5a, #b8860b);
+  --gradient-card:      linear-gradient(145deg, #ffffff 0%, #fafaf7 100%);
   --gradient-aurora:
-    radial-gradient(ellipse at 25% 35%, rgba(0,86,210,0.06) 0%, transparent 55%),
-    radial-gradient(ellipse at 75% 65%, rgba(0,39,97,0.04) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 10%, rgba(166,120,245,0.03) 0%, transparent 45%);
+    radial-gradient(ellipse at 25% 35%, rgba(193,39,45,0.04) 0%, transparent 55%),
+    radial-gradient(ellipse at 75% 65%, rgba(2,94,107,0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 10%, rgba(0,38,43,0.02) 0%, transparent 45%);
 
   /* Institutional accent stripe */
   --stripe-navy: repeating-linear-gradient(
     -45deg,
-    rgba(0,86,210,0.03) 0px,
-    rgba(0,86,210,0.03) 1px,
+    rgba(0,38,43,0.02) 0px,
+    rgba(0,38,43,0.02) 1px,
     transparent 1px,
     transparent 8px
   );
 
-  /* Shadows — subtle, border-first philosophy */
-  --shadow-xs:  0 1px 2px rgba(15,17,20,0.04);
-  --shadow-sm:  0 1px 3px rgba(15,17,20,0.06);
-  --shadow-md:  0 2px 8px rgba(15,17,20,0.06);
-  --shadow-lg:  0 4px 16px rgba(15,17,20,0.08);
-  --shadow-xl:  0 8px 32px rgba(15,17,20,0.10);
-  --shadow-2xl: 0 12px 48px rgba(15,17,20,0.12);
-  --shadow-card: 0 0 4px 0 rgba(15,17,20,0.06), 0 1px 4px 0 rgba(15,17,20,0.04);
-  --shadow-card-hover: 0 0 4px 0 rgba(15,17,20,0.08), 0 4px 12px 2px rgba(15,17,20,0.06);
-  --shadow-glow-navy: 0 0 0 3px rgba(0,86,210,0.12), 0 4px 16px rgba(0,86,210,0.14);
-  --shadow-glow-gold: 0 0 0 3px rgba(166,120,245,0.12), 0 4px 16px rgba(166,120,245,0.12);
-  --shadow-inner: inset 0 1px 2px rgba(15,17,20,0.04);
-  --shadow-nav: 0 1px 0 rgba(15,17,20,0.05);
+  /* Shadows — elevated (edX shadow-first philosophy) */
+  --shadow-xs:  0 1px 2px rgba(0,0,0,0.04);
+  --shadow-sm:  0 1px 4px rgba(0,0,0,0.06);
+  --shadow-md:  0 2px 12px rgba(0,0,0,0.07);
+  --shadow-lg:  0 6px 20px rgba(0,0,0,0.09);
+  --shadow-xl:  0 10px 36px rgba(0,0,0,0.11);
+  --shadow-2xl: 0 16px 48px rgba(0,0,0,0.14);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04);
+  --shadow-card-hover: 0 4px 16px rgba(0,0,0,0.08), 0 8px 28px rgba(0,0,0,0.06);
+  --shadow-glow-navy: 0 0 0 3px rgba(193,39,45,0.10), 0 4px 16px rgba(193,39,45,0.12);
+  --shadow-glow-gold: 0 0 0 3px rgba(184,134,11,0.10), 0 4px 16px rgba(184,134,11,0.10);
+  --shadow-inner: inset 0 1px 3px rgba(0,0,0,0.04);
+  --shadow-nav: 0 1px 3px rgba(0,0,0,0.06);
 
-  /* Radii — Coursera-aligned */
-  --radius-xs:  2px;
-  --radius-sm:  4px;
-  --radius-md:  8px;
-  --radius-lg:  16px;
-  --radius-xl:  24px;
-  --radius-2xl: 28px;
-  --radius-3xl: 32px;
+  /* Radii — edX softer, generous */
+  --radius-xs:  3px;
+  --radius-sm:  6px;
+  --radius-md:  10px;
+  --radius-lg:  14px;
+  --radius-xl:  20px;
+  --radius-2xl: 24px;
+  --radius-3xl: 28px;
   --radius-pill: 50px;
 
   /* Spacing unit */
   --space-unit: 4px;
 
-  /* Typography — Source Sans 3 (Coursera-inspired) */
+  /* Typography — Source Sans 3 (edX-compatible academic) */
   --font-display: 'Source Sans 3 Variable', 'Source Sans 3', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   --font-body:    'Source Sans 3 Variable', 'Source Sans 3', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-mono:    'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
@@ -154,72 +154,140 @@
 /* ─── Dark Theme ─────────────────────────────────────────────── */
 [data-theme="dark"],
 .dark {
-  --color-bg:             #0c1622;
-  --color-bg-secondary:   #111e2e;
-  --color-bg-tertiary:    #162838;
-  --color-bg-card:        #142230;
-  --color-bg-hover:       #1a2c3e;
-  --color-text:           #edf2f9;
-  --color-text-secondary: #8eacc4;
-  --color-text-muted:     #4e6a88;
-  --color-border:         #1e3558;
-  --color-border-light:   #162d4e;
-  --color-border-strong:  #2a4a72;
-  --color-navy:           #3587fc;
-  --color-navy-mid:       #5a9dfc;
-  --color-navy-light:     #7cb4ff;
-  --color-navy-pale:      #0e1e2e;
+  --color-bg:             #0a1214;
+  --color-bg-secondary:   #101c1e;
+  --color-bg-tertiary:    #162428;
+  --color-bg-card:        #121e22;
+  --color-bg-hover:       #1a282c;
+  --color-text:           #e8e6e1;
+  --color-text-secondary: #a0a4ac;
+  --color-text-muted:     #5a6068;
+  --color-border:         #1e3034;
+  --color-border-light:   #16262a;
+  --color-border-strong:  #2a4045;
+  --color-navy:           #4dd0d8;
+  --color-navy-mid:       #6edce3;
+  --color-navy-light:     #90e8ed;
+  --color-navy-pale:      #0e181a;
   --color-gold-pale:      #1a1505;
-  --color-cream:          #111e2e;
+  --color-cream:          #101c1e;
   --gradient-aurora:
-    radial-gradient(ellipse at 25% 35%, rgba(0,86,210,0.12) 0%, transparent 55%),
-    radial-gradient(ellipse at 75% 65%, rgba(166,120,245,0.06) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 10%, rgba(8,20,40,0.6) 0%, transparent 45%);
-  --shadow-card: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
-  --shadow-card-hover: 0 6px 20px rgba(0,0,0,0.35), 0 2px 6px rgba(0,0,0,0.2);
+    radial-gradient(ellipse at 25% 35%, rgba(193,39,45,0.08) 0%, transparent 55%),
+    radial-gradient(ellipse at 75% 65%, rgba(2,94,107,0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 10%, rgba(8,20,24,0.6) 0%, transparent 45%);
+  --shadow-card: 0 1px 3px rgba(0,0,0,0.3), 0 2px 8px rgba(0,0,0,0.2);
+  --shadow-card-hover: 0 6px 20px rgba(0,0,0,0.35), 0 4px 12px rgba(0,0,0,0.2);
 }
 
 /* ─── Midnight Theme ─────────────────────────────────────────── */
 [data-theme="midnight"] {
-  --color-bg:             #080d18;
-  --color-bg-secondary:   #0c1424;
-  --color-bg-tertiary:    #101c32;
-  --color-bg-card:        #0e182c;
-  --color-bg-hover:       #121f38;
-  --color-text:           #c8d8f0;
-  --color-text-secondary: #7a9cc0;
-  --color-text-muted:     #3e5a7a;
-  --color-border:         #152338;
-  --color-border-light:   #101c2e;
-  --color-border-strong:  #1e3050;
-  --color-primary:        #3587fc;
-  --color-primary-hover:  #5a9dfc;
-  --color-primary-light:  #7cb4ff;
-  --color-primary-muted:  #0a1824;
-  --color-secondary:      #5a9dfc;
-  --color-secondary-light:#7cb4ff;
-  --color-navy:           #5a9dfc;
-  --color-navy-mid:       #7cb4ff;
-  --color-navy-light:     #a0ccff;
-  --color-navy-pale:      #0c1824;
+  --color-bg:             #060c0e;
+  --color-bg-secondary:   #0a1416;
+  --color-bg-tertiary:    #0e1c20;
+  --color-bg-card:        #0c1618;
+  --color-bg-hover:       #102024;
+  --color-text:           #c0c8cc;
+  --color-text-secondary: #7a8a90;
+  --color-text-muted:     #3e5058;
+  --color-border:         #122024;
+  --color-border-light:   #0e1a1e;
+  --color-border-strong:  #1a3038;
+  --color-primary:        #e8535a;
+  --color-primary-hover:  #f07075;
+  --color-primary-light:  #f8a0a3;
+  --color-primary-muted:  #0a0c0e;
+  --color-secondary:      #4dd0d8;
+  --color-secondary-light:#6edce3;
+  --color-navy:           #4dd0d8;
+  --color-navy-mid:       #6edce3;
+  --color-navy-light:     #90e8ed;
+  --color-navy-pale:      #0a1012;
   --color-gold:           #a07830;
   --color-gold-mid:       #c4984e;
   --color-gold-light:     #deb870;
   --color-gold-bright:    #f0d080;
   --color-gold-pale:      #120e04;
-  --color-cream:          #0c1424;
+  --color-cream:          #0a1416;
   --gradient-aurora:
-    radial-gradient(ellipse at 20% 30%, rgba(53,135,252,0.10) 0%, transparent 55%),
-    radial-gradient(ellipse at 80% 70%, rgba(166,120,245,0.05) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 5%,  rgba(8,13,24,0.7) 0%, transparent 45%);
-  --shadow-card: 0 1px 4px rgba(0,0,0,0.5), 0 1px 2px rgba(0,0,0,0.3);
-  --shadow-card-hover: 0 6px 24px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.3);
-  --shadow-glow-navy: 0 0 0 3px rgba(53,135,252,0.15), 0 4px 18px rgba(53,135,252,0.18);
+    radial-gradient(ellipse at 20% 30%, rgba(77,208,216,0.08) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 70%, rgba(193,39,45,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 5%,  rgba(6,12,14,0.7) 0%, transparent 45%);
+  --shadow-card: 0 1px 4px rgba(0,0,0,0.5), 0 2px 12px rgba(0,0,0,0.3);
+  --shadow-card-hover: 0 6px 24px rgba(0,0,0,0.5), 0 4px 16px rgba(0,0,0,0.3);
+  --shadow-glow-navy: 0 0 0 3px rgba(77,208,216,0.12), 0 4px 18px rgba(77,208,216,0.15);
 }
 
 /* ═══════════════════════════════════════════════════════════════
    ACADEMIC PRESETS — Switchable institutional themes
+   Fundamentally different color/spacing/radius per preset
    ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Coursera Preset ──────────────────────────────────────── */
+[data-academic="coursera"] {
+  --color-primary:        #0056d2;
+  --color-primary-hover:  #0048b0;
+  --color-primary-light:  #3587fc;
+  --color-primary-dark:   #002761;
+  --color-primary-muted:  #e3eeff;
+  --color-secondary:      #002761;
+  --color-secondary-hover:#003b8f;
+  --color-secondary-light:#3587fc;
+  --color-accent:         #a678f5;
+  --color-accent-warm:    #3587fc;
+  --color-bg:             #ffffff;
+  --color-bg-secondary:   #f7f8fa;
+  --color-bg-tertiary:    #e8eef7;
+  --color-bg-card:        #ffffff;
+  --color-bg-hover:       #f0f3f8;
+  --color-text:           #0f1114;
+  --color-text-secondary: #1e2229;
+  --color-text-muted:     #5b6780;
+  --color-border:         #dae1ed;
+  --color-border-light:   #e8eef7;
+  --color-border-strong:  #b0b8c9;
+  --color-navy:           #002761;
+  --color-navy-mid:       #003b8f;
+  --color-navy-light:     #3587fc;
+  --color-navy-pale:      #e3eeff;
+  --color-gold:           #b8922a;
+  --color-gold-mid:       #d4ad4b;
+  --color-gold-light:     #f0cc5a;
+  --color-gold-bright:    #f5d76e;
+  --color-gold-pale:      #fdf6e3;
+  --color-cream:          #f7f8fa;
+  --color-danger:         #d30a28;
+  --color-warning:        #a32e00;
+  --color-success:        #276a1a;
+  --color-info:           #0056d2;
+  --gradient-primary:     linear-gradient(135deg, #002761 0%, #0056d2 55%, #3587fc 100%);
+  --gradient-hero:        linear-gradient(160deg, #001a4d 0%, #002761 35%, #0056d2 75%, #002761 100%);
+  --gradient-warm:        linear-gradient(135deg, #002761 0%, #0056d2 60%, #3587fc 100%);
+  --radius-md:            8px;
+  --radius-lg:            16px;
+}
+
+[data-academic="coursera"] .dark,
+[data-academic="coursera"][data-theme="dark"] {
+  --color-primary:        #3587fc;
+  --color-primary-hover:  #5a9dfc;
+  --color-primary-light:  #7cb4ff;
+  --color-primary-muted:  #0e1e2e;
+  --color-navy:           #3587fc;
+  --color-navy-mid:       #5a9dfc;
+  --color-navy-light:     #7cb4ff;
+  --color-navy-pale:      #0e1e2e;
+}
+
+[data-academic="coursera"][data-theme="midnight"] {
+  --color-primary:        #5a9dfc;
+  --color-primary-hover:  #7cb4ff;
+  --color-primary-light:  #a0ccff;
+  --color-primary-muted:  #0a1824;
+  --color-navy:           #5a9dfc;
+  --color-navy-mid:       #7cb4ff;
+  --color-navy-light:     #a0ccff;
+  --color-navy-pale:      #0c1824;
+}
 
 /* ─── Harvard Preset ──────────────────────────────────────── */
 [data-academic="harvard"] {
@@ -286,70 +354,6 @@
   --color-navy-light:     #ffb0be;
   --color-navy-pale:      #0e0508;
   --color-border:         #2a0f18;
-}
-
-/* ─── edX Preset ──────────────────────────────────────────── */
-[data-academic="edx"] {
-  --color-primary:        #025e6b;
-  --color-primary-hover:  #014a55;
-  --color-primary-light:  #0a8a99;
-  --color-primary-dark:   #013b44;
-  --color-primary-muted:  #e8f6f8;
-  --color-secondary:      #c05028;
-  --color-secondary-hover:#a33e1c;
-  --color-secondary-light:#d4704e;
-  --color-accent:         #8b6914;
-  --color-accent-warm:    #c05028;
-  --color-bg:             #f9f8f6;
-  --color-bg-secondary:   #f3f1ed;
-  --color-bg-tertiary:    #e8e4dc;
-  --color-bg-card:        #ffffff;
-  --color-bg-hover:       #f5f3ef;
-  --color-text:           #1c1e21;
-  --color-text-secondary: #434953;
-  --color-text-muted:     #6e7681;
-  --color-border:         #ddd9d0;
-  --color-border-light:   #edebe5;
-  --color-border-strong:  #c4bfb5;
-  --color-navy:           #025e6b;
-  --color-navy-mid:       #014a55;
-  --color-navy-light:     #0a8a99;
-  --color-navy-pale:      #e8f6f8;
-  --color-gold:           #8b6914;
-  --color-gold-mid:       #b8922a;
-  --color-gold-light:     #d4ad4b;
-  --color-gold-bright:    #f0cc5a;
-  --color-gold-pale:      #fbf5e3;
-  --color-danger:         #c41e3a;
-  --color-warning:        #c47618;
-  --color-success:        #1b8c52;
-  --color-info:           #025e6b;
-  --gradient-primary:     linear-gradient(135deg, #0b2545 0%, #025e6b 55%, #0a8a99 100%);
-  --gradient-hero:        linear-gradient(160deg, #050e1a 0%, #0b2545 35%, #025e6b 75%, #0b2545 100%);
-  --gradient-warm:        linear-gradient(135deg, #8b6914 0%, #c05028 60%, #d4704e 100%);
-}
-
-[data-academic="edx"] .dark,
-[data-academic="edx"][data-theme="dark"] {
-  --color-primary:        #0a8a99;
-  --color-primary-hover:  #08a0b2;
-  --color-primary-light:  #28b8ca;
-  --color-primary-muted:  #0e1e2e;
-  --color-navy:           #0a8a99;
-  --color-navy-mid:       #20a4b4;
-  --color-navy-light:     #48bed0;
-  --color-navy-pale:      #0e1e2e;
-}
-
-[data-academic="edx"][data-theme="midnight"] {
-  --color-primary:        #28b8ca;
-  --color-primary-hover:  #48ced8;
-  --color-primary-light:  #70dce4;
-  --color-primary-muted:  #0a1824;
-  --color-navy:           #28b8ca;
-  --color-navy-mid:       #48ced8;
-  --color-navy-light:     #70dce4;
-  --color-navy-pale:      #0c1824;
 }
 
 /* ─── Canvas Preset ────────────────────────────────────────── */
@@ -443,7 +447,7 @@ body {
 }
 
 ::selection {
-  background: rgba(0,86,210,0.12);
+  background: rgba(193,39,45,0.10);
   color: var(--color-text);
 }
 
@@ -470,14 +474,14 @@ input, select, textarea { font: inherit; color: inherit; }
 .text-display-xl {
   font-family: var(--font-display);
   font-size: clamp(2.8rem, 5.5vw, 5rem);
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: -0.03em;
   line-height: 0.96;
 }
 .text-display-lg {
   font-family: var(--font-display);
   font-size: clamp(2rem, 4vw, 3.6rem);
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: -0.025em;
   line-height: 1.02;
 }
@@ -496,7 +500,7 @@ input, select, textarea { font: inherit; color: inherit; }
   line-height: 1.2;
 }
 
-/* Academic section label — Coursera eyebrow */
+/* Academic section label — edX editorial eyebrow */
 .text-label-caps {
   font-size: 11px;
   font-weight: 700;
@@ -508,31 +512,31 @@ input, select, textarea { font: inherit; color: inherit; }
 
 /* ─── Glass / Nav ────────────────────────────────────────────── */
 .glass {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(12px) saturate(180%);
-  -webkit-backdrop-filter: blur(12px) saturate(180%);
-  border-bottom: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border-bottom: 1px solid var(--color-border-light);
   box-shadow: var(--shadow-nav);
 }
 .dark .glass,
 [data-theme="dark"] .glass {
-  background: rgba(12, 22, 34, 0.95);
+  background: rgba(10, 18, 20, 0.96);
   border-bottom: 1px solid var(--color-border);
 }
 
-/* ─── Card — border-first (Coursera pattern) ─────────────────── */
+/* ─── Card — shadow-elevated (edX pattern) ─────────────────── */
 .card {
   background: var(--color-bg-card);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-border-light);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
   transition:
     box-shadow var(--duration-base) var(--ease-out),
-    border-color var(--duration-base) var(--ease-out);
+    transform var(--duration-base) var(--ease-out);
 }
 .card:hover {
   box-shadow: var(--shadow-card-hover);
-  border-color: var(--color-border-strong);
+  transform: translateY(-1px);
 }
 .card-interactive {
   cursor: pointer;
@@ -541,34 +545,36 @@ input, select, textarea { font: inherit; color: inherit; }
   box-shadow: var(--shadow-lg);
 }
 
-/* Academic card — with top accent stripe (Canvas-inspired) */
+/* Academic card — with left accent stripe (edX editorial) */
 .card-academic {
   background: var(--color-bg-card);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-border-light);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
   position: relative;
   overflow: hidden;
-  transition: box-shadow var(--duration-base) var(--ease-out);
+  transition: box-shadow var(--duration-base) var(--ease-out),
+              transform var(--duration-base) var(--ease-out);
 }
 .card-academic::before {
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
+  top: 0; left: 0; bottom: 0;
+  width: 3px;
   background: var(--gradient-primary);
   opacity: 0;
   transition: opacity var(--duration-base) var(--ease-out);
 }
 .card-academic:hover {
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-1px);
 }
 .card-academic:hover::before { opacity: 1; }
 
 /* ─── Inputs ─────────────────────────────────────────────────── */
 .input {
   width: 100%;
-  padding: 11px 13px;
+  padding: 12px 14px;
   background: var(--color-bg-card);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
@@ -584,12 +590,12 @@ input, select, textarea { font: inherit; color: inherit; }
 .input:hover  { border-color: var(--color-border-strong); }
 .input:focus  {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(0,86,210,0.08);
+  box-shadow: 0 0 0 3px rgba(193,39,45,0.06);
 }
 
 .select {
   width: 100%;
-  padding: 11px 34px 11px 13px;
+  padding: 12px 36px 12px 14px;
   background: var(--color-bg-card);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
@@ -598,7 +604,7 @@ input, select, textarea { font: inherit; color: inherit; }
   outline: none;
   appearance: none;
   cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%235b6780' stroke-width='2.5' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%236b6e76' stroke-width='2.5' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 11px center;
   transition: border-color var(--duration-fast) var(--ease-out),
@@ -606,12 +612,12 @@ input, select, textarea { font: inherit; color: inherit; }
 }
 .select:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(0,86,210,0.08);
+  box-shadow: 0 0 0 3px rgba(193,39,45,0.06);
 }
 
 .textarea {
   width: 100%;
-  padding: 11px 13px;
+  padding: 12px 14px;
   background: var(--color-bg-card);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
@@ -626,17 +632,16 @@ input, select, textarea { font: inherit; color: inherit; }
 }
 .textarea:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(0,86,210,0.08);
+  box-shadow: 0 0 0 3px rgba(193,39,45,0.06);
 }
 
 .label {
   display: block;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   color: var(--color-text-secondary);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  margin-bottom: 5px;
+  letter-spacing: 0.04em;
+  margin-bottom: 6px;
 }
 
 /* ─── Buttons ────────────────────────────────────────────────── */
@@ -645,13 +650,13 @@ input, select, textarea { font: inherit; color: inherit; }
   align-items: center;
   justify-content: center;
   gap: 7px;
-  padding: 0 20px;
-  height: 36px;
+  padding: 0 22px;
+  height: 40px;
   background: var(--color-primary);
   color: #fff;
   font-size: 14px;
   font-weight: 600;
-  letter-spacing: 0.14px;
+  letter-spacing: 0.12px;
   border-radius: var(--radius-md);
   transition: all var(--duration-base) var(--ease-out);
   white-space: nowrap;
@@ -660,9 +665,9 @@ input, select, textarea { font: inherit; color: inherit; }
 }
 .btn-primary:hover {
   background: var(--color-primary-hover);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  box-shadow: 0 4px 12px rgba(193,39,45,0.2);
 }
-.btn-primary:active { box-shadow: var(--shadow-xs); }
+.btn-primary:active { box-shadow: var(--shadow-xs); transform: scale(0.98); }
 .btn-primary:disabled { opacity: 0.5; pointer-events: none; }
 
 .btn-secondary {
@@ -670,8 +675,8 @@ input, select, textarea { font: inherit; color: inherit; }
   align-items: center;
   justify-content: center;
   gap: 7px;
-  padding: 0 20px;
-  height: 36px;
+  padding: 0 22px;
+  height: 40px;
   background: var(--color-bg-card);
   color: var(--color-text);
   font-size: 14px;
@@ -683,6 +688,7 @@ input, select, textarea { font: inherit; color: inherit; }
 .btn-secondary:hover {
   border-color: var(--color-primary);
   color: var(--color-primary);
+  box-shadow: var(--shadow-sm);
 }
 
 .btn-ghost {
@@ -690,8 +696,8 @@ input, select, textarea { font: inherit; color: inherit; }
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 0 13px;
-  height: 36px;
+  padding: 0 14px;
+  height: 40px;
   color: var(--color-text-secondary);
   font-size: 14px;
   font-weight: 600;
@@ -703,33 +709,34 @@ input, select, textarea { font: inherit; color: inherit; }
   color: var(--color-text);
 }
 
-/* Navy CTA — Coursera-style deep action button */
+/* Navy CTA — edX-style dark action button */
 .btn-gold {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 7px;
-  padding: 0 22px;
-  height: 40px;
-  background: var(--color-primary);
+  padding: 0 24px;
+  height: 44px;
+  background: var(--color-secondary);
   color: #fff;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 700;
   letter-spacing: 0.14px;
   border-radius: var(--radius-md);
   transition: all var(--duration-base) var(--ease-out);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 .btn-gold:hover {
-  background: var(--color-primary-hover);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  background: var(--color-secondary-hover);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+  transform: translateY(-1px);
 }
 
 /* ─── Badge ──────────────────────────────────────────────────── */
 .badge {
   display: inline-flex;
   align-items: center;
-  padding: 3px 8px;
+  padding: 3px 10px;
   font-size: 10px;
   font-weight: 700;
   border-radius: var(--radius-sm);
@@ -738,17 +745,17 @@ input, select, textarea { font: inherit; color: inherit; }
 }
 .badge-navy    { background: var(--color-navy-pale);  color: var(--color-primary); }
 .badge-gold    { background: var(--color-gold-pale);  color: var(--color-gold); }
-.badge-success { background: rgba(39,106,26,0.08);    color: var(--color-success); }
-.badge-danger  { background: rgba(211,10,40,0.08);    color: var(--color-danger); }
-.badge-warning { background: rgba(163,46,0,0.08);     color: var(--color-warning); }
+.badge-success { background: rgba(27,122,66,0.08);    color: var(--color-success); }
+.badge-danger  { background: rgba(193,39,45,0.08);    color: var(--color-danger); }
+.badge-warning { background: rgba(196,122,16,0.08);   color: var(--color-warning); }
 .badge-neutral { background: var(--color-bg-secondary); color: var(--color-text-muted); }
 
 /* ─── Stat Card ──────────────────────────────────────────────── */
 .stat-card {
   background: var(--color-bg-card);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-border-light);
   border-radius: var(--radius-lg);
-  padding: 20px;
+  padding: 22px;
   box-shadow: var(--shadow-card);
   transition: all var(--duration-slow) var(--ease-out);
   position: relative;
@@ -764,23 +771,24 @@ input, select, textarea { font: inherit; color: inherit; }
   pointer-events: none;
 }
 .stat-card:hover {
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-2px);
 }
 .stat-card:hover::after { opacity: 1; }
 
 /* ─── Section Headers ────────────────────────────────────────── */
 .section-label {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
-  color: var(--color-secondary);
+  color: var(--color-primary);
   text-transform: uppercase;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   font-family: var(--font-body);
 }
 .section-title {
   font-family: var(--font-display);
-  font-size: 26px;
-  font-weight: 700;
+  font-size: 28px;
+  font-weight: 800;
   color: var(--color-text);
   letter-spacing: -0.02em;
   line-height: 1.15;
@@ -789,24 +797,25 @@ input, select, textarea { font: inherit; color: inherit; }
 /* ─── Table ──────────────────────────────────────────────────── */
 .table-container {
   background: var(--color-bg-card);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-border-light);
   border-radius: var(--radius-lg);
   overflow: hidden;
+  box-shadow: var(--shadow-card);
 }
 .table { width: 100%; border-collapse: collapse; }
 .table th {
   text-align: left;
-  padding: 11px 16px;
-  font-size: 10px;
+  padding: 12px 16px;
+  font-size: 11px;
   font-weight: 700;
   color: var(--color-text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.09em;
+  letter-spacing: 0.08em;
   background: var(--color-bg-secondary);
-  border-bottom: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border-light);
 }
 .table td {
-  padding: 11px 16px;
+  padding: 12px 16px;
   font-size: var(--text-sm);
   border-bottom: 1px solid var(--color-border-light);
   color: var(--color-text);
@@ -819,8 +828,8 @@ input, select, textarea { font: inherit; color: inherit; }
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(6px);
   z-index: 50;
   display: flex;
   align-items: center;
@@ -829,12 +838,12 @@ input, select, textarea { font: inherit; color: inherit; }
 }
 .modal {
   background: var(--color-bg-card);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--color-border-light);
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-2xl);
   max-width: 440px;
   width: 100%;
-  padding: 28px;
+  padding: 30px;
 }
 
 /* ─── Avatar ─────────────────────────────────────────────────── */
@@ -860,14 +869,14 @@ input, select, textarea { font: inherit; color: inherit; }
   text-align: center;
 }
 .empty-state-icon {
-  width: 52px;
-  height: 52px;
+  width: 56px;
+  height: 56px;
   border-radius: var(--radius-lg);
   background: var(--color-bg-secondary);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 14px;
+  margin-bottom: 16px;
   color: var(--color-text-muted);
 }
 
@@ -893,7 +902,7 @@ input, select, textarea { font: inherit; color: inherit; }
 
 /* ─── Utility text ───────────────────────────────────────────── */
 .metallic-text {
-  background: linear-gradient(135deg, #0056d2 0%, #a678f5 40%, #3587fc 65%, #5a9dfc 80%, #0056d2 100%);
+  background: linear-gradient(135deg, #c1272d 0%, #025e6b 40%, #e8535a 65%, #4dd0d8 80%, #c1272d 100%);
   background-size: 280% 280%;
   animation: gradient-shift 8s ease infinite;
   -webkit-background-clip: text;
@@ -929,7 +938,7 @@ input, select, textarea { font: inherit; color: inherit; }
   position: absolute;
   inset: -1px;
   border-radius: inherit;
-  background: linear-gradient(135deg, #0056d2, #a678f5, #3587fc, #5a9dfc, #0056d2);
+  background: linear-gradient(135deg, #c1272d, #025e6b, #e8535a, #4dd0d8, #c1272d);
   background-size: 280% 280%;
   animation: gradient-shift 5s ease infinite;
   z-index: -1;
@@ -957,8 +966,8 @@ input, select, textarea { font: inherit; color: inherit; }
   100% { background-position: 0% 50%; }
 }
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(0,86,210,0.3); }
-  50%       { box-shadow: 0 0 0 7px rgba(0,86,210,0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(193,39,45,0.3); }
+  50%       { box-shadow: 0 0 0 7px rgba(193,39,45,0); }
 }
 @keyframes aurora-drift {
   0%   { transform: translate(0%,  0%)  scale(1); }
@@ -989,37 +998,36 @@ input, select, textarea { font: inherit; color: inherit; }
 .empty-state { text-align: center; }
 
 /* ═══════════════════════════════════════════════════════════
-   ACADEMIC DESIGN POLISH v3
-   Coursera: clean CTAs, border-first, capsule pills
-   Canvas: data density, crisp hierarchy
+   ACADEMIC DESIGN POLISH v4
+   edX: shadow-elevated, warm editorial, generous spacing
    ═══════════════════════════════════════════════════════════ */
 
 /* ── Institutional rule line ─────────────────────────────── */
 .rule-gold {
   display: block;
   width: 40px;
-  height: 2px;
+  height: 3px;
   background: var(--color-primary);
   border-radius: var(--radius-pill);
-  margin: 10px auto 0;
+  margin: 12px auto 0;
 }
 
 /* ── Academic eyebrow / overline ─────────────────────────── */
 .eyebrow {
   display: inline-block;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--color-secondary);
-  margin-bottom: 8px;
+  color: var(--color-primary);
+  margin-bottom: 10px;
 }
 
 /* ── Feature number badge (01, 02 ...) ──────────────────── */
 .feature-number {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 800;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
   color: var(--color-primary);
   text-transform: uppercase;
 }
@@ -1029,21 +1037,21 @@ input, select, textarea { font: inherit; color: inherit; }
   height: 1px;
   background: linear-gradient(to right, transparent, rgba(0,0,0,0.08), transparent);
   border: none;
-  margin: 24px 0;
+  margin: 28px 0;
 }
 
 /* ── Data label / value pair ─────────────────────────────── */
 .data-label {
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--color-text-muted);
-  margin-bottom: 3px;
+  margin-bottom: 4px;
 }
 .data-value {
-  font-size: 22px;
-  font-weight: 700;
+  font-size: 24px;
+  font-weight: 800;
   font-family: var(--font-display);
   color: var(--color-navy);
   line-height: 1;
@@ -1063,7 +1071,7 @@ input, select, textarea { font: inherit; color: inherit; }
   bottom: -2px;
   left: 0;
   width: 0;
-  height: 1.5px;
+  height: 2px;
   background: var(--color-primary);
   transition: width var(--duration-base) var(--ease-out);
   border-radius: var(--radius-pill);
@@ -1075,12 +1083,12 @@ input, select, textarea { font: inherit; color: inherit; }
 .trust-badge {
   display: inline-flex;
   align-items: center;
-  padding: 3px 10px;
-  font-size: 9px;
+  padding: 4px 12px;
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  border: 1px solid rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.15);
   border-radius: var(--radius-pill);
   color: rgba(255,255,255,0.5);
 }
@@ -1095,25 +1103,27 @@ input, select, textarea { font: inherit; color: inherit; }
   margin-right: 4px;
 }
 
-/* ── Discipline pill — 50px capsule (Coursera pattern) ──── */
+/* ── Discipline pill — rounded rect (edX pattern) ───────── */
 .discipline-pill {
   display: inline-flex;
   align-items: center;
-  padding: 8px 20px;
-  font-size: 13px;
+  padding: 10px 22px;
+  font-size: 14px;
   font-weight: 600;
   color: var(--color-text);
   background: var(--color-bg-card);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-pill);
+  border-radius: var(--radius-md);
   cursor: pointer;
   transition: all var(--duration-base) var(--ease-out);
   white-space: nowrap;
+  box-shadow: var(--shadow-xs);
 }
 .discipline-pill:hover {
   background: var(--color-primary-muted);
   color: var(--color-primary);
   border-color: var(--color-primary);
+  box-shadow: var(--shadow-sm);
 }
 
 /* ── Page section wrapper ────────────────────────────────── */
@@ -1132,24 +1142,24 @@ input, select, textarea { font: inherit; color: inherit; }
 .stat-row-value {
   font-family: var(--font-display);
   font-size: clamp(1.6rem, 3vw, 2.4rem);
-  font-weight: 700;
+  font-weight: 800;
   color: var(--color-navy);
   letter-spacing: -0.02em;
   line-height: 1;
-  margin-bottom: 4px;
+  margin-bottom: 5px;
 }
 .stat-row-label {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   color: var(--color-text-muted);
 }
 
 /* ── Role card (register page) ───────────────────────────── */
 .role-card {
   width: 100%;
-  padding: 16px;
+  padding: 18px;
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-border);
   background: var(--color-bg-card);
@@ -1159,14 +1169,17 @@ input, select, textarea { font: inherit; color: inherit; }
   gap: 14px;
   transition: all var(--duration-base) var(--ease-out);
   cursor: pointer;
+  box-shadow: var(--shadow-xs);
 }
 .role-card:hover {
   border-color: var(--color-primary);
   background: var(--color-primary-muted);
+  box-shadow: var(--shadow-sm);
 }
 .role-card.selected {
   border-color: var(--color-primary);
   background: var(--color-primary-muted);
+  box-shadow: var(--shadow-glow-navy);
 }
 
 /* ── Form group ──────────────────────────────────────────── */
@@ -1175,7 +1188,7 @@ input, select, textarea { font: inherit; color: inherit; }
 /* ── Auth card container ─────────────────────────────────── */
 .auth-card {
   width: 100%;
-  max-width: 360px;
+  max-width: 380px;
   margin: auto;
 }
 
@@ -1210,7 +1223,7 @@ input, select, textarea { font: inherit; color: inherit; }
   animation: spin-slow 0.7s linear infinite;
 }
 .spinner-navy {
-  border-color: rgba(0,86,210,0.2);
+  border-color: rgba(193,39,45,0.2);
   border-top-color: var(--color-primary);
 }
 
@@ -1219,21 +1232,23 @@ input, select, textarea { font: inherit; color: inherit; }
 .select:focus,
 .textarea:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(0,86,210,0.08);
+  box-shadow: 0 0 0 3px rgba(193,39,45,0.06);
 }
 
 /* ── Academic preset selector ────────────────────────────── */
 .preset-card {
   border: 2px solid var(--color-border);
   border-radius: var(--radius-lg);
-  padding: 16px;
+  padding: 18px;
   cursor: pointer;
   transition: all var(--duration-base) var(--ease-out);
   text-align: center;
+  box-shadow: var(--shadow-xs);
 }
 .preset-card:hover {
   border-color: var(--color-primary);
   background: var(--color-primary-muted);
+  box-shadow: var(--shadow-sm);
 }
 .preset-card.active {
   border-color: var(--color-primary);
