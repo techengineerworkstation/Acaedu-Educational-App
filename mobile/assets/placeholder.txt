@@ -1,0 +1,12 @@
+Assets that need to be generated before building the app:
+
+Required files in /mobile/assets/:
+- icon.png (1024x1024) - App icon
+- splash.png (1284x2778 or larger) - Splash screen image
+- adaptive-icon.png (1024x1024) - Android adaptive icon foreground
+- favicon.png (48x48) - Web favicon
+- notification-icon.png (96x96) - Android notification icon (white on transparent)
+- notification.wav - Notification sound file
+
+Use tools like Figma, Canva, or Expo's asset generation tools to create these.
+The splash and icon backgrounds should use the brand color #00262b.

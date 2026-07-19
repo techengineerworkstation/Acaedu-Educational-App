@@ -1,63 +1,60 @@
-// PayPal Integration
-// Uses PayPal JS SDK for client-side payments
-
+// PayPal checkout integration
 const PAYPAL_CLIENT_ID = import.meta.env.VITE_PAYPAL_CLIENT_ID || ''
 
-interface PayPalConfig {
-  amount: string
-  currency: string
-  description: string
-  onSuccess: (orderId: string) => void
-  onError: (error: string) => void
+export interface PayPalConfig {
+  amount: number
+  currency?: string
+  description?: string
+  onSuccess?: (details: any) => void
+  onError?: (error: any) => void
 }
 
-export async function initializePayPal(config: PayPalConfig) {
-  if (!PAYPAL_CLIENT_ID) {
-    config.onError('PayPal client ID not configured')
-    return
-  }
-
-  // Load PayPal script if not already loaded
-  if (!(window as any).paypal) {
+// Load PayPal SDK
+export function loadPaypalScript(): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (document.querySelector(`script[src*="paypal.com/sdk/js"]`)) {
+      resolve()
+      return
+    }
     const script = document.createElement('script')
-    script.src = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&currency=${config.currency}`
-    script.onload = () => renderPayPalButton(config)
-    script.onerror = () => config.onError('Failed to load PayPal SDK')
+    script.src = `https://www.paypal.com/sdk/js?client-id=${PAYPAL_CLIENT_ID}&currency=USD`
+    script.onload = () => resolve()
+    script.onerror = () => reject(new Error('Failed to load PayPal script'))
     document.head.appendChild(script)
-  } else {
-    renderPayPalButton(config)
-  }
+  })
 }
 
-function renderPayPalButton(config: PayPalConfig) {
-  ;(window as any).paypal.Buttons({
+export async function renderPaypalButton(
+  containerId: string,
+  config: PayPalConfig
+) {
+  await loadPaypalScript()
+  
+  const paypal = (window as any).paypal
+  if (!paypal) throw new Error('PayPal SDK not loaded')
+
+  paypal.Buttons({
     createOrder: (_data: any, actions: any) => {
       return actions.order.create({
         purchase_units: [{
-          description: config.description,
           amount: {
-            currency_code: config.currency,
-            value: config.amount,
+            value: config.amount.toFixed(2),
+            currency_code: config.currency || 'USD',
           },
+          description: config.description || 'Acaedu Educational App',
         }],
       })
     },
     onApprove: async (_data: any, actions: any) => {
-      const order = await actions.order.capture()
-      config.onSuccess(order.id)
+      const details = await actions.order.capture()
+      config.onSuccess?.(details)
     },
-    onError: (err: any) => {
-      config.onError(err.message || 'PayPal payment failed')
+    onError: (error: any) => {
+      config.onError?.(error)
     },
-  }).render('#paypal-button-container')
+  }).render(`#${containerId}`)
 }
 
-export async function capturePayPalOrder(orderId: string): Promise<boolean> {
-  try {
-    const response = await fetch(`/api/paypal/capture?order_id=${orderId}`)
-    const data = await response.json()
-    return data.status === 'COMPLETED'
-  } catch {
-    return false
-  }
+export function formatUSD(amount: number): string {
+  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(amount)
 }

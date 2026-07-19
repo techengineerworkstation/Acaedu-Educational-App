@@ -1,65 +1,71 @@
-// Paystack Integration
-// Uses Paystack InlineJS for client-side payments
-
+// Paystack inline integration for NGN payments
 const PAYSTACK_PUBLIC_KEY = import.meta.env.VITE_PAYSTACK_PUBLIC_KEY || ''
 
-interface PaystackConfig {
+export interface PaystackConfig {
   email: string
-  amount: number // in kobo (100 = NGN 1.00)
+  amount: number // in kobo (NGN * 100)
   currency?: string
   reference?: string
-  onSuccess: (reference: string) => void
-  onClose: () => void
+  metadata?: Record<string, any>
+  onSuccess?: (reference: string) => void
+  onClose?: () => void
 }
 
-export function initializePaystack(config: PaystackConfig) {
-  if (!PAYSTACK_PUBLIC_KEY) {
-    console.error('Paystack public key not configured')
-    return
-  }
-
-  // Load Paystack script if not already loaded
-  if (!(window as any).PaystackPop) {
+// Load Paystack script dynamically
+function loadPaystackScript(): Promise<void> {
+  return new Promise((resolve, reject) => {
+    if (document.querySelector('script[src="https://js.paystack.co/v1/inline.js"]')) {
+      resolve()
+      return
+    }
     const script = document.createElement('script')
     script.src = 'https://js.paystack.co/v1/inline.js'
-    script.onload = () => openPaystack(config)
+    script.onload = () => resolve()
+    script.onerror = () => reject(new Error('Failed to load Paystack script'))
     document.head.appendChild(script)
-  } else {
-    openPaystack(config)
-  }
+  })
 }
 
-function openPaystack(config: PaystackConfig) {
+export async function initializePayment(config: PaystackConfig) {
+  await loadPaystackScript()
+  
+  const reference = config.reference || `ACAEDU_${Date.now()}_${Math.random().toString(36).substring(2, 8)}`
+  
   const handler = (window as any).PaystackPop.setup({
     key: PAYSTACK_PUBLIC_KEY,
     email: config.email,
     amount: config.amount,
     currency: config.currency || 'NGN',
-    ref: config.reference || `acaedu_${Date.now()}`,
+    ref: reference,
     metadata: {
-      custom_fields: [{
-        display_name: 'Platform',
-        variable_name: 'platform',
-        value: 'acaedu'
-      }]
+      custom_fields: Object.entries(config.metadata || {}).map(([name, value]) => ({
+        display_name: name,
+        variable_name: name,
+        value,
+      })),
     },
-    callback: (response: any) => {
-      config.onSuccess(response.reference)
+    callback: (response: { reference: string }) => {
+      config.onSuccess?.(response.reference)
     },
     onClose: () => {
-      config.onClose()
-    }
+      config.onClose?.()
+    },
   })
+  
   handler.openIframe()
+  return reference
 }
 
-// Verify payment on server (Supabase Edge Function)
-export async function verifyPaystackPayment(reference: string): Promise<boolean> {
-  try {
-    const response = await fetch(`/api/paystack/verify?reference=${reference}`)
-    const data = await response.json()
-    return data.status === 'success'
-  } catch {
-    return false
-  }
+export async function verifyPayment(reference: string): Promise<any> {
+  const response = await fetch(`https://api.paystack.co/transaction/verify/${reference}`, {
+    headers: {
+      'Authorization': `Bearer ${PAYSTACK_PUBLIC_KEY}`,
+    },
+  })
+  const result = await response.json()
+  return result
+}
+
+export function formatNGN(amount: number): string {
+  return new Intl.NumberFormat('en-NG', { style: 'currency', currency: 'NGN' }).format(amount / 100)
 }

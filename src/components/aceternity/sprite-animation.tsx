@@ -25,9 +25,8 @@ const defaultSprites: SpriteConfig[] = [
   // Orbiting academic ring
   {
     name: 'orbit',
-    frames: Array.from({ length: 12 }, (_, i) => ({
-      x: 0, y: 0, w: 6, h: 6, // size per frame
-      // encode angle in frame index
+    frames: Array.from({ length: 12 }, () => ({
+      x: 0, y: 0, w: 6, h: 6,
     })),
     fps: 8,
     loop: true,
@@ -37,7 +36,7 @@ const defaultSprites: SpriteConfig[] = [
   // Floating book sprite
   {
     name: 'book',
-    frames: Array.from({ length: 8 }, (_, i) => ({
+    frames: Array.from({ length: 8 }, () => ({
       x: 0, y: 0, w: 10, h: 14,
     })),
     fps: 6,
@@ -48,7 +47,7 @@ const defaultSprites: SpriteConfig[] = [
   // Graduation cap sprite
   {
     name: 'cap',
-    frames: Array.from({ length: 6 }, (_, i) => ({
+    frames: Array.from({ length: 6 }, () => ({
       x: 0, y: 0, w: 12, h: 10,
     })),
     fps: 4,

@@ -155,11 +155,12 @@ export async function getUser() {
 // ─── Secure CRUD Functions ──────────────────────────────────
 const ALLOWED_TABLES = [
   'ai_scheduler_suggestions', 'ai_summaries', 'announcements', 'assignments',
-  'attendance', 'billing_subscriptions', 'course_materials', 'courses',
-  'departments', 'email_verifications', 'enrollments', 'events', 'exams',
-  'faculties', 'feature_access', 'grades', 'holidays', 'institutions',
-  'meetings', 'notifications', 'payments', 'profiles', 'schedule_instances',
-  'schedules', 'search_queries', 'tests', 'users', 'venues', 'videos',
+  'attendance', 'billing', 'billing_subscriptions', 'course_constraints',
+  'course_materials', 'courses', 'departments', 'email_verifications',
+  'enrollments', 'events', 'exams', 'faculties', 'feature_access', 'grades',
+  'holidays', 'institutions', 'meetings', 'notifications', 'payments',
+  'profiles', 'schedule_instances', 'schedules', 'search_queries',
+  'tests', 'venues', 'videos',
 ]
 
 function validateTable(table: string): void {
