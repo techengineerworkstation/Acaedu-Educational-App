@@ -127,14 +127,14 @@ export function RoleLayout({ user, children }: { user: User; children: React.Rea
       `}>
 
         {/* Brand */}
-        <div className="h-[56px] flex items-center gap-2.5 px-4 border-b border-[var(--color-border-light)] flex-shrink-0">
+        <div className="h-[60px] flex items-center gap-3 px-4 border-b border-[var(--color-border-light)] flex-shrink-0">
           <motion.div
             whileHover={{ rotate: [0, -6, 6, 0] }}
             transition={{ duration: 0.4 }}
-            className="w-7 h-7 rounded-[9px] overflow-hidden shadow-sm">
+            className="w-8 h-8 rounded-[10px] overflow-hidden shadow-sm">
             <img src="/favicon.svg" alt="Acaedu" className="w-full h-full object-cover" />
           </motion.div>
-          <span className="text-[14px] font-bold text-[var(--color-navy)] tracking-tight flex-1"
+          <span className="text-[15px] font-bold text-[var(--color-navy)] tracking-tight flex-1"
             style={{ fontFamily: 'var(--font-display)' }}>
             Acaedu
           </span>
@@ -149,13 +149,13 @@ export function RoleLayout({ user, children }: { user: User; children: React.Rea
 
         {/* Nav */}
         <motion.nav
-          className="flex-1 overflow-y-auto py-2 px-2"
+          className="flex-1 overflow-y-auto py-3 px-2.5"
           initial="hidden" animate="visible" variants={sidebarVariants}>
-          {Object.entries(groupedNav).map(([group, items]) => (
-            <div key={group} className="mb-0.5">
+          {Object.entries(groupedNav).map(([group, items], gi) => (
+            <div key={group} className={gi > 0 ? 'mt-2 pt-2 border-t border-[var(--color-border-light)]' : ''}>
               {groupLabels[group] && (
                 <motion.div variants={itemVariants}
-                  className="px-3 pt-3.5 pb-1 text-[10px] font-bold text-[var(--color-text-muted)] uppercase tracking-[0.11em]">
+                  className="px-3 pt-2 pb-1.5 text-[11px] font-bold text-[var(--color-text-muted)] uppercase tracking-[0.10em]">
                   {groupLabels[group]}
                 </motion.div>
               )}
@@ -174,18 +174,18 @@ export function RoleLayout({ user, children }: { user: User; children: React.Rea
                       to={item.to}
                       onClick={() => setSidebarOpen(false)}
                       className={`
-                        flex items-center gap-2.5 px-3 py-2 rounded-[var(--radius-md)]
-                        text-[13px] font-medium transition-all duration-150 mb-0.5 ml-1
+                        flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-md)]
+                        text-[14px] font-medium transition-all duration-150 mb-px ml-1
                         ${active
                           ? 'bg-[var(--color-primary-muted)] text-[var(--color-primary)] font-semibold'
                           : 'text-[var(--color-text-secondary)] hover:text-[var(--color-navy)] hover:bg-[var(--color-bg-hover)]'
                         }
                       `}>
-                      <item.icon size={15}
-                        className={active ? 'text-[var(--color-primary)]' : 'text-[var(--color-text-muted)]'} />
+                      <item.icon size={18}
+                        className={`flex-shrink-0 ${active ? 'text-[var(--color-primary)]' : 'text-[var(--color-text-muted)]'}`} />
                       <span className="flex-1 truncate">{item.label}</span>
                       {active && (
-                        <ChevronRight size={12} className="text-[var(--color-primary)] opacity-50 flex-shrink-0" />
+                        <ChevronRight size={14} className="text-[var(--color-primary)] opacity-50 flex-shrink-0" />
                       )}
                     </Link>
                   </motion.div>
@@ -196,12 +196,12 @@ export function RoleLayout({ user, children }: { user: User; children: React.Rea
         </motion.nav>
 
         {/* User footer */}
-        <div className="border-t border-[var(--color-border-light)] p-2.5 flex-shrink-0">
-          <div className="flex items-center gap-2.5 px-2 py-2 rounded-[var(--radius-md)] hover:bg-[var(--color-bg-secondary)] transition-colors group cursor-default">
-            <div className="avatar w-7 h-7 text-[10px] flex-shrink-0">{user.full_name[0]}</div>
+        <div className="border-t border-[var(--color-border-light)] p-3 flex-shrink-0">
+          <div className="flex items-center gap-3 px-2.5 py-2.5 rounded-[var(--radius-md)] hover:bg-[var(--color-bg-secondary)] transition-colors group cursor-default">
+            <div className="avatar w-8 h-8 text-[11px] flex-shrink-0">{user.full_name[0]}</div>
             <div className="flex-1 min-w-0">
-              <div className="text-[12px] font-semibold text-[var(--color-navy)] truncate">{user.full_name}</div>
-              <div className="text-[10px] text-[var(--color-text-muted)] capitalize">{user.role}</div>
+              <div className="text-[13px] font-semibold text-[var(--color-navy)] truncate">{user.full_name}</div>
+              <div className="text-[11px] text-[var(--color-text-muted)] capitalize">{user.role}</div>
             </div>
             <button onClick={handleLogout}
               className="p-1.5 rounded-[var(--radius-sm)] text-[var(--color-danger)] hover:bg-[var(--color-danger)]/8 transition-colors flex-shrink-0 opacity-0 group-hover:opacity-100"
@@ -216,7 +216,7 @@ export function RoleLayout({ user, children }: { user: User; children: React.Rea
       <main className="flex-1 lg:ml-[248px] min-h-screen flex flex-col">
 
         {/* Top bar */}
-        <header className="sticky top-0 z-30 h-[56px] glass flex items-center justify-between px-5 gap-4">
+        <header className="sticky top-0 z-30 h-[60px] glass flex items-center justify-between px-5 gap-4">
           <div className="flex items-center gap-3">
             <button
               className="lg:hidden p-1.5 rounded-[var(--radius-md)] hover:bg-[var(--color-bg-secondary)] transition-colors"

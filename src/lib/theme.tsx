@@ -4,10 +4,10 @@ type Theme = 'light' | 'dark' | 'midnight'
 export type AcademicPreset = 'default' | 'blue' | 'crimson' | 'institutional'
 
 const academicPresets: Record<AcademicPreset, { label: string; desc: string; color: string }> = {
-  default:       { label: 'Acaedu',        desc: 'Dark teal, maroon accents, shadow-elevated cards',                color: '#c1272d' },
-  blue:          { label: 'Blue Academy',  desc: 'Voltage-blue CTAs, border-first cards, capsule pills',            color: '#0056d2' },
-  crimson:       { label: 'Crimson Prestige', desc: 'Crimson heritage, gold accents, classical warmth',             color: '#a51c30' },
-  institutional: { label: 'Institutional', desc: 'Institutional red-gray, data-dense hierarchy',                    color: '#e03c31' },
+  default:       { label: 'Acaedu',           desc: 'Shadow-elevated cards, 14px radii, warm editorial',             color: '#c1272d' },
+  blue:          { label: 'Blue Academy',      desc: 'Border-first cards, 8px buttons, 50px capsule pills',          color: '#0056d2' },
+  crimson:       { label: 'Crimson Prestige',  desc: 'Sharp 4px scholarly radii, deep shadows, serif headings',     color: '#a51c30' },
+  institutional: { label: 'Institutional',     desc: 'Flat 12px cards, strong borders, compact system font',        color: '#e03c31' },
 }
 
 interface ThemeContextValue {
