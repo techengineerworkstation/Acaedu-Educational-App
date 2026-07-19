@@ -53,7 +53,7 @@ export function RegisterPage() {
 
   return (
     <div className="min-h-screen flex bg-[var(--color-bg)]">
-      {/* ── Left panel — edX dark teal editorial ──────────────────── */}
+      {/* ── Left panel — dark teal editorial ─────────────────────── */}
       <div className="hidden lg:flex lg:w-[44%] relative overflow-hidden items-center justify-center">
         <div className="absolute inset-0">
           <img src="/images/students-group.jpg" alt="" className="w-full h-full object-cover opacity-15" />

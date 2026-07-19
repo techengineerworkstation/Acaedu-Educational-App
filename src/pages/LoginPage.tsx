@@ -47,7 +47,7 @@ export function LoginPage() {
   return (
     <div className="min-h-screen flex bg-[var(--color-bg)]">
 
-      {/* ── Left panel — edX dark teal editorial ──────────────────── */}
+      {/* ── Left panel — dark teal editorial ─────────────────────── */}
       <div className="hidden lg:flex lg:w-[44%] relative overflow-hidden flex-col">
         <div className="absolute inset-0">
           <img src="/images/campus.jpg" alt="" className="w-full h-full object-cover" />

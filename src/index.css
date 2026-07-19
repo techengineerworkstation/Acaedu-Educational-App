@@ -4,22 +4,22 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ═══════════════════════════════════════════════════════════════
-   ACAEDU — edX-Inspired Academic Design System v4
+   ACAEDU — Academic Design System
    Dark teal-black header, maroon accents, shadow-elevated cards,
    warm editorial palette, generous radii
-   Presets: edX | Coursera | Harvard | Canvas
+   Presets: Default | Blue | Crimson | Institutional
    ═══════════════════════════════════════════════════════════════ */
 
-/* ─── Design Tokens (edX Default) ──────────────────────────── */
+/* ─── Design Tokens (Default) ─────────────────────────────── */
 @theme {
-  /* Primary — maroon/burgundy (edX signature) */
+  /* Primary — maroon/burgundy (Acaedu signature) */
   --color-primary:        #c1272d;
   --color-primary-hover:  #a82025;
   --color-primary-light:  #e8535a;
   --color-primary-dark:   #8b181c;
   --color-primary-muted:  #fdf0f0;
 
-  /* Secondary — dark teal-black (edX header) */
+  /* Secondary — dark teal-black (header) */
   --color-secondary:      #00262b;
   --color-secondary-hover:#00383f;
   --color-secondary-light:#005e6b;
@@ -28,7 +28,7 @@
   --color-accent:         #025e6b;
   --color-accent-warm:    #d4724e;
 
-  /* Backgrounds — warm off-white (edX warmth) */
+  /* Backgrounds — warm off-white */
   --color-bg:             #ffffff;
   --color-bg-secondary:   #f5f5f0;
   --color-bg-tertiary:    #eae8e1;
@@ -41,7 +41,7 @@
   --color-text-muted:     #6b6e76;
   --color-text-inverse:   #ffffff;
 
-  /* Borders — soft warm grays (shadow-primary, not border-primary) */
+  /* Borders — soft warm grays */
   --color-border:         #ddd9d0;
   --color-border-light:   #e8e5de;
   --color-border-strong:  #c4c0b8;
@@ -64,10 +64,11 @@
   --color-gold-pale:      #fdf6e3;
   --color-cream:          #f5f5f0;
   --color-slate:          #1c1e21;
+  --color-primary-glow:   rgba(193,39,45,0.08);
 }
 
 :root {
-  /* Gradients — edX dark teal → maroon language */
+  /* Gradients — dark teal → maroon language */
   --gradient-primary:   linear-gradient(135deg, #8b181c 0%, #c1272d 50%, #e8535a 100%);
   --gradient-warm:      linear-gradient(135deg, #c1272d 0%, #d4724e 60%, #e8a070 100%);
   --gradient-mixed:     linear-gradient(135deg, #00262b 0%, #025e6b 50%, #c1272d 100%);
@@ -90,7 +91,7 @@
     transparent 8px
   );
 
-  /* Shadows — elevated (edX shadow-first philosophy) */
+  /* Shadows — elevated (shadow-first philosophy) */
   --shadow-xs:  0 1px 2px rgba(0,0,0,0.04);
   --shadow-sm:  0 1px 4px rgba(0,0,0,0.06);
   --shadow-md:  0 2px 12px rgba(0,0,0,0.07);
@@ -99,12 +100,12 @@
   --shadow-2xl: 0 16px 48px rgba(0,0,0,0.14);
   --shadow-card: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04);
   --shadow-card-hover: 0 4px 16px rgba(0,0,0,0.08), 0 8px 28px rgba(0,0,0,0.06);
-  --shadow-glow-navy: 0 0 0 3px rgba(193,39,45,0.10), 0 4px 16px rgba(193,39,45,0.12);
+  --shadow-glow-navy: 0 0 0 3px var(--color-primary-muted-shadow, rgba(193,39,45,0.10)), 0 4px 16px var(--color-primary-shadow, rgba(193,39,45,0.12));
   --shadow-glow-gold: 0 0 0 3px rgba(184,134,11,0.10), 0 4px 16px rgba(184,134,11,0.10);
   --shadow-inner: inset 0 1px 3px rgba(0,0,0,0.04);
   --shadow-nav: 0 1px 3px rgba(0,0,0,0.06);
 
-  /* Radii — edX softer, generous */
+  /* Radii — softer, generous */
   --radius-xs:  3px;
   --radius-sm:  6px;
   --radius-md:  10px;
@@ -117,7 +118,7 @@
   /* Spacing unit */
   --space-unit: 4px;
 
-  /* Typography — Source Sans 3 (edX-compatible academic) */
+  /* Typography — Source Sans 3 (academic) */
   --font-display: 'Source Sans 3 Variable', 'Source Sans 3', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   --font-body:    'Source Sans 3 Variable', 'Source Sans 3', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-mono:    'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
@@ -222,8 +223,8 @@
    Fundamentally different color/spacing/radius per preset
    ═══════════════════════════════════════════════════════════════ */
 
-/* ─── Coursera Preset ──────────────────────────────────────── */
-[data-academic="coursera"] {
+/* ─── Blue Preset ──────────────────────────────────────────── */
+[data-academic="blue"] {
   --color-primary:        #0056d2;
   --color-primary-hover:  #0048b0;
   --color-primary-light:  #3587fc;
@@ -264,10 +265,11 @@
   --gradient-warm:        linear-gradient(135deg, #002761 0%, #0056d2 60%, #3587fc 100%);
   --radius-md:            8px;
   --radius-lg:            16px;
+  --color-primary-glow:   rgba(0,86,210,0.08);
 }
 
-[data-academic="coursera"] .dark,
-[data-academic="coursera"][data-theme="dark"] {
+[data-academic="blue"] .dark,
+[data-academic="blue"][data-theme="dark"] {
   --color-primary:        #3587fc;
   --color-primary-hover:  #5a9dfc;
   --color-primary-light:  #7cb4ff;
@@ -278,7 +280,7 @@
   --color-navy-pale:      #0e1e2e;
 }
 
-[data-academic="coursera"][data-theme="midnight"] {
+[data-academic="blue"][data-theme="midnight"] {
   --color-primary:        #5a9dfc;
   --color-primary-hover:  #7cb4ff;
   --color-primary-light:  #a0ccff;
@@ -289,8 +291,8 @@
   --color-navy-pale:      #0c1824;
 }
 
-/* ─── Harvard Preset ──────────────────────────────────────── */
-[data-academic="harvard"] {
+/* ─── Crimson Preset ────────────────────────────────────────── */
+[data-academic="crimson"] {
   --color-primary:        #a51c30;
   --color-primary-hover:  #8c1728;
   --color-primary-light:  #c4324a;
@@ -328,10 +330,11 @@
   --gradient-primary:     linear-gradient(135deg, #6b1020 0%, #a51c30 55%, #c4324a 100%);
   --gradient-hero:        linear-gradient(160deg, #1a0a10 0%, #3d0f1c 35%, #a51c30 75%, #6b1020 100%);
   --gradient-warm:        linear-gradient(135deg, #b8860b 0%, #f8c21c 60%, #b8860b 100%);
+  --color-primary-glow:   rgba(165,28,48,0.08);
 }
 
-[data-academic="harvard"] .dark,
-[data-academic="harvard"][data-theme="dark"] {
+[data-academic="crimson"] .dark,
+[data-academic="crimson"][data-theme="dark"] {
   --color-primary:        #e84057;
   --color-primary-hover:  #ff5c72;
   --color-primary-light:  #ff8a9a;
@@ -344,7 +347,7 @@
   --color-border-light:   #2a1018;
 }
 
-[data-academic="harvard"][data-theme="midnight"] {
+[data-academic="crimson"][data-theme="midnight"] {
   --color-primary:        #ff6b7f;
   --color-primary-hover:  #ff8a9a;
   --color-primary-light:  #ffb0be;
@@ -356,8 +359,8 @@
   --color-border:         #2a0f18;
 }
 
-/* ─── Canvas Preset ────────────────────────────────────────── */
-[data-academic="canvas"] {
+/* ─── Institutional Preset ──────────────────────────────────── */
+[data-academic="institutional"] {
   --color-primary:        #e03c31;
   --color-primary-hover:  #c4342b;
   --color-primary-light:  #f0564d;
@@ -395,10 +398,11 @@
   --gradient-primary:     linear-gradient(135deg, #2d3b45 0%, #394b58 55%, #5b7a8a 100%);
   --gradient-hero:        linear-gradient(160deg, #1a2530 0%, #2d3b45 35%, #394b58 75%, #2d3b45 100%);
   --gradient-warm:        linear-gradient(135deg, #1d6b9f 0%, #e03c31 60%, #f0564d 100%);
+  --color-primary-glow:   rgba(224,60,49,0.08);
 }
 
-[data-academic="canvas"] .dark,
-[data-academic="canvas"][data-theme="dark"] {
+[data-academic="institutional"] .dark,
+[data-academic="institutional"][data-theme="dark"] {
   --color-primary:        #f0564d;
   --color-primary-hover:  #ff7a72;
   --color-primary-light:  #ffa09a;
@@ -409,7 +413,7 @@
   --color-navy-pale:      #0c1218;
 }
 
-[data-academic="canvas"][data-theme="midnight"] {
+[data-academic="institutional"][data-theme="midnight"] {
   --color-primary:        #ff7a72;
   --color-primary-hover:  #ffa09a;
   --color-primary-light:  #ffc4c0;
@@ -447,7 +451,7 @@ body {
 }
 
 ::selection {
-  background: rgba(193,39,45,0.10);
+  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
   color: var(--color-text);
 }
 
@@ -500,7 +504,7 @@ input, select, textarea { font: inherit; color: inherit; }
   line-height: 1.2;
 }
 
-/* Academic section label — edX editorial eyebrow */
+/* ─── Glass / Nav ────────────────────────────────────────────── */
 .text-label-caps {
   font-size: 11px;
   font-weight: 700;
@@ -524,7 +528,7 @@ input, select, textarea { font: inherit; color: inherit; }
   border-bottom: 1px solid var(--color-border);
 }
 
-/* ─── Card — shadow-elevated (edX pattern) ─────────────────── */
+/* ─── Card — shadow-elevated ──────────────────────────────── */
 .card {
   background: var(--color-bg-card);
   border: 1px solid var(--color-border-light);
@@ -545,7 +549,7 @@ input, select, textarea { font: inherit; color: inherit; }
   box-shadow: var(--shadow-lg);
 }
 
-/* Academic card — soft rounded-square shape (edX editorial) */
+/* Academic card — soft rounded-square shape ──────────────── */
 .card-academic {
   background: var(--color-bg-card);
   border: 1px solid var(--color-border-light);
@@ -590,7 +594,7 @@ input, select, textarea { font: inherit; color: inherit; }
 .input:hover  { border-color: var(--color-border-strong); }
 .input:focus  {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(193,39,45,0.06);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 8%, transparent);
 }
 
 .select {
@@ -632,7 +636,7 @@ input, select, textarea { font: inherit; color: inherit; }
 }
 .textarea:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(193,39,45,0.06);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 8%, transparent);
 }
 
 .label {
@@ -665,7 +669,7 @@ input, select, textarea { font: inherit; color: inherit; }
 }
 .btn-primary:hover {
   background: var(--color-primary-hover);
-  box-shadow: 0 4px 12px rgba(193,39,45,0.2);
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--color-primary) 40%, transparent);
 }
 .btn-primary:active { box-shadow: var(--shadow-xs); transform: scale(0.98); }
 .btn-primary:disabled { opacity: 0.5; pointer-events: none; }
@@ -709,7 +713,7 @@ input, select, textarea { font: inherit; color: inherit; }
   color: var(--color-text);
 }
 
-/* Navy CTA — edX-style dark action button */
+/* Navy CTA — dark action button */
 .btn-gold {
   display: inline-flex;
   align-items: center;
@@ -746,7 +750,7 @@ input, select, textarea { font: inherit; color: inherit; }
 .badge-navy    { background: var(--color-navy-pale);  color: var(--color-primary); }
 .badge-gold    { background: var(--color-gold-pale);  color: var(--color-gold); }
 .badge-success { background: rgba(27,122,66,0.08);    color: var(--color-success); }
-.badge-danger  { background: rgba(193,39,45,0.08);    color: var(--color-danger); }
+.badge-danger  { background: color-mix(in srgb, var(--color-danger) 8%, transparent);  color: var(--color-danger); }
 .badge-warning { background: rgba(196,122,16,0.08);   color: var(--color-warning); }
 .badge-neutral { background: var(--color-bg-secondary); color: var(--color-text-muted); }
 
@@ -902,7 +906,7 @@ input, select, textarea { font: inherit; color: inherit; }
 
 /* ─── Utility text ───────────────────────────────────────────── */
 .metallic-text {
-  background: linear-gradient(135deg, #c1272d 0%, #025e6b 40%, #e8535a 65%, #4dd0d8 80%, #c1272d 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 40%, var(--color-primary-light) 65%, var(--color-navy-light) 80%, var(--color-primary) 100%);
   background-size: 280% 280%;
   animation: gradient-shift 8s ease infinite;
   -webkit-background-clip: text;
@@ -938,7 +942,7 @@ input, select, textarea { font: inherit; color: inherit; }
   position: absolute;
   inset: -1px;
   border-radius: inherit;
-  background: linear-gradient(135deg, #c1272d, #025e6b, #e8535a, #4dd0d8, #c1272d);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-accent), var(--color-primary-light), var(--color-navy-light), var(--color-primary));
   background-size: 280% 280%;
   animation: gradient-shift 5s ease infinite;
   z-index: -1;
@@ -966,8 +970,8 @@ input, select, textarea { font: inherit; color: inherit; }
   100% { background-position: 0% 50%; }
 }
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(193,39,45,0.3); }
-  50%       { box-shadow: 0 0 0 7px rgba(193,39,45,0); }
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-primary) 30%, transparent); }
+  50%       { box-shadow: 0 0 0 7px color-mix(in srgb, var(--color-primary) 0%, transparent); }
 }
 @keyframes aurora-drift {
   0%   { transform: translate(0%,  0%)  scale(1); }
@@ -999,7 +1003,7 @@ input, select, textarea { font: inherit; color: inherit; }
 
 /* ═══════════════════════════════════════════════════════════
    ACADEMIC DESIGN POLISH v4
-   edX: shadow-elevated, warm editorial, generous spacing
+   shadow-elevated, warm editorial, generous spacing
    ═══════════════════════════════════════════════════════════ */
 
 /* ── Institutional rule line ─────────────────────────────── */
@@ -1103,7 +1107,7 @@ input, select, textarea { font: inherit; color: inherit; }
   margin-right: 4px;
 }
 
-/* ── Discipline pill — rounded rect (edX pattern) ───────── */
+/* ── Discipline pill — rounded rect ──────────────────────── */
 .discipline-pill {
   display: inline-flex;
   align-items: center;
@@ -1231,7 +1235,7 @@ section + section,
   animation: spin-slow 0.7s linear infinite;
 }
 .spinner-navy {
-  border-color: rgba(193,39,45,0.2);
+  border-color: color-mix(in srgb, var(--color-primary) 20%, transparent);
   border-top-color: var(--color-primary);
 }
 
@@ -1240,7 +1244,7 @@ section + section,
 .select:focus,
 .textarea:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(193,39,45,0.06);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 8%, transparent);
 }
 
 /* ── Academic preset selector ────────────────────────────── */

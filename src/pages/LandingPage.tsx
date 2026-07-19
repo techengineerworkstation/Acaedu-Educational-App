@@ -4,7 +4,7 @@ import { useRef, useState, useEffect, Suspense, lazy, Component, type ReactNode 
 import { ArrowRight, Zap, Shield, Brain, BookOpen, Bell, Sparkles, Search, GraduationCap, Globe, LineChart, Video } from 'lucide-react'
 import { NumberTicker } from '@/components/aceternity/text-reveal'
 import { CardContainer, CardBody } from '@/components/aceternity/3d-card'
-import { useTheme } from '@/lib/theme'
+import { useTheme, usePresetPalette } from '@/lib/theme'
 
 const SparklesComponent = lazy(() => import('@/components/aceternity/sparkles').then(m => ({ default: m.Sparkles })))
 const FractalTreeComponent = lazy(() => import('@/components/aceternity/fractal-tree').then(m => ({ default: m.FractalTree })))
@@ -42,57 +42,53 @@ function Section({ children, className = '', id }: { children: React.ReactNode; 
 }
 
 /* ─── Hero SVG illustrations — rich vector clipart style ─────── */
-const heroSlides = [
+function makeHeroSlides(p: ReturnType<typeof usePresetPalette>) {
+  return [
   {
     label: 'Smart Scheduling',
     svg: (
       <svg viewBox="0 0 320 240" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
         <defs>
           <linearGradient id="grad1" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#c1272d" stopOpacity="0.15"/>
-            <stop offset="100%" stopColor="#025e6b" stopOpacity="0.05"/>
+            <stop offset="0%" stopColor={p.primary} stopOpacity="0.15"/>
+            <stop offset="100%" stopColor={p.teal} stopOpacity="0.05"/>
           </linearGradient>
         </defs>
         <circle cx="160" cy="120" r="100" fill="url(#grad1)"/>
         <circle cx="160" cy="120" r="75" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" strokeWidth="1"/>
-        <circle cx="160" cy="120" r="110" fill="none" stroke="rgba(193,39,45,0.08)" strokeWidth="0.5" strokeDasharray="4 6"/>
-        {/* Calendar card */}
+        <circle cx="160" cy="120" r="110" fill="none" stroke={p.rgba(p.primary, 0.08)} strokeWidth="0.5" strokeDasharray="4 6"/>
         <rect x="110" y="55" width="100" height="120" rx="12" fill="#00262b" stroke="rgba(255,255,255,0.12)" strokeWidth="1.2"/>
-        <rect x="110" y="55" width="100" height="30" rx="12" fill="rgba(193,39,45,0.35)"/>
-        <rect x="110" y="73" width="100" height="12" fill="rgba(193,39,45,0.35)"/>
+        <rect x="110" y="55" width="100" height="30" rx="12" fill={p.rgba(p.primary, 0.35)}/>
+        <rect x="110" y="73" width="100" height="12" fill={p.rgba(p.primary, 0.35)}/>
         <circle cx="130" cy="70" r="4" fill="rgba(255,255,255,0.25)"/>
         <circle cx="150" cy="70" r="4" fill="rgba(255,255,255,0.25)"/>
         <circle cx="170" cy="70" r="4" fill="rgba(255,255,255,0.25)"/>
         <circle cx="190" cy="70" r="4" fill="rgba(255,255,255,0.25)"/>
-        {/* Calendar rows */}
         {[0,1,2,3].map(r => (
           <g key={r}>
             <rect x="120" y={95 + r * 16} width="80" height="1" fill="rgba(255,255,255,0.06)"/>
             {[0,1,2,3,4].map(c => (
               <rect key={c} x={122 + c * 16} y={98 + r * 16} width="10" height="6" rx="1.5" fill={
-                (r === 1 && c === 2) ? 'rgba(193,39,45,0.6)' :
-                (r === 2 && c === 4) ? 'rgba(77,208,216,0.4)' :
+                (r === 1 && c === 2) ? p.rgba(p.primary, 0.6) :
+                (r === 2 && c === 4) ? p.rgba(p.teal, 0.4) :
                 'rgba(255,255,255,0.06)'
               }/>
             ))}
           </g>
         ))}
-        {/* AI badge */}
-        <circle cx="215" cy="60" r="20" fill="#00262b" stroke="rgba(193,39,45,0.35)" strokeWidth="1.2"/>
-        <circle cx="215" cy="60" r="14" fill="rgba(193,39,45,0.12)"/>
-        <text x="215" y="65" textAnchor="middle" fill="#e8535a" fontSize="13" fontWeight="800" fontFamily="system-ui">AI</text>
-        {/* Floating particles */}
-        <circle cx="75" cy="85" r="4" fill="rgba(77,208,216,0.2)">
+        <circle cx="215" cy="60" r="20" fill="#00262b" stroke={p.rgba(p.primary, 0.35)} strokeWidth="1.2"/>
+        <circle cx="215" cy="60" r="14" fill={p.rgba(p.primary, 0.12)}/>
+        <text x="215" y="65" textAnchor="middle" fill={p.primary} fontSize="13" fontWeight="800" fontFamily="system-ui">AI</text>
+        <circle cx="75" cy="85" r="4" fill={p.rgba(p.teal, 0.2)}>
           <animate attributeName="cy" values="85;78;85" dur="3s" repeatCount="indefinite"/>
         </circle>
-        <circle cx="250" cy="170" r="3" fill="rgba(240,204,90,0.2)">
+        <circle cx="250" cy="170" r="3" fill={p.rgba(p.gold, 0.2)}>
           <animate attributeName="cy" values="170;163;170" dur="4s" repeatCount="indefinite"/>
         </circle>
-        <circle cx="60" cy="160" r="5" fill="rgba(193,39,45,0.1)">
+        <circle cx="60" cy="160" r="5" fill={p.rgba(p.primary, 0.1)}>
           <animate attributeName="cy" values="160;153;160" dur="3.5s" repeatCount="indefinite"/>
         </circle>
-        {/* Connecting lines */}
-        <line x1="210" y1="80" x2="195" y2="95" stroke="rgba(193,39,45,0.12)" strokeWidth="0.8" strokeDasharray="3 3">
+        <line x1="210" y1="80" x2="195" y2="95" stroke={p.rgba(p.primary, 0.12)} strokeWidth="0.8" strokeDasharray="3 3">
           <animate attributeName="stroke-opacity" values="0.12;0.25;0.12" dur="2s" repeatCount="indefinite"/>
         </line>
       </svg>
@@ -104,26 +100,24 @@ const heroSlides = [
       <svg viewBox="0 0 320 240" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
         <defs>
           <linearGradient id="grad2" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#025e6b" stopOpacity="0.12"/>
-            <stop offset="100%" stopColor="#c1272d" stopOpacity="0.04"/>
+            <stop offset="0%" stopColor={p.teal} stopOpacity="0.12"/>
+            <stop offset="100%" stopColor={p.primary} stopOpacity="0.04"/>
           </linearGradient>
         </defs>
         <circle cx="160" cy="120" r="100" fill="url(#grad2)"/>
-        <circle cx="160" cy="120" r="75" fill="none" stroke="rgba(77,208,216,0.06)" strokeWidth="0.8"/>
-        <circle cx="160" cy="120" r="110" fill="none" stroke="rgba(77,208,216,0.05)" strokeWidth="0.5" strokeDasharray="3 5"/>
-        {/* People avatars */}
+        <circle cx="160" cy="120" r="75" fill="none" stroke={p.rgba(p.teal, 0.06)} strokeWidth="0.8"/>
+        <circle cx="160" cy="120" r="110" fill="none" stroke={p.rgba(p.teal, 0.05)} strokeWidth="0.5" strokeDasharray="3 5"/>
         {[
-          { cx: 120, cy: 90, color: '#c1272d', r: 22 },
-          { cx: 200, cy: 90, color: '#025e6b', r: 22 },
-          { cx: 160, cy: 150, color: '#b8860b', r: 22 },
-        ].map((p, i) => (
+          { cx: 120, cy: 90, color: p.primary, r: 22 },
+          { cx: 200, cy: 90, color: p.teal, r: 22 },
+          { cx: 160, cy: 150, color: p.gold, r: 22 },
+        ].map((pt, i) => (
           <g key={i}>
-            <circle cx={p.cx} cy={p.cy} r={p.r} fill="#00262b" stroke="rgba(255,255,255,0.1)" strokeWidth="1.2"/>
-            <circle cx={p.cx} cy={p.cy - 5} r="8" fill={p.color} opacity="0.5"/>
-            <rect x={p.cx - 10} y={p.cy + 6} width="20" height="10" rx="4" fill={p.color} opacity="0.2"/>
+            <circle cx={pt.cx} cy={pt.cy} r={pt.r} fill="#00262b" stroke="rgba(255,255,255,0.1)" strokeWidth="1.2"/>
+            <circle cx={pt.cx} cy={pt.cy - 5} r="8" fill={pt.color} opacity="0.5"/>
+            <rect x={pt.cx - 10} y={pt.cy + 6} width="20" height="10" rx="4" fill={pt.color} opacity="0.2"/>
           </g>
         ))}
-        {/* Connection lines */}
         <line x1="137" y1="100" x2="145" y2="135" stroke="rgba(255,255,255,0.08)" strokeWidth="1" strokeDasharray="3 3">
           <animate attributeName="stroke-opacity" values="0.08;0.2;0.08" dur="2.5s" repeatCount="indefinite"/>
         </line>
@@ -131,14 +125,12 @@ const heroSlides = [
           <animate attributeName="stroke-opacity" values="0.08;0.2;0.08" dur="2.5s" repeatCount="indefinite" begin="0.5s"/>
         </line>
         <line x1="140" y1="90" x2="180" y2="90" stroke="rgba(255,255,255,0.06)" strokeWidth="1" strokeDasharray="2 4"/>
-        {/* Signal arcs */}
-        <path d="M155 58 Q160 48 165 58" fill="none" stroke="rgba(193,39,45,0.25)" strokeWidth="1.2"/>
-        <path d="M152 52 Q160 40 168 52" fill="none" stroke="rgba(193,39,45,0.15)" strokeWidth="1"/>
-        {/* Floating dots */}
-        <circle cx="80" cy="75" r="3" fill="rgba(77,208,216,0.15)">
+        <path d="M155 58 Q160 48 165 58" fill="none" stroke={p.rgba(p.primary, 0.25)} strokeWidth="1.2"/>
+        <path d="M152 52 Q160 40 168 52" fill="none" stroke={p.rgba(p.primary, 0.15)} strokeWidth="1"/>
+        <circle cx="80" cy="75" r="3" fill={p.rgba(p.teal, 0.15)}>
           <animate attributeName="cy" values="75;68;75" dur="3s" repeatCount="indefinite"/>
         </circle>
-        <circle cx="240" cy="155" r="4" fill="rgba(240,204,90,0.12)">
+        <circle cx="240" cy="155" r="4" fill={p.rgba(p.gold, 0.12)}>
           <animate attributeName="cy" values="155;148;155" dur="4s" repeatCount="indefinite"/>
         </circle>
       </svg>
@@ -150,42 +142,37 @@ const heroSlides = [
       <svg viewBox="0 0 320 240" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
         <defs>
           <linearGradient id="grad3" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#b8860b" stopOpacity="0.1"/>
-            <stop offset="100%" stopColor="#025e6b" stopOpacity="0.04"/>
+            <stop offset="0%" stopColor={p.gold} stopOpacity="0.1"/>
+            <stop offset="100%" stopColor={p.teal} stopOpacity="0.04"/>
           </linearGradient>
         </defs>
         <circle cx="160" cy="120" r="100" fill="url(#grad3)"/>
-        <circle cx="160" cy="120" r="75" fill="none" stroke="rgba(240,204,90,0.05)" strokeWidth="0.8"/>
-        {/* Dashboard panel */}
+        <circle cx="160" cy="120" r="75" fill="none" stroke={p.rgba(p.gold, 0.05)} strokeWidth="0.8"/>
         <rect x="80" y="55" width="160" height="130" rx="12" fill="#00262b" stroke="rgba(255,255,255,0.1)" strokeWidth="1.2"/>
         <rect x="80" y="55" width="160" height="28" rx="12" fill="rgba(255,255,255,0.04)"/>
         <rect x="80" y="73" width="160" height="10" fill="rgba(255,255,255,0.04)"/>
         <rect x="95" y="65" width="50" height="5" rx="2" fill="rgba(255,255,255,0.2)"/>
-        <circle cx="225" cy="69" r="5" fill="rgba(77,208,216,0.3)"/>
-        {/* Chart bars with rounded tops */}
+        <circle cx="225" cy="69" r="5" fill={p.rgba(p.teal, 0.3)}/>
         {[
-          { x: 100, h: 30, fill: 'rgba(193,39,45,0.55)' },
-          { x: 120, h: 45, fill: 'rgba(77,208,216,0.45)' },
-          { x: 140, h: 60, fill: 'rgba(240,204,90,0.5)' },
-          { x: 160, h: 48, fill: 'rgba(193,39,45,0.45)' },
-          { x: 180, h: 72, fill: 'rgba(77,208,216,0.55)' },
-          { x: 200, h: 55, fill: 'rgba(240,204,90,0.4)' },
+          { x: 100, h: 30, fill: p.rgba(p.primary, 0.55) },
+          { x: 120, h: 45, fill: p.rgba(p.teal, 0.45) },
+          { x: 140, h: 60, fill: p.rgba(p.gold, 0.5) },
+          { x: 160, h: 48, fill: p.rgba(p.primary, 0.45) },
+          { x: 180, h: 72, fill: p.rgba(p.teal, 0.55) },
+          { x: 200, h: 55, fill: p.rgba(p.gold, 0.4) },
         ].map((b, i) => (
           <rect key={i} x={b.x} y={175 - b.h} width="14" height={b.h} rx="3" fill={b.fill}>
             <animate attributeName="height" values={`0;${b.h}`} dur="0.8s" begin={`${i * 0.1}s`} fill="freeze"/>
             <animate attributeName="y" values={`175;${175 - b.h}`} dur="0.8s" begin={`${i * 0.1}s`} fill="freeze"/>
           </rect>
         ))}
-        {/* Trend line */}
         <polyline points="107,150 127,138 147,125 167,132 187,115 207,128" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-        {/* Badge */}
-        <circle cx="220" cy="110" r="18" fill="#00262b" stroke="rgba(193,39,45,0.3)" strokeWidth="1.2"/>
-        <text x="220" y="115" textAnchor="middle" fill="#e8535a" fontSize="13" fontWeight="800" fontFamily="system-ui">A+</text>
-        {/* Floating particles */}
-        <circle cx="65" cy="90" r="3.5" fill="rgba(240,204,90,0.15)">
+        <circle cx="220" cy="110" r="18" fill="#00262b" stroke={p.rgba(p.primary, 0.3)} strokeWidth="1.2"/>
+        <text x="220" y="115" textAnchor="middle" fill={p.primary} fontSize="13" fontWeight="800" fontFamily="system-ui">A+</text>
+        <circle cx="65" cy="90" r="3.5" fill={p.rgba(p.gold, 0.15)}>
           <animate attributeName="cy" values="90;83;90" dur="3.5s" repeatCount="indefinite"/>
         </circle>
-        <circle cx="255" cy="165" r="3" fill="rgba(193,39,45,0.1)">
+        <circle cx="255" cy="165" r="3" fill={p.rgba(p.primary, 0.1)}>
           <animate attributeName="cy" values="165;158;165" dur="4s" repeatCount="indefinite"/>
         </circle>
       </svg>
@@ -197,52 +184,49 @@ const heroSlides = [
       <svg viewBox="0 0 320 240" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
         <defs>
           <linearGradient id="grad4" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#c1272d" stopOpacity="0.08"/>
-            <stop offset="100%" stopColor="#025e6b" stopOpacity="0.06"/>
+            <stop offset="0%" stopColor={p.primary} stopOpacity="0.08"/>
+            <stop offset="100%" stopColor={p.teal} stopOpacity="0.06"/>
           </linearGradient>
         </defs>
         <circle cx="160" cy="120" r="100" fill="url(#grad4)"/>
-        <circle cx="160" cy="120" r="75" fill="none" stroke="rgba(193,39,45,0.05)" strokeWidth="0.8"/>
-        {/* Building */}
+        <circle cx="160" cy="120" r="75" fill="none" stroke={p.rgba(p.primary, 0.05)} strokeWidth="0.8"/>
         <rect x="110" y="70" width="100" height="110" rx="8" fill="#00262b" stroke="rgba(255,255,255,0.1)" strokeWidth="1.2"/>
-        <rect x="110" y="70" width="100" height="32" rx="8" fill="rgba(193,39,45,0.3)"/>
-        <rect x="110" y="92" width="100" height="10" fill="rgba(193,39,45,0.3)"/>
-        {/* Windows */}
+        <rect x="110" y="70" width="100" height="32" rx="8" fill={p.rgba(p.primary, 0.3)}/>
+        <rect x="110" y="92" width="100" height="10" fill={p.rgba(p.primary, 0.3)}/>
         {[0,1,2].map(r => [0,1,2].map(c => (
           <rect key={`${r}${c}`} x={124 + c * 28} y={112 + r * 20} width="18" height="12" rx="2"
-            fill={(r === 1 && c === 1) ? 'rgba(240,204,90,0.25)' : 'rgba(77,208,216,0.08)'}
+            fill={(r === 1 && c === 1) ? p.rgba(p.gold, 0.25) : p.rgba(p.teal, 0.08)}
             stroke="rgba(255,255,255,0.06)" strokeWidth="0.5"/>
         )))}
-        {/* Door */}
-        <rect x="148" y="155" width="24" height="25" rx="3" fill="rgba(193,39,45,0.2)" stroke="rgba(255,255,255,0.08)" strokeWidth="0.8"/>
-        {/* Clock */}
+        <rect x="148" y="155" width="24" height="25" rx="3" fill={p.rgba(p.primary, 0.2)} stroke="rgba(255,255,255,0.08)" strokeWidth="0.8"/>
         <circle cx="160" cy="82" r="8" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.15)" strokeWidth="0.8"/>
         <line x1="160" y1="82" x2="160" y2="77" stroke="rgba(255,255,255,0.3)" strokeWidth="0.8" strokeLinecap="round"/>
         <line x1="160" y1="82" x2="164" y2="82" stroke="rgba(255,255,255,0.3)" strokeWidth="0.8" strokeLinecap="round"/>
-        {/* Side cards */}
-        <rect x="60" y="100" width="35" height="50" rx="6" fill="rgba(77,208,216,0.08)" stroke="rgba(77,208,216,0.15)" strokeWidth="0.8"/>
-        <rect x="225" y="110" width="35" height="45" rx="6" fill="rgba(240,204,90,0.06)" stroke="rgba(240,204,90,0.12)" strokeWidth="0.8"/>
-        {/* Floating particles */}
-        <circle cx="75" cy="80" r="3" fill="rgba(193,39,45,0.12)">
+        <rect x="60" y="100" width="35" height="50" rx="6" fill={p.rgba(p.teal, 0.08)} stroke={p.rgba(p.teal, 0.15)} strokeWidth="0.8"/>
+        <rect x="225" y="110" width="35" height="45" rx="6" fill={p.rgba(p.gold, 0.06)} stroke={p.rgba(p.gold, 0.12)} strokeWidth="0.8"/>
+        <circle cx="75" cy="80" r="3" fill={p.rgba(p.primary, 0.12)}>
           <animate attributeName="cy" values="80;73;80" dur="3s" repeatCount="indefinite"/>
         </circle>
-        <circle cx="250" cy="75" r="4" fill="rgba(77,208,216,0.1)">
+        <circle cx="250" cy="75" r="4" fill={p.rgba(p.teal, 0.1)}>
           <animate attributeName="cy" values="75;68;75" dur="4s" repeatCount="indefinite"/>
         </circle>
       </svg>
     ),
   },
-]
+  ]
+}
 
 /* ─── Data ───────────────────────────────────────────────────── */
-const features = [
-    { icon: BookOpen,  title: 'Subject Management',  desc: 'Organise subjects, materials, and timetables in one unified workspace.', gradient: 'linear-gradient(135deg, rgba(193,39,45,0.08) 0%, rgba(193,39,45,0.02) 100%)', iconBg: 'rgba(193,39,45,0.10)', iconColor: '#c1272d' },
-  { icon: LineChart, title: 'Grade Analytics',      desc: 'Real-time grade tracking with visual performance dashboards.', gradient: 'linear-gradient(135deg, rgba(2,94,107,0.08) 0%, rgba(2,94,107,0.02) 100%)', iconBg: 'rgba(2,94,107,0.08)', iconColor: '#025e6b' },
-  { icon: Bell,      title: 'Smart Notifications', desc: 'Context-aware alerts for deadlines, exams, and announcements.', gradient: 'linear-gradient(135deg, rgba(184,134,11,0.08) 0%, rgba(184,134,11,0.02) 100%)', iconBg: 'rgba(184,134,11,0.10)', iconColor: '#b8860b' },
-  { icon: Video,     title: 'Live Collaboration',  desc: 'Integrated video conferencing and shared class recordings.', gradient: 'linear-gradient(135deg, rgba(77,208,216,0.08) 0%, rgba(77,208,216,0.02) 100%)', iconBg: 'rgba(77,208,216,0.08)', iconColor: '#025e6b' },
-  { icon: Brain,     title: 'AI Assistant',        desc: 'Intelligent lecture summaries, scheduling suggestions, and insights.', gradient: 'linear-gradient(135deg, rgba(193,39,45,0.06) 0%, rgba(2,94,107,0.04) 100%)', iconBg: 'rgba(193,39,45,0.08)', iconColor: '#c1272d' },
-  { icon: Shield,    title: 'Enterprise Security', desc: 'Bank-grade encryption, RLS policies, and role-based access control.', gradient: 'linear-gradient(135deg, rgba(0,38,43,0.06) 0%, rgba(0,38,43,0.02) 100%)', iconBg: 'rgba(0,38,43,0.07)', iconColor: '#00262b' },
-]
+function makeFeatures(p: ReturnType<typeof usePresetPalette>) {
+  return [
+    { icon: BookOpen,  title: 'Subject Management',  desc: 'Organise subjects, materials, and timetables in one unified workspace.', gradient: `linear-gradient(135deg, ${p.rgba(p.primary, 0.08)} 0%, ${p.rgba(p.primary, 0.02)} 100%)`, iconBg: p.rgba(p.primary, 0.10), iconColor: p.primary },
+    { icon: LineChart, title: 'Grade Analytics',      desc: 'Real-time grade tracking with visual performance dashboards.', gradient: `linear-gradient(135deg, ${p.rgba(p.teal, 0.08)} 0%, ${p.rgba(p.teal, 0.02)} 100%)`, iconBg: p.rgba(p.teal, 0.08), iconColor: p.teal },
+    { icon: Bell,      title: 'Smart Notifications', desc: 'Context-aware alerts for deadlines, exams, and announcements.', gradient: `linear-gradient(135deg, ${p.rgba(p.gold, 0.08)} 0%, ${p.rgba(p.gold, 0.02)} 100%)`, iconBg: p.rgba(p.gold, 0.10), iconColor: p.gold },
+    { icon: Video,     title: 'Live Collaboration',  desc: 'Integrated video conferencing and shared class recordings.', gradient: `linear-gradient(135deg, ${p.rgba(p.teal, 0.08)} 0%, ${p.rgba(p.teal, 0.02)} 100%)`, iconBg: p.rgba(p.teal, 0.08), iconColor: p.teal },
+    { icon: Brain,     title: 'AI Assistant',        desc: 'Intelligent lecture summaries, scheduling suggestions, and insights.', gradient: `linear-gradient(135deg, ${p.rgba(p.primary, 0.06)} 0%, ${p.rgba(p.teal, 0.04)} 100%)`, iconBg: p.rgba(p.primary, 0.08), iconColor: p.primary },
+    { icon: Shield,    title: 'Enterprise Security', desc: 'Bank-grade encryption, RLS policies, and role-based access control.', gradient: `linear-gradient(135deg, ${p.rgba(p.navy, 0.06)} 0%, ${p.rgba(p.navy, 0.02)} 100%)`, iconBg: p.rgba(p.navy, 0.07), iconColor: p.navy },
+  ]
+}
 
 const courseCards = [
   { img: '/images/hero-graduation.jpg', title: 'Smart Academic Scheduling', meta: 'AI-Powered', tag: 'New', institution: 'Acaedu Institute' },
@@ -275,18 +259,21 @@ const themeIcons: Record<string, React.ReactNode> = {
 }
 
 /* ─── Pulsating headline animation ────────────────────────────── */
-function PulsatingHeadline() {
+function PulsatingHeadline({ accent }: { accent: string }) {
+  const r = parseInt(accent.slice(1, 3), 16)
+  const g = parseInt(accent.slice(3, 5), 16)
+  const b = parseInt(accent.slice(5, 7), 16)
   return (
     <motion.h1
       className="text-[36px] md:text-[52px] font-extrabold text-white leading-[1.08] tracking-tight mb-6"
       style={{ fontFamily: 'var(--font-display)' }}
       animate={{
         textShadow: [
-          '0 0 0px rgba(193,39,45,0)',
-          '0 0 30px rgba(193,39,45,0.12)',
-          '0 0 50px rgba(193,39,45,0.06)',
-          '0 0 30px rgba(193,39,45,0.12)',
-          '0 0 0px rgba(193,39,45,0)',
+          `0 0 0px rgba(${r},${g},${b},0)`,
+          `0 0 30px rgba(${r},${g},${b},0.12)`,
+          `0 0 50px rgba(${r},${g},${b},0.06)`,
+          `0 0 30px rgba(${r},${g},${b},0.12)`,
+          `0 0 0px rgba(${r},${g},${b},0)`,
         ],
       }}
       transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
@@ -304,6 +291,9 @@ export function LandingPage() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0])
   const heroScale   = useTransform(scrollYProgress, [0, 1], [1, 1.08])
   const { theme, cycle } = useTheme()
+  const palette = usePresetPalette()
+  const heroSlides = makeHeroSlides(palette)
+  const features = makeFeatures(palette)
 
   const [slideIndex, setSlideIndex] = useState(0)
   useEffect(() => {
@@ -361,7 +351,7 @@ export function LandingPage() {
           <div className="absolute inset-0 z-[1] pointer-events-none opacity-60">
             <SilentErrorBoundary>
               <Suspense fallback={null}>
-                <SparklesComponent count={70} speed={0.4} colors={['#c1272d', '#e8535a', '#025e6b', '#4dd0d8', '#ffffff']} />
+                <SparklesComponent count={70} speed={0.4} colors={[palette.primary, palette.primary, palette.teal, palette.teal, '#ffffff']} />
               </Suspense>
             </SilentErrorBoundary>
           </div>
@@ -375,7 +365,7 @@ export function LandingPage() {
                   branchAngle={28}
                   shrink={0.70}
                   windSpeed={0.25}
-                  colors={{ trunk: 'rgba(255,255,255,0.06)', leaf: 'rgba(77,208,216,0.25)', glow: 'rgba(193,39,45,0.1)' }}
+                  colors={{ trunk: 'rgba(255,255,255,0.06)', leaf: palette.rgba(palette.teal, 0.25), glow: palette.rgba(palette.primary, 0.1) }}
                 />
               </Suspense>
             </SilentErrorBoundary>
@@ -410,7 +400,7 @@ export function LandingPage() {
 
               {/* Headline with pulsating glow */}
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4, delay: 0.4 }}>
-                <PulsatingHeadline />
+                <PulsatingHeadline accent={palette.primary} />
               </motion.div>
 
               {/* Sub-headline */}
@@ -521,7 +511,7 @@ export function LandingPage() {
                   branchAngle={22}
                   shrink={0.68}
                   windSpeed={0.15}
-                  colors={{ trunk: 'rgba(255,255,255,0.04)', leaf: 'rgba(193,39,45,0.15)', glow: 'rgba(77,208,216,0.08)' }}
+                  colors={{ trunk: 'rgba(255,255,255,0.04)', leaf: palette.rgba(palette.primary, 0.15), glow: palette.rgba(palette.teal, 0.08) }}
                 />
               </Suspense>
             </SilentErrorBoundary>
@@ -530,8 +520,8 @@ export function LandingPage() {
             <SilentErrorBoundary>
               <Suspense fallback={null}>
                 <SpriteAnimComponent maxParticles={8} sprites={[
-                  { name: 'orbit', frames: Array.from({ length: 12 }, () => ({ x: 0, y: 0, w: 6, h: 6 })), fps: 8, loop: true, color: 'rgba(193,39,45,0.2)', size: 4 },
-                  { name: 'book', frames: Array.from({ length: 8 }, () => ({ x: 0, y: 0, w: 10, h: 14 })), fps: 6, loop: true, color: 'rgba(77,208,216,0.2)', size: 8 },
+                  { name: 'orbit', frames: Array.from({ length: 12 }, () => ({ x: 0, y: 0, w: 6, h: 6 })), fps: 8, loop: true, color: palette.rgba(palette.primary, 0.2), size: 4 },
+                  { name: 'book', frames: Array.from({ length: 8 }, () => ({ x: 0, y: 0, w: 10, h: 14 })), fps: 6, loop: true, color: palette.rgba(palette.teal, 0.2), size: 8 },
                 ]} />
               </Suspense>
             </SilentErrorBoundary>
@@ -581,7 +571,7 @@ export function LandingPage() {
               ))}
             </div>
 
-            {/* Course image cards — edX large-image pattern */}
+            {/* Course image cards */}
             <div className="mt-14">
               <motion.div variants={fadeUp} className="text-center mb-10">
                 <span className="section-label">Explore Programs</span>
@@ -681,14 +671,14 @@ export function LandingPage() {
           </div>
         </Section>
 
-        {/* ── CTA — edX dark editorial ───────────────────────────── */}
+        {/* ── CTA — dark editorial ────────────────────────────── */}
         <Section className="py-24 relative overflow-hidden">
           <div className="absolute inset-0 bg-[var(--color-secondary)]" />
           <div className="absolute inset-0 opacity-[0.08]">
             <img src="/images/campus.jpg" alt="" className="w-full h-full object-cover" />
           </div>
           <div className="absolute inset-0" style={{
-            background: 'radial-gradient(ellipse at 30% 50%, rgba(193,39,45,0.12) 0%, transparent 60%), radial-gradient(ellipse at 70% 50%, rgba(2,94,107,0.08) 0%, transparent 50%)',
+            background: `radial-gradient(ellipse at 30% 50%, ${palette.rgba(palette.primary, 0.12)} 0%, transparent 60%), radial-gradient(ellipse at 70% 50%, ${palette.rgba(palette.teal, 0.08)} 0%, transparent 50%)`,
           }} />
           <div className="page-section text-center relative z-10">
             <motion.div variants={fadeUp}>

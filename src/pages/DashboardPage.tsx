@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react'
 import { motion, useInView, animate } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import { usePresetPalette } from '../lib/theme'
 import type { User } from '../types'
 import {
   BookOpen, FileText, Calendar, Bell, ClipboardList, CheckCircle,
@@ -48,20 +49,20 @@ const statCards = [
   { key: 'exams',         label: 'Upcoming Exams',    icon: FileText,       accent: 'var(--color-secondary)',      link: '/exams' },
   { key: 'assignments',   label: 'Pending Tasks',     icon: ClipboardList,  accent: 'var(--color-warning)',        link: '/assignments' },
   { key: 'notifications', label: 'Notifications',     icon: Bell,           accent: 'var(--color-success)',        link: '/notifications' },
-  { key: 'completed',     label: 'Completed',         icon: CheckCircle,    accent: '#6B5CE7',                    link: '/grades' },
+  { key: 'completed',     label: 'Completed',         icon: CheckCircle,    accent: 'var(--color-accent)',         link: '/grades' },
   { key: 'grade',         label: 'Avg Grade',         icon: BarChart3,      accent: 'var(--color-primary-light)',  link: '/grades',   suffix: '%' },
   { key: 'sessions',      label: 'Live Sessions',     icon: Video,          accent: 'var(--color-danger)',         link: '/live-classes' },
-  { key: 'enrollments',   label: 'Enrollments',       icon: Users,          accent: 'var(--color-accent)',         link: '/enrollments' },
+  { key: 'enrollments',   label: 'Enrollments',       icon: Users,          accent: 'var(--color-navy)',           link: '/enrollments' },
 ]
 
-/* ─── Course card (Coursera-style) ───────────────────────────── */
-function CourseCard({ course, index }: { course: Record<string,unknown>; index: number }) {
-  const palette = [
-    'var(--color-primary)',   'var(--color-secondary)',
-    '#6B5CE7',                'var(--color-success)',
-    'var(--color-accent)',
+/* ─── Course card ──────────────────────────────────────────── */
+function CourseCard({ course, index, palette }: { course: Record<string,unknown>; index: number; palette: ReturnType<typeof usePresetPalette> }) {
+  const palette_ = [
+    palette.primary,   palette.teal,
+    palette.accent,    palette.gold,
+    palette.navy,
   ]
-  const color = palette[index % palette.length]
+  const color = palette_[index % palette_.length]
   const progress = course._progress as number ?? Math.floor(Math.random() * 75) + 10
 
   return (
@@ -100,7 +101,7 @@ function CourseCard({ course, index }: { course: Record<string,unknown>; index: 
   )
 }
 
-/* ─── Activity feed item (Canvas-style) ─────────────────────── */
+/* ─── Activity feed item ──────────────────────────────────── */
 function ActivityItem({ icon: Icon, text, sub, color }: {
   icon: React.ComponentType<{size?:number; style?:React.CSSProperties}>
   text: string; sub: string; color: string
@@ -121,6 +122,7 @@ function ActivityItem({ icon: Icon, text, sub, color }: {
 
 /* ─── Main dashboard ─────────────────────────────────────────── */
 export function DashboardPage({ user }: { user: User }) {
+  const palette = usePresetPalette()
   const [stats, setStats]               = useState<Record<string,number>>({})
   const [courses, setCourses]           = useState<Record<string,unknown>[]>([])
   const [announcements, setAnnouncements] = useState<Record<string,unknown>[]>([])
@@ -242,7 +244,7 @@ export function DashboardPage({ user }: { user: User }) {
       {/* ── Courses + Activity feed ───────────────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-5">
 
-        {/* Course progress cards — Coursera style */}
+        {/* Course progress cards */}
         <div className="lg:col-span-2">
           <div className="flex items-center justify-between mb-4">
             <div>
@@ -266,12 +268,12 @@ export function DashboardPage({ user }: { user: User }) {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {courses.slice(0, 4).map((c, i) => <CourseCard key={c.id as string} course={c} index={i} />)}
+              {courses.slice(0, 4).map((c, i) => <CourseCard key={c.id as string} course={c} index={i} palette={palette} />)}
             </div>
           )}
         </div>
 
-        {/* Activity / Announcements feed — Canvas style */}
+        {/* Activity / Announcements feed */}
         <div>
           <div className="mb-4">
             <span className="section-label">Recent Activity</span>
@@ -311,7 +313,7 @@ export function DashboardPage({ user }: { user: User }) {
       {/* ── Grades table + Quick links ────────────────────────────── */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
 
-        {/* Grades — edX style */}
+        {/* Grades */}
         <div>
           <div className="flex items-center justify-between mb-4">
             <div>
@@ -377,12 +379,12 @@ export function DashboardPage({ user }: { user: User }) {
           </div>
           <div className="grid grid-cols-2 gap-2.5">
             {[
-              { label: 'Schedule',      icon: Calendar,      to: '/schedule',          accent: 'var(--color-primary)' },
-              { label: 'Assignments',   icon: ClipboardList, to: '/assignments',        accent: 'var(--color-warning)' },
-              { label: 'Attendance',    icon: CheckCircle,   to: '/attendance',         accent: 'var(--color-success)' },
-              { label: 'AI Scheduler',  icon: TrendingUp,    to: '/ai-scheduler',       accent: '#6B5CE7' },
-              { label: 'Events',        icon: Award,         to: '/events',             accent: 'var(--color-secondary)' },
-              { label: 'Materials',     icon: Clock,         to: '/course-materials',   accent: 'var(--color-accent)' },
+              { label: 'Schedule',      icon: Calendar,      to: '/schedule',          accent: palette.primary },
+              { label: 'Assignments',   icon: ClipboardList, to: '/assignments',        accent: palette.gold },
+              { label: 'Attendance',    icon: CheckCircle,   to: '/attendance',         accent: palette.teal },
+              { label: 'AI Scheduler',  icon: TrendingUp,    to: '/ai-scheduler',       accent: palette.accent },
+              { label: 'Events',        icon: Award,         to: '/events',             accent: palette.navy },
+              { label: 'Materials',     icon: Clock,         to: '/course-materials',   accent: palette.primary },
             ].map((item, i) => (
               <motion.div key={i}
                 initial={{ opacity: 0, scale: 0.95 }}

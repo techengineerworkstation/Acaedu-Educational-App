@@ -58,7 +58,7 @@ export function CardBody({ children, className, style: externalStyle }: { childr
           className="absolute inset-0 pointer-events-none rounded-[inherit] z-20"
           style={{
             background: `radial-gradient(280px circle at ${glowPos.x}% ${glowPos.y}%,
-              rgba(255,255,255,0.08) 0%,
+              var(--color-primary-glow, rgba(255,255,255,0.08)) 0%,
               transparent 65%)`,
             mixBlendMode: 'overlay',
           }}

@@ -131,9 +131,8 @@ export function RoleLayout({ user, children }: { user: User; children: React.Rea
           <motion.div
             whileHover={{ rotate: [0, -6, 6, 0] }}
             transition={{ duration: 0.4 }}
-            className="w-7 h-7 rounded-[9px] bg-[var(--color-primary)] flex items-center justify-center shadow-sm">
-            <span className="text-white font-extrabold text-[11px]"
-              style={{ fontFamily: 'var(--font-display)' }}>A</span>
+            className="w-7 h-7 rounded-[9px] overflow-hidden shadow-sm">
+            <img src="/favicon.svg" alt="Acaedu" className="w-full h-full object-cover" />
           </motion.div>
           <span className="text-[14px] font-bold text-[var(--color-navy)] tracking-tight flex-1"
             style={{ fontFamily: 'var(--font-display)' }}>
