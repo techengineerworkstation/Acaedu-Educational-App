@@ -4,7 +4,7 @@ type Theme = 'light' | 'dark' | 'midnight'
 export type AcademicPreset = 'default' | 'blue' | 'crimson' | 'institutional'
 
 const academicPresets: Record<AcademicPreset, { label: string; desc: string; color: string }> = {
-  default:       { label: 'Acaedu',           desc: 'Khan Academy / Moodle — warm, approachable, shadow-elevated',  color: '#c1272d' },
+  default:       { label: 'Acaedu',           desc: 'Khan Academy / Moodle — warm, approachable, wonder-blocks inspired',  color: '#1865f2' },
   blue:          { label: 'Blue Academy',      desc: 'Coursera — voltage blue, border-first cards, 8px/50px radii', color: '#0056d2' },
   crimson:       { label: 'Crimson Prestige',  desc: 'Harvard / MIT — crimson, Georgia serif, deep warm shadows',  color: '#a51c30' },
   institutional: { label: 'Institutional',     desc: 'Canvas LMS — Workday neutrals, flat depth, system font',     color: '#0070E0' },
@@ -131,9 +131,9 @@ interface PresetPalette {
 
 const palettes: Record<AcademicPreset, Omit<PresetPalette, 'rgba'>> = {
   default: {
-    primary: '#c1272d', secondary: '#00262b', accent: '#025e6b',
-    navy: '#00262b', gold: '#b8860b', danger: '#c1272d', success: '#1b7a42', teal: '#025e6b',
-    bg: '#ffffff', card: '#ffffff', text: '#1c1e21', textMuted: '#6b6e76', border: '#ddd9d0',
+    primary: '#1865f2', secondary: '#21242c', accent: '#9059ff',
+    navy: '#0b2149', gold: '#ffb100', danger: '#d92916', success: '#00a60e', teal: '#14bf96',
+    bg: '#ffffff', card: '#ffffff', text: '#21242c', textMuted: '#6b7080', border: '#c9ccd1',
   },
   blue: {
     primary: '#0056d2', secondary: '#002761', accent: '#a678f5',
@@ -202,40 +202,40 @@ export interface PresetTokens {
 }
 
 export const presetTokens: Record<AcademicPreset, PresetTokens> = {
-  /* ─── Default (Acaedu) — Khan Academy / Moodle inspired ─── */
+  /* ─── Default (Acaedu) — Khan Academy / Moodle cloned ───── */
   default: {
     colors: {
-      primary: '#c1272d', primaryHover: '#a82025', primaryLight: '#e8535a', primaryDark: '#8b181c', primaryMuted: '#fdf0f0',
-      secondary: '#00262b', secondaryHover: '#00383f', secondaryLight: '#005e6b',
-      accent: '#025e6b', accentWarm: '#d4724e',
-      bg: '#ffffff', bgSecondary: '#f5f5f0', bgTertiary: '#eae8e1', bgCard: '#ffffff', bgHover: '#f0efe9',
-      text: '#1c1e21', textSecondary: '#3d4047', textMuted: '#6b6e76', textInverse: '#ffffff',
-      border: '#ddd9d0', borderLight: '#e8e5de', borderStrong: '#c4c0b8',
-      navy: '#00262b', navyMid: '#00383f', navyLight: '#005e6b', navyPale: '#e8f4f5',
-      gold: '#b8860b', goldMid: '#d4a017', goldLight: '#f0cc5a', goldBright: '#f5d76e', goldPale: '#fdf6e3',
-      cream: '#f5f5f0',
-      danger: '#c1272d', warning: '#c47a10', success: '#1b7a42', info: '#025e6b',
+      primary: '#1865f2', primaryHover: '#1254c7', primaryLight: '#4d8af2', primaryDark: '#0b2149', primaryMuted: '#e8f0fe',
+      secondary: '#21242c', secondaryHover: '#3a3d45', secondaryLight: '#5e6168',
+      accent: '#9059ff', accentWarm: '#14bf96',
+      bg: '#ffffff', bgSecondary: '#f7f8fa', bgTertiary: '#eef0f3', bgCard: '#ffffff', bgHover: '#f0f2f5',
+      text: '#21242c', textSecondary: '#3a3d45', textMuted: '#6b7080', textInverse: '#ffffff',
+      border: '#c9ccd1', borderLight: '#e3e5e8', borderStrong: '#999da3',
+      navy: '#0b2149', navyMid: '#123b75', navyLight: '#1865f2', navyPale: '#e8f0fe',
+      gold: '#ffb100', goldMid: '#ffc84d', goldLight: '#ffe08a', goldBright: '#ffebad', goldPale: '#fffaea',
+      cream: '#f7f8fa',
+      danger: '#d92916', warning: '#ffb100', success: '#00a60e', info: '#1865f2',
     },
-    radii: { xs: 3, sm: 6, md: 10, lg: 14, xl: 20, xxl: 24, xxxl: 28, pill: 50 },
+    radii: { xs: 4, sm: 8, md: 12, lg: 16, xl: 20, xxl: 24, xxxl: 32, pill: 50 },
     spacing: { xs: 4, sm: 8, md: 12, lg: 16, xl: 24, xxl: 32, xxxl: 48 },
     shadows: {
       xs: '0 1px 2px rgba(0,0,0,0.04)', sm: '0 1px 4px rgba(0,0,0,0.06)', md: '0 2px 12px rgba(0,0,0,0.07)',
       lg: '0 6px 20px rgba(0,0,0,0.09)', xl: '0 10px 36px rgba(0,0,0,0.11)', xxl: '0 16px 48px rgba(0,0,0,0.14)',
       card: '0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04)',
       cardHover: '0 4px 16px rgba(0,0,0,0.08), 0 8px 28px rgba(0,0,0,0.06)',
-      glowNavy: '0 0 0 3px rgba(193,39,45,0.10), 0 4px 16px rgba(193,39,45,0.12)',
+      glowNavy: '0 0 0 3px rgba(24,101,242,0.10), 0 4px 16px rgba(24,101,242,0.12)',
     },
     typography: {
-      displayFont: "'Source Sans 3', 'Inter', sans-serif",
-      bodyFont: "'Source Sans 3', 'Inter', sans-serif",
+      displayFont: "'Lato', 'Source Sans 3', 'Inter', sans-serif",
+      bodyFont: "'Lato', 'Source Sans 3', 'Inter', sans-serif",
       monoFont: "'JetBrains Mono', monospace",
       displayWeight: 800, bodyWeight: 400, headingWeight: 700,
       displayLetterSpacing: -0.02,
     },
     gradients: {
-      primary: 'linear-gradient(135deg, #8b181c 0%, #c1272d 50%, #e8535a 100%)',
-      hero: 'linear-gradient(160deg, #001214 0%, #00262b 30%, #00383f 65%, #00262b 100%)',
-      warm: 'linear-gradient(135deg, #c1272d 0%, #d4724e 60%, #e8a070 100%)',
+      primary: 'linear-gradient(135deg, #0b2149 0%, #1865f2 50%, #4d8af2 100%)',
+      hero: 'linear-gradient(160deg, #0b1628 0%, #0b2149 30%, #123b75 65%, #0b2149 100%)',
+      warm: 'linear-gradient(135deg, #1865f2 0%, #9059ff 60%, #c4a6ff 100%)',
     },
   },
 

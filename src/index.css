@@ -5,93 +5,92 @@
 
 /* ═══════════════════════════════════════════════════════════════
    ACAEDU — Academic Design System
-   Dark teal-black header, maroon accents, shadow-elevated cards,
-   warm editorial palette, generous radii
-   Presets: Default | Blue | Crimson | Institutional
+   Warm, approachable, wonder-blocks inspired cards, generous radii
+   Presets: Default (Khan Academy/Moodle) | Blue (Coursera) | Crimson (Harvard/MIT) | Institutional (Canvas LMS)
    ═══════════════════════════════════════════════════════════════ */
 
-/* ─── Design Tokens (Default) ─────────────────────────────── */
+/* ─── Design Tokens (Default — Khan Academy / Moodle) ──────── */
 @theme {
-  /* Primary — maroon/burgundy (Acaedu signature) */
-  --color-primary:        #c1272d;
-  --color-primary-hover:  #a82025;
-  --color-primary-light:  #e8535a;
-  --color-primary-dark:   #8b181c;
-  --color-primary-muted:  #fdf0f0;
+  /* Primary — Khan instructive blue */
+  --color-primary:        #1865f2;
+  --color-primary-hover:  #1254c7;
+  --color-primary-light:  #4d8af2;
+  --color-primary-dark:   #0b2149;
+  --color-primary-muted:  #e8f0fe;
 
-  /* Secondary — dark teal-black (header) */
-  --color-secondary:      #00262b;
-  --color-secondary-hover:#00383f;
-  --color-secondary-light:#005e6b;
+  /* Secondary — Khan off-black */
+  --color-secondary:      #21242c;
+  --color-secondary-hover:#3a3d45;
+  --color-secondary-light:#5e6168;
 
-  /* Accent — warm teal */
-  --color-accent:         #025e6b;
-  --color-accent-warm:    #d4724e;
+  /* Accent — Khan purple + teal */
+  --color-accent:         #9059ff;
+  --color-accent-warm:    #14bf96;
 
-  /* Backgrounds — warm off-white */
+  /* Backgrounds — Khan off-white, warm and approachable */
   --color-bg:             #ffffff;
-  --color-bg-secondary:   #f5f5f0;
-  --color-bg-tertiary:    #eae8e1;
+  --color-bg-secondary:   #f7f8fa;
+  --color-bg-tertiary:    #eef0f3;
   --color-bg-card:        #ffffff;
-  --color-bg-hover:       #f0efe9;
+  --color-bg-hover:       #f0f2f5;
 
-  /* Text — warm charcoal scale */
-  --color-text:           #1c1e21;
-  --color-text-secondary: #3d4047;
-  --color-text-muted:     #6b6e76;
+  /* Text — Khan off-black scale */
+  --color-text:           #21242c;
+  --color-text-secondary: #3a3d45;
+  --color-text-muted:     #6b7080;
   --color-text-inverse:   #ffffff;
 
-  /* Borders — soft warm grays */
-  --color-border:         #ddd9d0;
-  --color-border-light:   #e8e5de;
-  --color-border-strong:  #c4c0b8;
+  /* Borders — clean neutral grays */
+  --color-border:         #c9ccd1;
+  --color-border-light:   #e3e5e8;
+  --color-border-strong:  #999da3;
 
-  /* Semantic */
-  --color-danger:         #c1272d;
-  --color-warning:        #c47a10;
-  --color-success:        #1b7a42;
-  --color-info:           #025e6b;
+  /* Semantic — Khan exact tokens */
+  --color-danger:         #d92916;
+  --color-warning:        #ffb100;
+  --color-success:        #00a60e;
+  --color-info:           #1865f2;
 
-  /* Institutional palette — academic tones */
-  --color-navy:           #00262b;
-  --color-navy-mid:       #00383f;
-  --color-navy-light:     #005e6b;
-  --color-navy-pale:      #e8f4f5;
-  --color-gold:           #b8860b;
-  --color-gold-mid:       #d4a017;
-  --color-gold-light:     #f0cc5a;
-  --color-gold-bright:    #f5d76e;
-  --color-gold-pale:      #fdf6e3;
-  --color-cream:          #f5f5f0;
-  --color-slate:          #1c1e21;
-  --color-primary-glow:   rgba(193,39,45,0.08);
+  /* Brand palette — Khan dark blue, purple, teal */
+  --color-navy:           #0b2149;
+  --color-navy-mid:       #123b75;
+  --color-navy-light:     #1865f2;
+  --color-navy-pale:      #e8f0fe;
+  --color-gold:           #ffb100;
+  --color-gold-mid:       #ffc84d;
+  --color-gold-light:     #ffe08a;
+  --color-gold-bright:    #ffebad;
+  --color-gold-pale:      #fffaea;
+  --color-cream:          #f7f8fa;
+  --color-slate:          #21242c;
+  --color-primary-glow:   rgba(24,101,242,0.08);
 }
 
 :root {
-  /* Gradients — dark teal → maroon language */
-  --gradient-primary:   linear-gradient(135deg, #8b181c 0%, #c1272d 50%, #e8535a 100%);
-  --gradient-warm:      linear-gradient(135deg, #c1272d 0%, #d4724e 60%, #e8a070 100%);
-  --gradient-mixed:     linear-gradient(135deg, #00262b 0%, #025e6b 50%, #c1272d 100%);
-  --gradient-hero:      linear-gradient(160deg, #001214 0%, #00262b 30%, #00383f 65%, #00262b 100%);
-  --gradient-hero-alt:  linear-gradient(160deg, #000a0c 0%, #001a1e 50%, #00262b 100%);
-  --gradient-cream:     linear-gradient(180deg, #ffffff 0%, #f5f5f0 100%);
-  --gradient-gold:      linear-gradient(135deg, #b8860b, #f0cc5a, #b8860b);
-  --gradient-card:      linear-gradient(145deg, #ffffff 0%, #fafaf7 100%);
+  /* Gradients — Khan blue → purple language */
+  --gradient-primary:   linear-gradient(135deg, #0b2149 0%, #1865f2 50%, #4d8af2 100%);
+  --gradient-warm:      linear-gradient(135deg, #1865f2 0%, #9059ff 60%, #c4a6ff 100%);
+  --gradient-mixed:     linear-gradient(135deg, #0b2149 0%, #1865f2 50%, #9059ff 100%);
+  --gradient-hero:      linear-gradient(160deg, #0b1628 0%, #0b2149 30%, #123b75 65%, #0b2149 100%);
+  --gradient-hero-alt:  linear-gradient(160deg, #060e1c 0%, #0b1628 50%, #0b2149 100%);
+  --gradient-cream:     linear-gradient(180deg, #ffffff 0%, #f7f8fa 100%);
+  --gradient-gold:      linear-gradient(135deg, #ffb100, #ffe08a, #ffb100);
+  --gradient-card:      linear-gradient(145deg, #ffffff 0%, #fafbfc 100%);
   --gradient-aurora:
-    radial-gradient(ellipse at 25% 35%, rgba(193,39,45,0.04) 0%, transparent 55%),
-    radial-gradient(ellipse at 75% 65%, rgba(2,94,107,0.03) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 10%, rgba(0,38,43,0.02) 0%, transparent 45%);
+    radial-gradient(ellipse at 25% 35%, rgba(24,101,242,0.04) 0%, transparent 55%),
+    radial-gradient(ellipse at 75% 65%, rgba(144,89,255,0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 10%, rgba(11,33,73,0.02) 0%, transparent 45%);
 
   /* Institutional accent stripe */
   --stripe-navy: repeating-linear-gradient(
     -45deg,
-    rgba(0,38,43,0.02) 0px,
-    rgba(0,38,43,0.02) 1px,
+    rgba(11,33,73,0.02) 0px,
+    rgba(11,33,73,0.02) 1px,
     transparent 1px,
     transparent 8px
   );
 
-  /* Shadows — elevated (shadow-first philosophy) */
+  /* Shadows — soft, approachable */
   --shadow-xs:  0 1px 2px rgba(0,0,0,0.04);
   --shadow-sm:  0 1px 4px rgba(0,0,0,0.06);
   --shadow-md:  0 2px 12px rgba(0,0,0,0.07);
@@ -100,8 +99,8 @@
   --shadow-2xl: 0 16px 48px rgba(0,0,0,0.14);
   --shadow-card: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04);
   --shadow-card-hover: 0 4px 16px rgba(0,0,0,0.08), 0 8px 28px rgba(0,0,0,0.06);
-  --shadow-glow-navy: 0 0 0 3px var(--color-primary-muted-shadow, rgba(193,39,45,0.10)), 0 4px 16px var(--color-primary-shadow, rgba(193,39,45,0.12));
-  --shadow-glow-gold: 0 0 0 3px rgba(184,134,11,0.10), 0 4px 16px rgba(184,134,11,0.10);
+  --shadow-glow-navy: 0 0 0 3px var(--color-primary-muted-shadow, rgba(24,101,242,0.10)), 0 4px 16px var(--color-primary-shadow, rgba(24,101,242,0.12));
+  --shadow-glow-gold: 0 0 0 3px rgba(255,177,0,0.10), 0 4px 16px rgba(255,177,0,0.10);
   --shadow-inner: inset 0 1px 3px rgba(0,0,0,0.04);
   --shadow-nav: 0 1px 3px rgba(0,0,0,0.06);
 
@@ -152,70 +151,70 @@
   --duration-slower: 500ms;
 }
 
-/* ─── Dark Theme ─────────────────────────────────────────────── */
+/* ─── Dark Theme (Default — Khan Academy) ────────────────────── */
 [data-theme="dark"],
 .dark {
-  --color-bg:             #0a1214;
-  --color-bg-secondary:   #101c1e;
-  --color-bg-tertiary:    #162428;
-  --color-bg-card:        #121e22;
-  --color-bg-hover:       #1a282c;
+  --color-bg:             #0a0e14;
+  --color-bg-secondary:   #101620;
+  --color-bg-tertiary:    #16202c;
+  --color-bg-card:        #121a24;
+  --color-bg-hover:       #1a2430;
   --color-text:           #e8e6e1;
   --color-text-secondary: #a0a4ac;
   --color-text-muted:     #5a6068;
-  --color-border:         #1e3034;
-  --color-border-light:   #16262a;
-  --color-border-strong:  #2a4045;
-  --color-navy:           #4dd0d8;
-  --color-navy-mid:       #6edce3;
-  --color-navy-light:     #90e8ed;
-  --color-navy-pale:      #0e181a;
+  --color-border:         #1e2a36;
+  --color-border-light:   #162028;
+  --color-border-strong:  #2a3c4a;
+  --color-navy:           #4d8af2;
+  --color-navy-mid:       #6d9ff5;
+  --color-navy-light:     #90b8f8;
+  --color-navy-pale:      #0e1418;
   --color-gold-pale:      #1a1505;
-  --color-cream:          #101c1e;
+  --color-cream:          #101620;
   --gradient-aurora:
-    radial-gradient(ellipse at 25% 35%, rgba(193,39,45,0.08) 0%, transparent 55%),
-    radial-gradient(ellipse at 75% 65%, rgba(2,94,107,0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 25% 35%, rgba(24,101,242,0.08) 0%, transparent 55%),
+    radial-gradient(ellipse at 75% 65%, rgba(144,89,255,0.05) 0%, transparent 50%),
     radial-gradient(ellipse at 50% 10%, rgba(8,20,24,0.6) 0%, transparent 45%);
   --shadow-card: 0 1px 3px rgba(0,0,0,0.3), 0 2px 8px rgba(0,0,0,0.2);
   --shadow-card-hover: 0 6px 20px rgba(0,0,0,0.35), 0 4px 12px rgba(0,0,0,0.2);
 }
 
-/* ─── Midnight Theme ─────────────────────────────────────────── */
+/* ─── Midnight Theme (Default — Khan Academy) ────────────────── */
 [data-theme="midnight"] {
-  --color-bg:             #060c0e;
-  --color-bg-secondary:   #0a1416;
-  --color-bg-tertiary:    #0e1c20;
-  --color-bg-card:        #0c1618;
-  --color-bg-hover:       #102024;
+  --color-bg:             #060a10;
+  --color-bg-secondary:   #0a1018;
+  --color-bg-tertiary:    #0e1820;
+  --color-bg-card:        #0c141c;
+  --color-bg-hover:       #101c26;
   --color-text:           #c0c8cc;
   --color-text-secondary: #7a8a90;
   --color-text-muted:     #3e5058;
-  --color-border:         #122024;
-  --color-border-light:   #0e1a1e;
-  --color-border-strong:  #1a3038;
-  --color-primary:        #e8535a;
-  --color-primary-hover:  #f07075;
-  --color-primary-light:  #f8a0a3;
+  --color-border:         #121e28;
+  --color-border-light:   #0e1820;
+  --color-border-strong:  #1a2e3a;
+  --color-primary:        #4d8af2;
+  --color-primary-hover:  #6d9ff5;
+  --color-primary-light:  #90b8f8;
   --color-primary-muted:  #0a0c0e;
-  --color-secondary:      #4dd0d8;
-  --color-secondary-light:#6edce3;
-  --color-navy:           #4dd0d8;
-  --color-navy-mid:       #6edce3;
-  --color-navy-light:     #90e8ed;
-  --color-navy-pale:      #0a1012;
-  --color-gold:           #a07830;
-  --color-gold-mid:       #c4984e;
-  --color-gold-light:     #deb870;
-  --color-gold-bright:    #f0d080;
+  --color-secondary:      #4d8af2;
+  --color-secondary-light:#6d9ff5;
+  --color-navy:           #4d8af2;
+  --color-navy-mid:       #6d9ff5;
+  --color-navy-light:     #90b8f8;
+  --color-navy-pale:      #0a1014;
+  --color-gold:           #c4984e;
+  --color-gold-mid:       #d4a860;
+  --color-gold-light:     #e0c080;
+  --color-gold-bright:    #f0d090;
   --color-gold-pale:      #120e04;
-  --color-cream:          #0a1416;
+  --color-cream:          #0a1018;
   --gradient-aurora:
-    radial-gradient(ellipse at 20% 30%, rgba(77,208,216,0.08) 0%, transparent 55%),
-    radial-gradient(ellipse at 80% 70%, rgba(193,39,45,0.04) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 5%,  rgba(6,12,14,0.7) 0%, transparent 45%);
+    radial-gradient(ellipse at 20% 30%, rgba(77,138,242,0.08) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 70%, rgba(144,89,255,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 5%,  rgba(6,10,16,0.7) 0%, transparent 45%);
   --shadow-card: 0 1px 4px rgba(0,0,0,0.5), 0 2px 12px rgba(0,0,0,0.3);
   --shadow-card-hover: 0 6px 24px rgba(0,0,0,0.5), 0 4px 16px rgba(0,0,0,0.3);
-  --shadow-glow-navy: 0 0 0 3px rgba(77,208,216,0.12), 0 4px 18px rgba(77,208,216,0.15);
+  --shadow-glow-navy: 0 0 0 3px rgba(77,138,242,0.12), 0 4px 18px rgba(77,138,242,0.15);
 }
 
 /* ═══════════════════════════════════════════════════════════════

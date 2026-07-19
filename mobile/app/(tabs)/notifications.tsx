@@ -1,38 +1,46 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { View, Text, FlatList, TouchableOpacity, RefreshControl, StyleSheet } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Ionicons } from '@expo/vector-icons'
 import { supabase } from '../../lib/supabase'
-import { colors, spacing, borderRadius } from '../../lib/theme'
+import { useMobileTheme } from '../../lib/theme'
 
 export default function NotificationsScreen() {
+  const { tokens } = useMobileTheme()
   const [notifications, setNotifications] = useState<any[]>([])
   const [refreshing, setRefreshing] = useState(false)
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    loadNotifications()
-  }, [])
+  const s = useMemo(() => StyleSheet.create({
+    container: { flex: 1, backgroundColor: tokens.colors.bg },
+    header: { padding: tokens.spacing.lg },
+    headerTitle: { color: '#fff', fontSize: 22, fontWeight: '800' },
+    headerSubtitle: { color: tokens.colors.textMuted, fontSize: 13, marginTop: 2 },
+    center: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: tokens.spacing.xl },
+    list: { padding: tokens.spacing.lg, gap: tokens.spacing.sm },
+    notifCard: { flexDirection: 'row', alignItems: 'flex-start', backgroundColor: tokens.colors.bgCard, borderRadius: tokens.radii.md, padding: tokens.spacing.md },
+    unreadCard: { borderLeftWidth: 3, borderLeftColor: tokens.colors.primary },
+    notifIcon: { width: 40, height: 40, borderRadius: 10, justifyContent: 'center', alignItems: 'center' },
+    notifContent: { flex: 1, marginLeft: tokens.spacing.md },
+    notifTitle: { color: '#fff', fontSize: 14, fontWeight: '700' },
+    notifBody: { color: tokens.colors.textMuted, fontSize: 12, marginTop: 4, lineHeight: 18 },
+    notifTime: { color: tokens.colors.textMuted, fontSize: 11, marginTop: 6 },
+    unreadDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: tokens.colors.primary, marginTop: tokens.spacing.xs },
+    emptyText: { color: tokens.colors.textMuted, fontSize: 14, marginTop: tokens.spacing.md },
+    emptySubtext: { color: tokens.colors.textMuted, fontSize: 12, marginTop: tokens.spacing.xs },
+  }), [tokens])
+
+  useEffect(() => { loadNotifications() }, [])
 
   const loadNotifications = async () => {
     const { data: { session } } = await supabase.auth.getSession()
     if (!session?.user) return
-
-    const { data } = await supabase
-      .from('notifications')
-      .select('*')
-      .eq('user_id', session.user.id)
-      .order('created_at', { ascending: false })
-
+    const { data } = await supabase.from('notifications').select('*').eq('user_id', session.user.id).order('created_at', { ascending: false })
     setNotifications(data || [])
     setLoading(false)
   }
 
-  const onRefresh = async () => {
-    setRefreshing(true)
-    await loadNotifications()
-    setRefreshing(false)
-  }
+  const onRefresh = async () => { setRefreshing(true); await loadNotifications(); setRefreshing(false) }
 
   const markAsRead = async (id: string) => {
     await supabase.from('notifications').update({ read: true }).eq('id', id)
@@ -51,44 +59,44 @@ export default function NotificationsScreen() {
   }
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Notifications</Text>
-        <Text style={styles.headerSubtitle}>{notifications.filter(n => !n.read).length} unread</Text>
+    <SafeAreaView style={s.container}>
+      <View style={s.header}>
+        <Text style={s.headerTitle}>Notifications</Text>
+        <Text style={s.headerSubtitle}>{notifications.filter(n => !n.read).length} unread</Text>
       </View>
 
       {loading ? (
-        <View style={styles.center}>
-          <Ionicons name="notifications-outline" size={48} color={colors.textMuted} />
-          <Text style={styles.emptyText}>Loading notifications...</Text>
+        <View style={s.center}>
+          <Ionicons name="notifications-outline" size={48} color={tokens.colors.textMuted} />
+          <Text style={s.emptyText}>Loading notifications...</Text>
         </View>
       ) : notifications.length === 0 ? (
-        <View style={styles.center}>
-          <Ionicons name="notifications-outline" size={48} color={colors.textMuted} />
-          <Text style={styles.emptyText}>No notifications</Text>
-          <Text style={styles.emptySubtext}>You're all caught up!</Text>
+        <View style={s.center}>
+          <Ionicons name="notifications-outline" size={48} color={tokens.colors.textMuted} />
+          <Text style={s.emptyText}>No notifications</Text>
+          <Text style={s.emptySubtext}>You're all caught up!</Text>
         </View>
       ) : (
         <FlatList
           data={notifications}
           keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.list}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={colors.primary} />}
+          contentContainerStyle={s.list}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={tokens.colors.primary} />}
           renderItem={({ item }) => (
             <TouchableOpacity
-              style={[styles.notifCard, !item.read && styles.unreadCard]}
+              style={[s.notifCard, !item.read && s.unreadCard]}
               activeOpacity={0.7}
               onPress={() => markAsRead(item.id)}
             >
-              <View style={[styles.notifIcon, { backgroundColor: (item.color_tag === 'red' ? colors.primary : colors.secondary) + '20' }]}>
-                <Ionicons name={getIcon(item.notification_type) as any} size={20} color={item.color_tag === 'red' ? colors.primary : colors.secondary} />
+              <View style={[s.notifIcon, { backgroundColor: (item.color_tag === 'red' ? tokens.colors.primary : tokens.colors.secondary) + '20' }]}>
+                <Ionicons name={getIcon(item.notification_type) as any} size={20} color={item.color_tag === 'red' ? tokens.colors.primary : tokens.colors.secondary} />
               </View>
-              <View style={styles.notifContent}>
-                <Text style={styles.notifTitle}>{item.title}</Text>
-                <Text style={styles.notifBody} numberOfLines={3}>{item.body}</Text>
-                <Text style={styles.notifTime}>{new Date(item.created_at).toLocaleDateString()}</Text>
+              <View style={s.notifContent}>
+                <Text style={s.notifTitle}>{item.title}</Text>
+                <Text style={s.notifBody} numberOfLines={3}>{item.body}</Text>
+                <Text style={s.notifTime}>{new Date(item.created_at).toLocaleDateString()}</Text>
               </View>
-              {!item.read && <View style={styles.unreadDot} />}
+              {!item.read && <View style={s.unreadDot} />}
             </TouchableOpacity>
           )}
         />
@@ -96,22 +104,3 @@ export default function NotificationsScreen() {
     </SafeAreaView>
   )
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: colors.bg },
-  header: { padding: spacing.lg },
-  headerTitle: { color: '#fff', fontSize: 22, fontWeight: '800' },
-  headerSubtitle: { color: colors.textMuted, fontSize: 13, marginTop: 2 },
-  center: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: spacing.xl },
-  list: { padding: spacing.lg, gap: spacing.sm },
-  notifCard: { flexDirection: 'row', alignItems: 'flex-start', backgroundColor: colors.bgCard, borderRadius: borderRadius.md, padding: spacing.md },
-  unreadCard: { borderLeftWidth: 3, borderLeftColor: colors.primary },
-  notifIcon: { width: 40, height: 40, borderRadius: 10, justifyContent: 'center', alignItems: 'center' },
-  notifContent: { flex: 1, marginLeft: spacing.md },
-  notifTitle: { color: '#fff', fontSize: 14, fontWeight: '700' },
-  notifBody: { color: colors.textMuted, fontSize: 12, marginTop: 4, lineHeight: 18 },
-  notifTime: { color: colors.textMuted, fontSize: 11, marginTop: 6 },
-  unreadDot: { width: 8, height: 8, borderRadius: 4, backgroundColor: colors.primary, marginTop: spacing.xs },
-  emptyText: { color: colors.textMuted, fontSize: 14, marginTop: spacing.md },
-  emptySubtext: { color: colors.textMuted, fontSize: 12, marginTop: spacing.xs },
-})

@@ -1,21 +1,22 @@
 import { Tabs } from 'expo-router'
 import { Ionicons } from '@expo/vector-icons'
-import { colors } from '../../lib/theme'
+import { useMobileTheme } from '../../lib/theme'
 
 export default function TabsLayout() {
+  const { tokens } = useMobileTheme()
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
         tabBarStyle: {
-          backgroundColor: colors.navy,
-          borderTopColor: colors.border,
+          backgroundColor: tokens.colors.navy,
+          borderTopColor: tokens.colors.border,
           paddingBottom: 8,
           paddingTop: 8,
           height: 60,
         },
-        tabBarActiveTintColor: colors.primary,
-        tabBarInactiveTintColor: colors.textMuted,
+        tabBarActiveTintColor: tokens.colors.primary,
+        tabBarInactiveTintColor: tokens.colors.textMuted,
         tabBarLabelStyle: { fontSize: 11, fontWeight: '600' },
       }}
     >

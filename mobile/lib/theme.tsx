@@ -37,18 +37,18 @@ export interface PresetTokens {
 /* ─── Default (Acaedu) — Khan Academy / Moodle ──────────── */
 const defaultTokens: PresetTokens = {
   colors: {
-    primary: '#c1272d', primaryHover: '#a82025', primaryLight: '#e8535a', primaryDark: '#8b181c', primaryMuted: '#fdf0f0',
-    secondary: '#00262b', secondaryHover: '#00383f', secondaryLight: '#005e6b',
-    accent: '#025e6b', accentWarm: '#d4724e',
-    bg: '#ffffff', bgSecondary: '#f5f5f0', bgTertiary: '#eae8e1', bgCard: '#ffffff', bgHover: '#f0efe9',
-    text: '#1c1e21', textSecondary: '#3d4047', textMuted: '#6b6e76', textInverse: '#ffffff',
-    border: '#ddd9d0', borderLight: '#e8e5de', borderStrong: '#c4c0b8',
-    navy: '#00262b', navyMid: '#00383f', navyLight: '#005e6b', navyPale: '#e8f4f5',
-    gold: '#b8860b', goldMid: '#d4a017', goldLight: '#f0cc5a', goldBright: '#f5d76e', goldPale: '#fdf6e3',
-    cream: '#f5f5f0',
-    danger: '#c1272d', warning: '#c47a10', success: '#1b7a42', info: '#025e6b',
+    primary: '#1865f2', primaryHover: '#1254c7', primaryLight: '#4d8af2', primaryDark: '#0b2149', primaryMuted: '#e8f0fe',
+    secondary: '#21242c', secondaryHover: '#3a3d45', secondaryLight: '#5e6168',
+    accent: '#9059ff', accentWarm: '#14bf96',
+    bg: '#ffffff', bgSecondary: '#f7f8fa', bgTertiary: '#eef0f3', bgCard: '#ffffff', bgHover: '#f0f2f5',
+    text: '#21242c', textSecondary: '#3a3d45', textMuted: '#6b7080', textInverse: '#ffffff',
+    border: '#c9ccd1', borderLight: '#e3e5e8', borderStrong: '#999da3',
+    navy: '#0b2149', navyMid: '#123b75', navyLight: '#1865f2', navyPale: '#e8f0fe',
+    gold: '#ffb100', goldMid: '#ffc84d', goldLight: '#ffe08a', goldBright: '#ffebad', goldPale: '#fffaea',
+    cream: '#f7f8fa',
+    danger: '#d92916', warning: '#ffb100', success: '#00a60e', info: '#1865f2',
   },
-  radii: { xs: 3, sm: 6, md: 10, lg: 14, xl: 20, xxl: 24, xxxl: 28, pill: 50 },
+  radii: { xs: 4, sm: 8, md: 12, lg: 16, xl: 20, xxl: 24, xxxl: 32, pill: 50 },
   spacing: { xs: 4, sm: 8, md: 12, lg: 16, xl: 24, xxl: 32, xxxl: 48 },
   shadows: {
     xs: { shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.04, shadowRadius: 2, shadowColor: '#000' },
@@ -59,10 +59,10 @@ const defaultTokens: PresetTokens = {
     xxl: { shadowOffset: { width: 0, height: 16 }, shadowOpacity: 0.14, shadowRadius: 48, shadowColor: '#000' },
     card: { shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.04, shadowRadius: 3, shadowColor: '#000' },
     cardHover: { shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.08, shadowRadius: 16, shadowColor: '#000' },
-    glowNavy: { shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.12, shadowRadius: 16, shadowColor: '#c1272d' },
+    glowNavy: { shadowOffset: { width: 0, height: 0 }, shadowOpacity: 0.12, shadowRadius: 16, shadowColor: '#1865f2' },
   },
   typography: {
-    displayFont: 'SourceSans3-Bold', bodyFont: 'SourceSans3-Regular', monoFont: 'Courier',
+    displayFont: 'Lato-Bold', bodyFont: 'Lato-Regular', monoFont: 'Courier',
     displayWeight: '800' as const, bodyWeight: '400' as const, headingWeight: '700' as const,
   },
 }
@@ -175,10 +175,10 @@ export const presetTokens: Record<Preset, PresetTokens> = {
 }
 
 export const presetMeta: Record<Preset, { label: string; desc: string; color: string }> = {
-  default:       { label: 'Acaedu',          desc: 'Shadow-elevated cards, 14px radii, warm editorial',       color: '#c1272d' },
-  blue:          { label: 'Blue Academy',     desc: 'Border-first cards, 8px buttons, 50px capsule pills',    color: '#0056d2' },
-  crimson:       { label: 'Crimson Prestige', desc: 'Sharp 4px scholarly radii, deep shadows, serif headings', color: '#a51c30' },
-  institutional: { label: 'Institutional',    desc: 'Flat 12px cards, strong borders, compact system font',   color: '#0070E0' },
+  default:       { label: 'Acaedu',          desc: 'Khan Academy / Moodle — warm, approachable, wonder-blocks',       color: '#1865f2' },
+  blue:          { label: 'Blue Academy',     desc: 'Coursera — voltage blue, border-first cards, 8px/50px radii',    color: '#0056d2' },
+  crimson:       { label: 'Crimson Prestige', desc: 'Harvard / MIT — sharp 4px scholarly radii, deep warm shadows',   color: '#a51c30' },
+  institutional: { label: 'Institutional',    desc: 'Canvas LMS — flat 12px cards, strong borders, compact system font', color: '#0070E0' },
 }
 
 /* ═══════════════════════════════════════════════════════════════
