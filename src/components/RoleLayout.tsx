@@ -8,7 +8,7 @@ import {
   ClipboardList, GraduationCap, Upload, MapPin, Bell, User as UserIcon,
   Settings, LogOut, Menu, Moon, Sun, Users, CreditCard,
   Brain, Search, Building2, GitBranch, Shield, Mail, Clock, CalendarOff, X,
-  ChevronRight, Sparkles,
+  ChevronRight, Palette,
 } from 'lucide-react'
 import { useState } from 'react'
 
@@ -64,11 +64,11 @@ const adminOnlyGroups = ['admin', 'finance', 'system']
 
 const sidebarVariants = {
   hidden:  { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.03, delayChildren: 0.04 } },
+  visible: { opacity: 1, transition: { staggerChildren: 0.025, delayChildren: 0.03 } },
 }
 const itemVariants = {
-  hidden:  { opacity: 0, x: -8 },
-  visible: { opacity: 1, x: 0, transition: { duration: 0.25, ease: [0.22, 1, 0.36, 1] as [number,number,number,number] } },
+  hidden:  { opacity: 0, x: -6 },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.2, ease: [0.22, 1, 0.36, 1] as [number,number,number,number] } },
 }
 
 function getBreadcrumb(pathname: string): string {
@@ -80,7 +80,7 @@ function getBreadcrumb(pathname: string): string {
 const themeIcons: Record<string, React.ReactNode> = {
   light: <Sun size={16} />,
   dark: <Moon size={16} />,
-  midnight: <Sparkles size={16} />,
+  midnight: <Palette size={16} />,
 }
 
 export function RoleLayout({ user, children }: { user: User; children: React.ReactNode }) {
@@ -110,8 +110,8 @@ export function RoleLayout({ user, children }: { user: User; children: React.Rea
         {sidebarOpen && (
           <motion.div key="overlay"
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            transition={{ duration: 0.18 }}
-            className="fixed inset-0 bg-[var(--color-secondary)]/40 backdrop-blur-sm z-40 lg:hidden"
+            transition={{ duration: 0.15 }}
+            className="fixed inset-0 bg-black/30 z-40 lg:hidden"
             onClick={() => setSidebarOpen(false)}
           />
         )}
@@ -119,28 +119,21 @@ export function RoleLayout({ user, children }: { user: User; children: React.Rea
 
       {/* ── Sidebar ──────────────────────────────────────────────── */}
       <aside className={`
-        fixed top-0 left-0 h-full w-[248px] z-50 flex flex-col
+        fixed top-0 left-0 h-full w-[260px] z-50 flex flex-col
         bg-[var(--color-bg-card)] border-r border-[var(--color-border-light)]
-        lg:shadow-none shadow-[var(--shadow-xl)]
         transition-transform duration-300 ease-out lg:translate-x-0
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
 
         {/* Brand */}
-        <div className="h-[60px] flex items-center gap-3 px-4 border-b border-[var(--color-border-light)] flex-shrink-0">
-          <motion.div
-            whileHover={{ rotate: [0, -6, 6, 0] }}
-            transition={{ duration: 0.4 }}
-            className="w-8 h-8 rounded-[10px] overflow-hidden shadow-sm">
-            <img src="/favicon.svg" alt="Acaedu" className="w-full h-full object-cover" />
-          </motion.div>
-          <span className="text-[15px] font-bold text-[var(--color-navy)] tracking-tight flex-1"
+        <div className="h-[56px] flex items-center gap-2.5 px-4 border-b border-[var(--color-border-light)] flex-shrink-0">
+          <img src="/favicon.svg" alt="Acaedu" className="w-7 h-7" />
+          <span className="text-[15px] font-bold text-[var(--color-text)] tracking-tight flex-1"
             style={{ fontFamily: 'var(--font-display)' }}>
             Acaedu
           </span>
-          <span className="badge badge-navy capitalize">{user.role}</span>
           <button
-            className="lg:hidden ml-1 p-1 rounded-[var(--radius-sm)] hover:bg-[var(--color-bg-secondary)] text-[var(--color-text-muted)]"
+            className="lg:hidden p-1 rounded-[var(--radius-sm)] hover:bg-[var(--color-bg-hover)] text-[var(--color-text-muted)]"
             onClick={() => setSidebarOpen(false)}
             aria-label="Close sidebar">
             <X size={15} />
@@ -149,13 +142,13 @@ export function RoleLayout({ user, children }: { user: User; children: React.Rea
 
         {/* Nav */}
         <motion.nav
-          className="flex-1 overflow-y-auto py-3 px-2.5"
+          className="flex-1 overflow-y-auto py-2 px-2"
           initial="hidden" animate="visible" variants={sidebarVariants}>
           {Object.entries(groupedNav).map(([group, items], gi) => (
-            <div key={group} className={gi > 0 ? 'mt-2 pt-2 border-t border-[var(--color-border-light)]' : ''}>
+            <div key={group} className={gi > 0 ? 'mt-3' : 'mt-1.5'}>
               {groupLabels[group] && (
                 <motion.div variants={itemVariants}
-                  className="px-3 pt-2 pb-1.5 text-[11px] font-bold text-[var(--color-text-muted)] uppercase tracking-[0.10em]">
+                  className="px-3 pt-1.5 pb-1 text-[11px] font-semibold text-[var(--color-text-muted)] uppercase tracking-[0.08em]">
                   {groupLabels[group]}
                 </motion.div>
               )}
@@ -166,26 +159,26 @@ export function RoleLayout({ user, children }: { user: User; children: React.Rea
                     {active && (
                       <motion.div
                         layoutId="nav-active-bar"
-                        className="absolute left-0 top-1 bottom-1 w-[3px] rounded-r-full bg-[var(--color-primary)]"
-                        transition={{ type: 'spring', stiffness: 400, damping: 34 }}
+                        className="absolute left-0 top-[6px] bottom-[6px] w-[3px] rounded-r-full bg-[var(--color-primary)]"
+                        transition={{ type: 'spring', stiffness: 380, damping: 30 }}
                       />
                     )}
                     <Link
                       to={item.to}
                       onClick={() => setSidebarOpen(false)}
                       className={`
-                        flex items-center gap-3 px-3 py-2.5 rounded-[var(--radius-md)]
-                        text-[14px] font-medium transition-all duration-150 mb-px ml-1
+                        flex items-center gap-3 px-3 py-[9px] rounded-[var(--radius-sm)]
+                        text-[14px] transition-colors duration-150
                         ${active
                           ? 'bg-[var(--color-primary-muted)] text-[var(--color-primary)] font-semibold'
-                          : 'text-[var(--color-text-secondary)] hover:text-[var(--color-navy)] hover:bg-[var(--color-bg-hover)]'
+                          : 'text-[var(--color-text-secondary)] hover:text-[var(--color-text)] hover:bg-[var(--color-bg-hover)] font-medium'
                         }
                       `}>
                       <item.icon size={18}
                         className={`flex-shrink-0 ${active ? 'text-[var(--color-primary)]' : 'text-[var(--color-text-muted)]'}`} />
                       <span className="flex-1 truncate">{item.label}</span>
                       {active && (
-                        <ChevronRight size={14} className="text-[var(--color-primary)] opacity-50 flex-shrink-0" />
+                        <ChevronRight size={14} className="text-[var(--color-primary)] opacity-40 flex-shrink-0" />
                       )}
                     </Link>
                   </motion.div>
@@ -197,14 +190,16 @@ export function RoleLayout({ user, children }: { user: User; children: React.Rea
 
         {/* User footer */}
         <div className="border-t border-[var(--color-border-light)] p-3 flex-shrink-0">
-          <div className="flex items-center gap-3 px-2.5 py-2.5 rounded-[var(--radius-md)] hover:bg-[var(--color-bg-secondary)] transition-colors group cursor-default">
-            <div className="avatar w-8 h-8 text-[11px] flex-shrink-0">{user.full_name[0]}</div>
+          <div className="flex items-center gap-3 px-2.5 py-2 rounded-[var(--radius-sm)] hover:bg-[var(--color-bg-hover)] transition-colors group cursor-default">
+            <div className="w-8 h-8 rounded-full bg-[var(--color-primary-muted)] text-[var(--color-primary)] text-[11px] font-bold flex items-center justify-center flex-shrink-0">
+              {user.full_name[0]}
+            </div>
             <div className="flex-1 min-w-0">
-              <div className="text-[13px] font-semibold text-[var(--color-navy)] truncate">{user.full_name}</div>
+              <div className="text-[13px] font-semibold text-[var(--color-text)] truncate">{user.full_name}</div>
               <div className="text-[11px] text-[var(--color-text-muted)] capitalize">{user.role}</div>
             </div>
             <button onClick={handleLogout}
-              className="p-1.5 rounded-[var(--radius-sm)] text-[var(--color-danger)] hover:bg-[var(--color-danger)]/8 transition-colors flex-shrink-0 opacity-0 group-hover:opacity-100"
+              className="p-1.5 rounded-[var(--radius-sm)] text-[var(--color-danger)] hover:bg-[var(--color-danger)]/10 transition-colors flex-shrink-0 opacity-0 group-hover:opacity-100"
               title="Sign out">
               <LogOut size={13} />
             </button>
@@ -213,13 +208,13 @@ export function RoleLayout({ user, children }: { user: User; children: React.Rea
       </aside>
 
       {/* ── Main ─────────────────────────────────────────────────── */}
-      <main className="flex-1 lg:ml-[248px] min-h-screen flex flex-col">
+      <main className="flex-1 lg:ml-[260px] min-h-screen flex flex-col">
 
         {/* Top bar */}
-        <header className="sticky top-0 z-30 h-[60px] glass flex items-center justify-between px-5 gap-4">
+        <header className="sticky top-0 z-30 h-[56px] bg-[var(--color-bg-card)] border-b border-[var(--color-border-light)] flex items-center justify-between px-5 gap-4">
           <div className="flex items-center gap-3">
             <button
-              className="lg:hidden p-1.5 rounded-[var(--radius-md)] hover:bg-[var(--color-bg-secondary)] transition-colors"
+              className="lg:hidden p-1.5 rounded-[var(--radius-sm)] hover:bg-[var(--color-bg-hover)] transition-colors"
               onClick={() => setSidebarOpen(true)}
               aria-label="Open sidebar">
               <Menu size={18} className="text-[var(--color-text-muted)]" />
@@ -231,32 +226,32 @@ export function RoleLayout({ user, children }: { user: User; children: React.Rea
                 key={breadcrumb}
                 initial={{ opacity: 0, y: -3 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.2 }}
-                className="font-semibold text-[var(--color-navy)]">
+                transition={{ duration: 0.18 }}
+                className="font-semibold text-[var(--color-text)]">
                 {breadcrumb}
               </motion.span>
             </div>
           </div>
 
           <div className="flex items-center gap-1.5">
-            <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border border-[var(--color-border)] text-[var(--color-text-muted)]"
+            <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border text-[var(--color-text-muted)]"
               style={{ borderColor: availablePresets[academicPreset]?.color + '40', color: availablePresets[academicPreset]?.color }}>
               <span className="w-1.5 h-1.5 rounded-full" style={{ background: availablePresets[academicPreset]?.color }} />
               {availablePresets[academicPreset]?.label}
             </span>
             <button onClick={cycle}
-              className="p-2 rounded-[var(--radius-md)] hover:bg-[var(--color-bg-secondary)] transition-colors text-[var(--color-text-muted)] hover:text-[var(--color-navy)]"
+              className="p-2 rounded-[var(--radius-sm)] hover:bg-[var(--color-bg-hover)] transition-colors text-[var(--color-text-muted)] hover:text-[var(--color-text)]"
               aria-label="Toggle theme"
               title={`Current: ${theme}`}>
               {themeIcons[theme]}
             </button>
             <button onClick={handleLogout}
-              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--radius-md)] text-[12px] font-medium text-[var(--color-danger)] hover:bg-[var(--color-danger)]/8 transition-colors">
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-[var(--radius-sm)] text-[12px] font-medium text-[var(--color-danger)] hover:bg-[var(--color-danger)]/10 transition-colors">
               <LogOut size={13} />
               <span>Sign Out</span>
             </button>
             <button onClick={handleLogout}
-              className="sm:hidden p-2 rounded-[var(--radius-md)] hover:bg-[var(--color-danger)]/8 transition-colors text-[var(--color-danger)]">
+              className="sm:hidden p-2 rounded-[var(--radius-sm)] hover:bg-[var(--color-danger)]/10 transition-colors text-[var(--color-danger)]">
               <LogOut size={16} />
             </button>
           </div>
@@ -265,9 +260,9 @@ export function RoleLayout({ user, children }: { user: User; children: React.Rea
         {/* Page content */}
         <motion.div
           key={location.pathname}
-          initial={{ opacity: 0, y: 8 }}
+          initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
           className="flex-1 p-5 max-w-7xl mx-auto w-full">
           {children}
         </motion.div>

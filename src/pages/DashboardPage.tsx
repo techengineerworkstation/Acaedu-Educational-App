@@ -2,7 +2,6 @@ import { useEffect, useState, useRef } from 'react'
 import { motion, useInView, animate } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
-import { usePresetPalette } from '../lib/theme'
 import type { User } from '../types'
 import {
   BookOpen, FileText, Calendar, Bell, ClipboardList, CheckCircle,
@@ -17,7 +16,7 @@ function AnimatedCounter({ value, suffix = '' }: { value: number; suffix?: strin
     if (!inView || !ref.current) return
     const node = ref.current
     const ctrl = animate(0, value, {
-      duration: 1.1, ease: [0.22, 1, 0.36, 1] as [number,number,number,number],
+      duration: 1.0, ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
       onUpdate(v) { node.textContent = suffix === '%' ? `${v.toFixed(1)}%` : Math.round(v).toString() },
     })
     return () => ctrl.stop()
@@ -26,18 +25,15 @@ function AnimatedCounter({ value, suffix = '' }: { value: number; suffix?: strin
 }
 
 /* ─── Progress bar ───────────────────────────────────────────── */
-function ProgressBar({ value, max, color = 'var(--color-primary)' }: {
-  value: number; max: number; color?: string
-}) {
+function ProgressBar({ value, max }: { value: number; max: number }) {
   const pct = max > 0 ? Math.min((value / max) * 100, 100) : 0
   return (
-    <div className="w-full h-1.5 rounded-full bg-[var(--color-bg-secondary)] overflow-hidden">
+    <div className="w-full h-1.5 rounded-full bg-[var(--color-bg-tertiary)] overflow-hidden">
       <motion.div
         initial={{ width: 0 }}
         animate={{ width: `${pct}%` }}
-        transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-        className="h-full rounded-full"
-        style={{ background: color }}
+        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+        className="h-full rounded-full bg-[var(--color-primary)]"
       />
     </div>
   )
@@ -45,38 +41,32 @@ function ProgressBar({ value, max, color = 'var(--color-primary)' }: {
 
 /* ─── Stat card metadata ─────────────────────────────────────── */
 const statCards = [
-  { key: 'courses',       label: 'Enrolled Subjects',  icon: BookOpen,       accent: 'var(--color-primary)',        link: '/courses' },
-  { key: 'exams',         label: 'Upcoming Exams',    icon: FileText,       accent: 'var(--color-secondary)',      link: '/exams' },
-  { key: 'assignments',   label: 'Pending Tasks',     icon: ClipboardList,  accent: 'var(--color-warning)',        link: '/assignments' },
-  { key: 'notifications', label: 'Notifications',     icon: Bell,           accent: 'var(--color-success)',        link: '/notifications' },
-  { key: 'completed',     label: 'Completed',         icon: CheckCircle,    accent: 'var(--color-accent)',         link: '/grades' },
-  { key: 'grade',         label: 'Avg Grade',         icon: BarChart3,      accent: 'var(--color-primary-light)',  link: '/grades',   suffix: '%' },
-  { key: 'sessions',      label: 'Live Sessions',     icon: Video,          accent: 'var(--color-danger)',         link: '/live-classes' },
-  { key: 'enrollments',   label: 'Enrollments',       icon: Users,          accent: 'var(--color-navy)',           link: '/enrollments' },
+  { key: 'courses',       label: 'Enrolled Subjects',  icon: BookOpen,       link: '/courses' },
+  { key: 'exams',         label: 'Upcoming Exams',     icon: FileText,       link: '/exams' },
+  { key: 'assignments',   label: 'Pending Tasks',      icon: ClipboardList,  link: '/assignments' },
+  { key: 'notifications', label: 'Notifications',      icon: Bell,           link: '/notifications' },
+  { key: 'completed',     label: 'Completed',          icon: CheckCircle,    link: '/grades' },
+  { key: 'grade',         label: 'Avg Grade',          icon: BarChart3,      link: '/grades',      suffix: '%' },
+  { key: 'sessions',      label: 'Live Sessions',      icon: Video,          link: '/live-classes' },
+  { key: 'enrollments',   label: 'Enrollments',        icon: Users,          link: '/enrollments' },
 ]
 
 /* ─── Course card ──────────────────────────────────────────── */
-function CourseCard({ course, index, palette }: { course: Record<string,unknown>; index: number; palette: ReturnType<typeof usePresetPalette> }) {
-  const palette_ = [
-    palette.primary,   palette.teal,
-    palette.accent,    palette.gold,
-    palette.navy,
-  ]
-  const color = palette_[index % palette_.length]
+function CourseCard({ course, index }: { course: Record<string, unknown>; index: number }) {
   const progress = course._progress as number ?? Math.floor(Math.random() * 75) + 10
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
+      initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.07, duration: 0.4, ease: [0.22,1,0.36,1] }}>
+      transition={{ delay: index * 0.05, duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+    >
       <Link to="/courses"
-        className="card p-4 flex flex-col gap-3 block hover:-translate-y-1 transition-transform duration-200"
-        style={{ borderTop: `3px solid ${color}` }}>
+        className="card p-5 flex flex-col gap-3 block"
+      >
         <div className="flex items-start justify-between gap-2">
-          <div className="w-9 h-9 rounded-[8px] flex items-center justify-center flex-shrink-0"
-            style={{ background: `color-mix(in srgb, ${color} 12%, transparent)` }}>
-            <BookOpen size={15} style={{ color }} />
+          <div className="w-9 h-9 rounded-[8px] flex items-center justify-center flex-shrink-0 bg-[var(--color-navy-pale)]">
+            <BookOpen size={15} className="text-[var(--color-primary)]" />
           </div>
           <span className="badge badge-navy">{course.credits as number || 3} cr</span>
         </div>
@@ -92,9 +82,9 @@ function CourseCard({ course, index, palette }: { course: Record<string,unknown>
         <div>
           <div className="flex justify-between mb-1">
             <span className="text-[10px] text-[var(--color-text-muted)]">Progress</span>
-            <span className="text-[10px] font-bold" style={{ color }}>{progress}%</span>
+            <span className="text-[10px] font-bold text-[var(--color-primary)]">{progress}%</span>
           </div>
-          <ProgressBar value={progress} max={100} color={color} />
+          <ProgressBar value={progress} max={100} />
         </div>
       </Link>
     </motion.div>
@@ -102,15 +92,14 @@ function CourseCard({ course, index, palette }: { course: Record<string,unknown>
 }
 
 /* ─── Activity feed item ──────────────────────────────────── */
-function ActivityItem({ icon: Icon, text, sub, color }: {
-  icon: React.ComponentType<{size?:number; style?:React.CSSProperties}>
-  text: string; sub: string; color: string
+function ActivityItem({ icon: Icon, text, sub }: {
+  icon: React.ComponentType<{ size?: number; className?: string }>
+  text: string; sub: string
 }) {
   return (
     <div className="flex items-start gap-3 py-2.5 border-b border-[var(--color-border-light)] last:border-0">
-      <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5"
-        style={{ background: `color-mix(in srgb, ${color} 12%, transparent)` }}>
-        <Icon size={13} style={{ color }} />
+      <div className="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 bg-[var(--color-bg-tertiary)]">
+        <Icon size={13} className="text-[var(--color-text-muted)]" />
       </div>
       <div className="flex-1 min-w-0">
         <p className="text-[12px] text-[var(--color-text)] leading-snug font-medium truncate">{text}</p>
@@ -122,11 +111,10 @@ function ActivityItem({ icon: Icon, text, sub, color }: {
 
 /* ─── Main dashboard ─────────────────────────────────────────── */
 export function DashboardPage({ user }: { user: User }) {
-  const palette = usePresetPalette()
-  const [stats, setStats]               = useState<Record<string,number>>({})
-  const [courses, setCourses]           = useState<Record<string,unknown>[]>([])
-  const [announcements, setAnnouncements] = useState<Record<string,unknown>[]>([])
-  const [recentGrades, setRecentGrades] = useState<Record<string,unknown>[]>([])
+  const [stats, setStats]               = useState<Record<string, number>>({})
+  const [courses, setCourses]           = useState<Record<string, unknown>[]>([])
+  const [announcements, setAnnouncements] = useState<Record<string, unknown>[]>([])
+  const [recentGrades, setRecentGrades] = useState<Record<string, unknown>[]>([])
   const [loading, setLoading]           = useState(true)
 
   useEffect(() => {
@@ -153,9 +141,9 @@ export function DashboardPage({ user }: { user: User }) {
         ])
 
         const gradeAvg = gradesData && gradesData.length > 0
-          ? gradesData.reduce((s: number, g: Record<string,unknown>) => s + ((g.score as number) || 0), 0) / gradesData.length
+          ? gradesData.reduce((s: number, g: Record<string, unknown>) => s + ((g.score as number) || 0), 0) / gradesData.length
           : 0
-        const completed = gradesData?.filter((g: Record<string,unknown>) => (g.score as number) >= 50).length || 0
+        const completed = gradesData?.filter((g: Record<string, unknown>) => (g.score as number) >= 50).length || 0
 
         setStats({
           courses:       coursesData?.length  || 0,
@@ -198,10 +186,9 @@ export function DashboardPage({ user }: { user: User }) {
     <div className="max-w-5xl mx-auto">
 
       {/* ── Page header ──────────────────────────────────────────── */}
-      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="page-header mb-8">
+      <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }} className="mb-8">
         <span className="section-label">Dashboard</span>
-        <span className="rule-gold" />
-        <h1 className="text-display-sm mt-3">{greeting()}, {user.full_name}</h1>
+        <h1 className="text-display-sm mt-2 text-[var(--color-navy)]">{greeting()}, {user.full_name}</h1>
         <p className="text-[13px] text-[var(--color-text-muted)] mt-1 capitalize">
           {user.role} · {new Date().toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}
         </p>
@@ -216,15 +203,15 @@ export function DashboardPage({ user }: { user: User }) {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
           {statCards.map((card, i) => (
             <motion.div key={card.key}
-              initial={{ opacity: 0, y: 12, scale: 0.97 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              transition={{ delay: i * 0.05, duration: 0.4, ease: [0.22,1,0.36,1] }}>
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: i * 0.04, duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            >
               <Link to={card.link}
-                className="card p-4 flex flex-col gap-2 block hover:-translate-y-1 transition-transform duration-200"
-                style={{ borderTop: `3px solid ${card.accent}` }}>
-                <div className="w-8 h-8 rounded-[8px] flex items-center justify-center"
-                  style={{ background: `color-mix(in srgb, ${card.accent} 12%, transparent)` }}>
-                  <card.icon size={15} style={{ color: card.accent }} />
+                className="card p-4 flex flex-col gap-2.5 block"
+              >
+                <div className="w-8 h-8 rounded-[8px] flex items-center justify-center bg-[var(--color-bg-tertiary)]">
+                  <card.icon size={15} className="text-[var(--color-text-muted)]" />
                 </div>
                 <div>
                   <div className="text-2xl font-extrabold text-[var(--color-navy)] leading-none"
@@ -264,11 +251,11 @@ export function DashboardPage({ user }: { user: User }) {
             <div className="empty-state card py-12">
               <div className="empty-state-icon"><BookOpen size={20} /></div>
               <p className="text-[13px] text-[var(--color-text-muted)] mb-3">No subjects yet</p>
-               <Link to="/enrollments" className="btn-primary text-[12px] px-4 py-2">Browse Subjects</Link>
+              <Link to="/enrollments" className="btn-primary text-[12px] px-4 py-2">Browse Subjects</Link>
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {courses.slice(0, 4).map((c, i) => <CourseCard key={c.id as string} course={c} index={i} palette={palette} />)}
+              {courses.slice(0, 4).map((c, i) => <CourseCard key={c.id as string} course={c} index={i} />)}
             </div>
           )}
         </div>
@@ -297,7 +284,6 @@ export function DashboardPage({ user }: { user: User }) {
                     icon={Bell}
                     text={a.title as string}
                     sub={a.created_at ? timeAgo(a.created_at as string) : ''}
-                    color="var(--color-primary)"
                   />
                 ))}
                 <Link to="/announcements"
@@ -349,10 +335,7 @@ export function DashboardPage({ user }: { user: User }) {
                         <span className="text-[13px] font-bold text-[var(--color-navy)] w-8 text-right flex-shrink-0">
                           {String(g.score ?? '—')}
                         </span>
-                        <ProgressBar value={Number(g.score) || 0} max={100}
-                          color={Number(g.score) >= 70 ? 'var(--color-success)'
-                            : Number(g.score) >= 50 ? 'var(--color-warning)'
-                            : 'var(--color-danger)'} />
+                        <ProgressBar value={Number(g.score) || 0} max={100} />
                       </div>
                     </td>
                     <td>
@@ -379,22 +362,23 @@ export function DashboardPage({ user }: { user: User }) {
           </div>
           <div className="grid grid-cols-2 gap-2.5">
             {[
-              { label: 'Schedule',      icon: Calendar,      to: '/schedule',          accent: palette.primary },
-              { label: 'Assignments',   icon: ClipboardList, to: '/assignments',        accent: palette.gold },
-              { label: 'Attendance',    icon: CheckCircle,   to: '/attendance',         accent: palette.teal },
-              { label: 'AI Scheduler',  icon: TrendingUp,    to: '/ai-scheduler',       accent: palette.accent },
-              { label: 'Events',        icon: Award,         to: '/events',             accent: palette.navy },
-              { label: 'Materials',     icon: Clock,         to: '/course-materials',   accent: palette.primary },
+              { label: 'Schedule',      icon: Calendar,      to: '/schedule' },
+              { label: 'Assignments',   icon: ClipboardList, to: '/assignments' },
+              { label: 'Attendance',    icon: CheckCircle,   to: '/attendance' },
+              { label: 'AI Scheduler',  icon: TrendingUp,    to: '/ai-scheduler' },
+              { label: 'Events',        icon: Award,         to: '/events' },
+              { label: 'Materials',     icon: Clock,         to: '/course-materials' },
             ].map((item, i) => (
               <motion.div key={i}
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.5 + i * 0.05 }}>
+                initial={{ opacity: 0, y: 4 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 + i * 0.04, duration: 0.25 }}
+              >
                 <Link to={item.to}
-                  className="card p-3.5 flex items-center gap-3 block hover:-translate-y-0.5 transition-transform duration-150">
-                  <div className="w-8 h-8 rounded-[8px] flex items-center justify-center flex-shrink-0"
-                    style={{ background: `color-mix(in srgb, ${item.accent} 12%, transparent)` }}>
-                    <item.icon size={15} style={{ color: item.accent }} />
+                  className="card p-3.5 flex items-center gap-3 block"
+                >
+                  <div className="w-8 h-8 rounded-[8px] flex items-center justify-center flex-shrink-0 bg-[var(--color-bg-tertiary)]">
+                    <item.icon size={15} className="text-[var(--color-text-muted)]" />
                   </div>
                   <span className="text-[12px] font-semibold text-[var(--color-navy)]">{item.label}</span>
                 </Link>

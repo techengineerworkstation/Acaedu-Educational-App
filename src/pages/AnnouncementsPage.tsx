@@ -5,12 +5,12 @@ import { fetchTable, insertRow } from '../lib/supabase'
 import { sendEmail, announcementEmail } from '../lib/email'
 
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } }
-const fadeUp = { hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22,1,0.36,1] as [number,number,number,number] } } }
+const fadeUp = { hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0, transition: { duration: 0.3, ease: [0.22,1,0.36,1] as [number,number,number,number] } } }
 
 const priorityConfig: Record<string, { badge: string; bg: string; iconColor: string; icon: React.ComponentType<{ size?: number; className?: string }> }> = {
   low:    { badge: 'badge-navy',    bg: 'color-mix(in srgb, var(--color-primary) 8%, transparent)', iconColor: 'var(--color-primary)', icon: Info },
-  normal: { badge: 'badge-success', bg: 'rgba(27,122,66,0.08)', iconColor: 'var(--color-success)', icon: Megaphone },
-  high:   { badge: 'badge-warning', bg: 'rgba(196,122,16,0.08)', iconColor: 'var(--color-warning)', icon: AlertTriangle },
+  normal: { badge: 'badge-success', bg: 'color-mix(in srgb, var(--color-success) 8%, transparent)', iconColor: 'var(--color-success)', icon: Megaphone },
+  high:   { badge: 'badge-warning', bg: 'color-mix(in srgb, var(--color-warning) 8%, transparent)', iconColor: 'var(--color-warning)', icon: AlertTriangle },
   urgent: { badge: 'badge-danger',  bg: 'color-mix(in srgb, var(--color-danger) 8%, transparent)', iconColor: 'var(--color-danger)', icon: AlertCircle },
 }
 
@@ -55,7 +55,7 @@ export function AnnouncementsPage() {
       <motion.div initial={{opacity:0,y:-10}} animate={{opacity:1,y:0}} className="flex justify-between items-center mb-6">
         <div>
           <span className="section-label">Announcements</span>
-          <h1 className="section-title mt-2 text-2xl">Announcements</h1>
+          <h1 className="section-title mt-1">Announcements</h1>
         </div>
         <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={() => setShowForm(!showForm)} className="btn-primary">
           <Plus size={16}/> Create Announcement
@@ -63,9 +63,9 @@ export function AnnouncementsPage() {
       </motion.div>
 
       {showForm && (
-        <motion.div initial={{opacity:0,y:-12,scale:0.98}} animate={{opacity:1,y:0,scale:1}} transition={{duration:0.35,ease:[0.22,1,0.36,1]}}
+        <motion.div initial={{opacity:0,y:-8,scale:0.98}} animate={{opacity:1,y:0,scale:1}} transition={{duration:0.25}}
           className="card p-6 mb-6">
-          <h3 className="text-[15px] font-bold text-[var(--color-navy)] mb-5 text-center" style={{ fontFamily: 'var(--font-display)' }}>Create Announcement</h3>
+          <h3 className="text-[15px] font-bold text-[var(--color-navy)] mb-5" style={{ fontFamily: 'var(--font-display)' }}>Create Announcement</h3>
           <div className="space-y-4 mb-5">
             <div><label className="label">Title</label><input value={title} onChange={e => setTitle(e.target.value)} className="input" placeholder="Announcement title"/></div>
             <div><label className="label">Content</label><textarea value={content} onChange={e => setContent(e.target.value)} className="textarea" rows={4} placeholder="Announcement content..."/></div>
@@ -104,13 +104,11 @@ export function AnnouncementsPage() {
             const Icon = config.icon
             return (
               <motion.div key={a.id as string} variants={fadeUp}
-                whileHover={{x:4,boxShadow:'var(--shadow-sm)'}}
-                className="card card-interactive p-4">
+                className="card p-4">
                 <div className="flex items-start gap-3">
-                  <motion.div whileHover={{scale:1.1,rotate:5}}
-                    className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0" style={{background:config.bg}}>
-                    <span style={{color:config.iconColor}}><Icon size={20}/></span>
-                  </motion.div>
+                  <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0" style={{background:config.bg}}>
+                    <Icon size={20} style={{color:config.iconColor}}/>
+                  </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex justify-between items-start gap-2">
                       <h3 className="font-bold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>{a.title as string}</h3>

@@ -5,7 +5,7 @@ import { fetchTable, insertRow, updateRow } from '../lib/supabase'
 import type { User } from '../types'
 
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.05 } } }
-const fadeUp = { hidden: { opacity: 0, y: 14 }, show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22,1,0.36,1] as [number,number,number,number] } } }
+const fadeUp = { hidden: { opacity: 0, y: 12 }, show: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.22,1,0.36,1] as [number,number,number,number] } } }
 
 export function LiveClassesPage() {
   const [meetings, setMeetings] = useState<Record<string, unknown>[]>([])
@@ -30,7 +30,7 @@ export function LiveClassesPage() {
       <motion.div initial={{opacity:0,y:-10}} animate={{opacity:1,y:0}} className="flex justify-between items-center mb-6">
         <div>
           <span className="section-label">Live Classes</span>
-          <h1 className="section-title mt-2 text-2xl">Live Classes</h1>
+          <h1 className="section-title mt-1">Live Classes</h1>
         </div>
         <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={() => setShowForm(!showForm)} className="btn-primary">
           <Plus size={16}/> Schedule Class
@@ -38,7 +38,7 @@ export function LiveClassesPage() {
       </motion.div>
 
       {showForm && (
-        <motion.div initial={{opacity:0,y:-12,scale:0.98}} animate={{opacity:1,y:0,scale:1}} transition={{duration:0.35,ease:[0.22,1,0.36,1]}}
+        <motion.div initial={{opacity:0,y:-8,scale:0.98}} animate={{opacity:1,y:0,scale:1}} transition={{duration:0.25}}
           className="card p-6 mb-6">
           <h3 className="text-[15px] font-bold text-[var(--color-navy)] mb-5" style={{ fontFamily: 'var(--font-display)' }}>Schedule Live Class</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
@@ -65,8 +65,7 @@ export function LiveClassesPage() {
         <motion.div variants={stagger} initial="hidden" animate="show" className="space-y-3">
           {meetings.map((m) => (
             <motion.div key={m.id as string} variants={fadeUp}
-              whileHover={{x:4,boxShadow:'var(--shadow-sm)'}}
-              className="card card-interactive p-4 flex justify-between items-center">
+              className="card p-4 flex justify-between items-center">
               <div className="flex items-center gap-3">
                 <div className="w-11 h-11 rounded-xl flex items-center justify-center" style={{background:'color-mix(in srgb, var(--color-primary) 8%, transparent)'}}>
                   <Video size={20} className="text-[var(--color-primary)]"/>
@@ -111,7 +110,7 @@ export function TestsPage() {
       <motion.div initial={{opacity:0,y:-10}} animate={{opacity:1,y:0}} className="flex justify-between items-center mb-6">
         <div>
           <span className="section-label">Tests</span>
-          <h1 className="section-title mt-2 text-2xl">Tests</h1>
+          <h1 className="section-title mt-1">Tests</h1>
         </div>
         <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={() => setShowForm(!showForm)} className="btn-primary">
           <Plus size={16}/> Create Test
@@ -119,7 +118,7 @@ export function TestsPage() {
       </motion.div>
 
       {showForm && (
-        <motion.div initial={{opacity:0,y:-12,scale:0.98}} animate={{opacity:1,y:0,scale:1}} transition={{duration:0.35,ease:[0.22,1,0.36,1]}}
+        <motion.div initial={{opacity:0,y:-8,scale:0.98}} animate={{opacity:1,y:0,scale:1}} transition={{duration:0.25}}
           className="card p-6 mb-6">
           <h3 className="text-[15px] font-bold text-[var(--color-navy)] mb-5" style={{ fontFamily: 'var(--font-display)' }}>Create Test</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
@@ -150,15 +149,14 @@ export function TestsPage() {
         <motion.div variants={stagger} initial="hidden" animate="show" className="space-y-3">
           {tests.map((t) => (
             <motion.div key={t.id as string} variants={fadeUp}
-              whileHover={{x:4,boxShadow:'var(--shadow-sm)'}}
-              className="card card-interactive p-4 flex justify-between items-center">
+              className="card p-4 flex justify-between items-center">
               <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-xl flex items-center justify-center" style={{background:'color-mix(in srgb, var(--color-accent) 10%, transparent)'}}>
+                <div className="w-11 h-11 rounded-xl flex items-center justify-center" style={{background:'color-mix(in srgb, var(--color-accent) 8%, transparent)'}}>
                   <ClipboardList size={20} className="text-[var(--color-accent)]"/>
                 </div>
                 <div>
                   <h3 className="font-bold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>{t.title as string}</h3>
-                  <p className="text-sm text-[var(--color-text-muted)]">{t.test_type as string} · {t.duration_minutes as number} min · {t.test_date ? new Date(t.test_date as string).toLocaleDateString() : 'TBD'}</p>
+                  <p className="text-sm text-[var(--color-text-muted)]">{t.test_type as string} &middot; {t.duration_minutes as number} min &middot; {t.test_date ? new Date(t.test_date as string).toLocaleDateString() : 'TBD'}</p>
                 </div>
               </div>
               <span className="badge badge-navy">{t.test_type as string}</span>
@@ -180,13 +178,13 @@ export function ClassRecordsPage() {
     <div>
       <motion.div initial={{opacity:0,y:-10}} animate={{opacity:1,y:0}} className="mb-6">
         <span className="section-label">Class Records</span>
-        <h1 className="section-title mt-2 text-2xl">Class Records</h1>
+        <h1 className="section-title mt-1">Class Records</h1>
       </motion.div>
 
       {loading ? (
-        <motion.div variants={stagger} initial="hidden" animate="show" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {Array.from({length:6}).map((_,i) => <motion.div key={i} variants={fadeUp} className="skeleton h-56 rounded-xl"/>)}
-        </motion.div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {Array.from({length:6}).map((_,i) => <div key={i} className="skeleton h-56 rounded-xl"/>)}
+        </div>
       ) : videos.length === 0 ? (
         <motion.div initial={{opacity:0,scale:0.95}} animate={{opacity:1,scale:1}} className="empty-state">
           <div className="empty-state-icon"><Video size={28}/></div>
@@ -196,8 +194,8 @@ export function ClassRecordsPage() {
         <motion.div variants={stagger} initial="hidden" animate="show" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {videos.map((v) => (
             <motion.div key={v.id as string} variants={fadeUp}
-              whileHover={{y:-4,boxShadow:'var(--shadow-card-hover)'}}
-              className="card-academic overflow-hidden glow-hover">
+              whileHover={{y:-2}}
+              className="card overflow-hidden">
               <div className="aspect-video bg-[var(--color-bg-secondary)] flex items-center justify-center">
                 <div className="w-14 h-14 rounded-full flex items-center justify-center" style={{background:'color-mix(in srgb, var(--color-primary) 10%, transparent)'}}>
                   <Video size={24} className="text-[var(--color-primary)]"/>
@@ -206,7 +204,7 @@ export function ClassRecordsPage() {
               <div className="p-4">
                 <h3 className="font-bold text-[var(--color-navy)] mb-1" style={{ fontFamily: 'var(--font-display)' }}>{v.title as string}</h3>
                 <p className="text-xs text-[var(--color-text-muted)]">{v.description as string}</p>
-                <div className="flex items-center gap-3 mt-2 text-xs text-[var(--color-text-muted)]">
+                <div className="flex items-center gap-2 mt-2 text-xs text-[var(--color-text-muted)]">
                   <Clock size={12}/> {v.duration_seconds ? `${Math.floor((v.duration_seconds as number)/60)}:${String((v.duration_seconds as number)%60).padStart(2,'0')}` : 'N/A'}
                 </div>
               </div>
@@ -290,7 +288,7 @@ export function ProfilePage({ user }: { user: User }) {
       <motion.div initial={{opacity:0,y:-10}} animate={{opacity:1,y:0}} className="mb-6 flex items-center justify-between">
         <div>
           <span className="section-label">Profile</span>
-          <h1 className="section-title mt-2 text-2xl">My Profile</h1>
+          <h1 className="section-title mt-1">My Profile</h1>
         </div>
         <div className="flex items-center gap-2">
           {editing ? (
@@ -316,8 +314,7 @@ export function ProfilePage({ user }: { user: User }) {
         </motion.div>
       )}
 
-      <motion.div initial={{opacity:0,y:16}} animate={{opacity:1,y:0}} transition={{delay:0.1}} className="max-w-2xl space-y-5">
-        {/* Avatar + identity */}
+      <motion.div initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} transition={{delay:0.1}} className="max-w-2xl space-y-5">
         <div className="card p-6">
           <div className="flex items-center gap-4 mb-6">
             <div className="w-20 h-20 rounded-full flex items-center justify-center text-white font-bold text-3xl flex-shrink-0"
@@ -356,7 +353,6 @@ export function ProfilePage({ user }: { user: User }) {
           </div>
         </div>
 
-        {/* Read-only account info */}
         <motion.div initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} transition={{delay:0.2}} className="card p-5">
           <h3 className="text-xs font-bold text-[var(--color-navy)] uppercase tracking-wider mb-3" style={{ fontFamily: 'var(--font-display)' }}>Account Info</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">

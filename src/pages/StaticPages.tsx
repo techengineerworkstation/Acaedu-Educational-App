@@ -5,21 +5,37 @@ import { sendEmail } from '../lib/email'
 export function TermsPage() {
   return (
     <div className="max-w-3xl mx-auto">
-      <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}}>
-        <h1 className="text-3xl font-extrabold text-[var(--color-navy)] mb-6" style={{ fontFamily: 'var(--font-display)' }}>Terms of Service</h1>
-        <div className="prose prose-sm max-w-none text-[var(--color-text-secondary)] space-y-6">
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
+        <h1 className="text-3xl font-extrabold text-[var(--color-navy)] mb-2" style={{ fontFamily: 'var(--font-display)' }}>
+          Terms of Service
+        </h1>
+        <div className="h-px bg-[var(--color-border-light)] my-6" />
+        <div className="text-[var(--color-text-secondary)] space-y-8">
           <section>
-            <h2 className="text-lg font-bold text-[var(--color-navy)] mb-2">1. Acceptance of Terms</h2>
-            <p>By accessing and using Acaedu (&quot;the Platform&quot;), you agree to be bound by these Terms of Service. If you do not agree to these terms, please do not use the Platform.</p>
+            <h2 className="text-lg font-bold text-[var(--color-navy)] mb-3" style={{ fontFamily: 'var(--font-display)' }}>
+              1. Acceptance of Terms
+            </h2>
+            <p className="leading-relaxed">
+              By accessing and using Acaedu (&quot;the Platform&quot;), you agree to be bound by these Terms of Service.
+              If you do not agree to these terms, please do not use the Platform.
+            </p>
           </section>
           <section>
-            <h2 className="text-lg font-bold text-[var(--color-navy)] mb-2">2. User Accounts</h2>
-            <p>You are responsible for maintaining the confidentiality of your account credentials. You agree to notify us immediately of any unauthorized use of your account. You must provide accurate and complete information during registration.</p>
+            <h2 className="text-lg font-bold text-[var(--color-navy)] mb-3" style={{ fontFamily: 'var(--font-display)' }}>
+              2. User Accounts
+            </h2>
+            <p className="leading-relaxed">
+              You are responsible for maintaining the confidentiality of your account credentials. You agree to notify
+              us immediately of any unauthorized use of your account. You must provide accurate and complete information
+              during registration.
+            </p>
           </section>
           <section>
-            <h2 className="text-lg font-bold text-[var(--color-navy)] mb-2">3. Acceptable Use</h2>
-            <p>You agree to use the Platform only for lawful academic purposes. You shall not:</p>
-            <ul className="list-disc pl-6 mt-2 space-y-1">
+            <h2 className="text-lg font-bold text-[var(--color-navy)] mb-3" style={{ fontFamily: 'var(--font-display)' }}>
+              3. Acceptable Use
+            </h2>
+            <p className="leading-relaxed">You agree to use the Platform only for lawful academic purposes. You shall not:</p>
+            <ul className="list-disc pl-6 mt-3 space-y-2 leading-relaxed">
               <li>Share false or misleading information</li>
               <li>Attempt to gain unauthorized access to other accounts</li>
               <li>Use the Platform for commercial purposes without authorization</li>
@@ -27,18 +43,34 @@ export function TermsPage() {
             </ul>
           </section>
           <section>
-            <h2 className="text-lg font-bold text-[var(--color-navy)] mb-2">4. Intellectual Property</h2>
-            <p>All content on the Platform, including text, graphics, logos, and software, is the property of Acaedu and is protected by copyright laws.</p>
+            <h2 className="text-lg font-bold text-[var(--color-navy)] mb-3" style={{ fontFamily: 'var(--font-display)' }}>
+              4. Intellectual Property
+            </h2>
+            <p className="leading-relaxed">
+              All content on the Platform, including text, graphics, logos, and software, is the property of Acaedu and
+              is protected by copyright laws.
+            </p>
           </section>
           <section>
-            <h2 className="text-lg font-bold text-[var(--color-navy)] mb-2">5. Limitation of Liability</h2>
-            <p>Acaedu shall not be liable for any indirect, incidental, or consequential damages arising from your use of the Platform.</p>
+            <h2 className="text-lg font-bold text-[var(--color-navy)] mb-3" style={{ fontFamily: 'var(--font-display)' }}>
+              5. Limitation of Liability
+            </h2>
+            <p className="leading-relaxed">
+              Acaedu shall not be liable for any indirect, incidental, or consequential damages arising from your use of the Platform.
+            </p>
           </section>
           <section>
-            <h2 className="text-lg font-bold text-[var(--color-navy)] mb-2">6. Changes to Terms</h2>
-            <p>We reserve the right to modify these terms at any time. Continued use of the Platform constitutes acceptance of the modified terms.</p>
+            <h2 className="text-lg font-bold text-[var(--color-navy)] mb-3" style={{ fontFamily: 'var(--font-display)' }}>
+              6. Changes to Terms
+            </h2>
+            <p className="leading-relaxed">
+              We reserve the right to modify these terms at any time. Continued use of the Platform constitutes acceptance
+              of the modified terms.
+            </p>
           </section>
-          <p className="text-[var(--color-text-muted)] text-xs mt-8">Last updated: January 2026</p>
+          <p className="text-[var(--color-text-muted)] text-xs pt-6 border-t border-[var(--color-border-light)]">
+            Last updated: January 2026
+          </p>
         </div>
       </motion.div>
     </div>
@@ -48,13 +80,18 @@ export function TermsPage() {
 export function PrivacyPage() {
   return (
     <div className="max-w-3xl mx-auto">
-      <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}}>
-        <h1 className="text-3xl font-extrabold text-[var(--color-navy)] mb-6" style={{ fontFamily: 'var(--font-display)' }}>Privacy Policy</h1>
-        <div className="prose prose-sm max-w-none text-[var(--color-text-secondary)] space-y-6">
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
+        <h1 className="text-3xl font-extrabold text-[var(--color-navy)] mb-2" style={{ fontFamily: 'var(--font-display)' }}>
+          Privacy Policy
+        </h1>
+        <div className="h-px bg-[var(--color-border-light)] my-6" />
+        <div className="text-[var(--color-text-secondary)] space-y-8">
           <section>
-            <h2 className="text-lg font-bold text-[var(--color-navy)] mb-2">1. Information We Collect</h2>
-            <p>We collect information you provide directly, including:</p>
-            <ul className="list-disc pl-6 mt-2 space-y-1">
+            <h2 className="text-lg font-bold text-[var(--color-navy)] mb-3" style={{ fontFamily: 'var(--font-display)' }}>
+              1. Information We Collect
+            </h2>
+            <p className="leading-relaxed">We collect information you provide directly, including:</p>
+            <ul className="list-disc pl-6 mt-3 space-y-2 leading-relaxed">
               <li>Name, email, and contact information</li>
               <li>Academic records and course enrollments</li>
               <li>Usage data and interaction logs</li>
@@ -62,9 +99,11 @@ export function PrivacyPage() {
             </ul>
           </section>
           <section>
-            <h2 className="text-lg font-bold text-[var(--color-navy)] mb-2">2. How We Use Your Information</h2>
-            <p>Your information is used to:</p>
-            <ul className="list-disc pl-6 mt-2 space-y-1">
+            <h2 className="text-lg font-bold text-[var(--color-navy)] mb-3" style={{ fontFamily: 'var(--font-display)' }}>
+              2. How We Use Your Information
+            </h2>
+            <p className="leading-relaxed">Your information is used to:</p>
+            <ul className="list-disc pl-6 mt-3 space-y-2 leading-relaxed">
               <li>Provide and improve the Platform</li>
               <li>Send academic notifications and announcements</li>
               <li>Process payments and subscriptions</li>
@@ -72,18 +111,34 @@ export function PrivacyPage() {
             </ul>
           </section>
           <section>
-            <h2 className="text-lg font-bold text-[var(--color-navy)] mb-2">3. Data Security</h2>
-            <p>We implement industry-standard security measures to protect your data, including encryption, secure authentication, and regular security audits.</p>
+            <h2 className="text-lg font-bold text-[var(--color-navy)] mb-3" style={{ fontFamily: 'var(--font-display)' }}>
+              3. Data Security
+            </h2>
+            <p className="leading-relaxed">
+              We implement industry-standard security measures to protect your data, including encryption, secure
+              authentication, and regular security audits.
+            </p>
           </section>
           <section>
-            <h2 className="text-lg font-bold text-[var(--color-navy)] mb-2">4. Third-Party Services</h2>
-            <p>We use Supabase for authentication and database, Resend for email delivery, and Paystack/PayPal for payments. These services have their own privacy policies.</p>
+            <h2 className="text-lg font-bold text-[var(--color-navy)] mb-3" style={{ fontFamily: 'var(--font-display)' }}>
+              4. Third-Party Services
+            </h2>
+            <p className="leading-relaxed">
+              We use Supabase for authentication and database, Resend for email delivery, and Paystack/PayPal for
+              payments. These services have their own privacy policies.
+            </p>
           </section>
           <section>
-            <h2 className="text-lg font-bold text-[var(--color-navy)] mb-2">5. Your Rights</h2>
-            <p>You have the right to access, correct, or delete your personal data. Contact us to exercise these rights.</p>
+            <h2 className="text-lg font-bold text-[var(--color-navy)] mb-3" style={{ fontFamily: 'var(--font-display)' }}>
+              5. Your Rights
+            </h2>
+            <p className="leading-relaxed">
+              You have the right to access, correct, or delete your personal data. Contact us to exercise these rights.
+            </p>
           </section>
-          <p className="text-[var(--color-text-muted)] text-xs mt-8">Last updated: January 2026</p>
+          <p className="text-[var(--color-text-muted)] text-xs pt-6 border-t border-[var(--color-border-light)]">
+            Last updated: January 2026
+          </p>
         </div>
       </motion.div>
     </div>
@@ -126,61 +181,90 @@ export function ContactPage() {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}}>
-        <h1 className="text-3xl font-extrabold text-[var(--color-navy)] mb-6" style={{ fontFamily: 'var(--font-display)' }}>Contact Us</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-          <div className="p-5 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-border)] hover:border-[var(--color-navy)]/20 transition-colors">
-            <h3 className="font-bold text-[var(--color-navy)] mb-2 text-sm">Email</h3>
-            <a href="mailto:support@acaedu.sbs" className="text-sm text-accent hover:underline">support@acaedu.sbs</a>
+      <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
+        <h1 className="text-3xl font-extrabold text-[var(--color-navy)] mb-2" style={{ fontFamily: 'var(--font-display)' }}>
+          Contact Us
+        </h1>
+        <div className="h-px bg-[var(--color-border-light)] my-6" />
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+          <div className="card p-5">
+            <h3 className="font-bold text-[var(--color-navy)] mb-1.5 text-sm" style={{ fontFamily: 'var(--font-display)' }}>Email</h3>
+            <a href="mailto:support@acaedu.sbs" className="text-sm text-[var(--color-primary)] hover:underline">support@acaedu.sbs</a>
           </div>
-          <div className="p-5 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-border)] hover:border-[var(--color-navy)]/20 transition-colors">
-            <h3 className="font-bold text-[var(--color-navy)] mb-2 text-sm">Phone</h3>
-            <a href="tel:+2349115899245" className="text-sm text-accent hover:underline">+234 911 589 9245</a>
+          <div className="card p-5">
+            <h3 className="font-bold text-[var(--color-navy)] mb-1.5 text-sm" style={{ fontFamily: 'var(--font-display)' }}>Phone</h3>
+            <a href="tel:+2349115899245" className="text-sm text-[var(--color-primary)] hover:underline">+234 911 589 9245</a>
           </div>
-          <div className="p-5 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-border)] hover:border-[var(--color-navy)]/20 transition-colors">
-            <h3 className="font-bold text-[var(--color-navy)] mb-2 text-sm">WhatsApp</h3>
-            <a href="https://wa.me/2349115899245" target="_blank" rel="noopener noreferrer" className="text-sm text-accent hover:underline">Chat on WhatsApp</a>
+          <div className="card p-5">
+            <h3 className="font-bold text-[var(--color-navy)] mb-1.5 text-sm" style={{ fontFamily: 'var(--font-display)' }}>WhatsApp</h3>
+            <a href="https://wa.me/2349115899245" target="_blank" rel="noopener noreferrer" className="text-sm text-[var(--color-primary)] hover:underline">
+              Chat on WhatsApp
+            </a>
           </div>
-          <div className="p-5 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-border)] hover:border-[var(--color-navy)]/20 transition-colors">
-            <h3 className="font-bold text-[var(--color-navy)] mb-2 text-sm">Location</h3>
+          <div className="card p-5">
+            <h3 className="font-bold text-[var(--color-navy)] mb-1.5 text-sm" style={{ fontFamily: 'var(--font-display)' }}>Location</h3>
             <p className="text-sm text-[var(--color-text-muted)]">Nigeria</p>
           </div>
         </div>
 
-        <div className="p-6 rounded-xl bg-[var(--color-bg-card)] border border-[var(--color-border)]">
-          <h3 className="font-bold text-[var(--color-navy)] mb-4 text-sm">Send us a message</h3>
+        <div className="card p-6">
+          <h3 className="font-bold text-[var(--color-navy)] mb-4 text-sm" style={{ fontFamily: 'var(--font-display)' }}>
+            Send us a message
+          </h3>
 
           {sent ? (
-            <motion.div initial={{opacity:0,y:8}} animate={{opacity:1,y:0}}
+            <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
               className="py-10 text-center">
-              <div className="w-14 h-14 rounded-full bg-green-50 border border-green-200 flex items-center justify-center mx-auto mb-3">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#16a34a" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              <div className="w-12 h-12 rounded-full bg-[var(--color-bg-tertiary)] flex items-center justify-center mx-auto mb-3">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-success)" strokeWidth="2.5">
+                  <polyline points="20 6 9 17 4 12" />
+                </svg>
               </div>
-              <p className="font-bold text-[var(--color-navy)] mb-1">Message sent!</p>
-              <p className="text-sm text-[var(--color-text-muted)]">We'll get back to you at <strong>{email || 'your email'}</strong> soon.</p>
-              <button onClick={() => setSent(false)} className="mt-4 text-sm text-[var(--color-navy)] hover:underline">Send another message</button>
+              <p className="font-bold text-[var(--color-navy)] mb-1" style={{ fontFamily: 'var(--font-display)' }}>Message sent!</p>
+              <p className="text-sm text-[var(--color-text-muted)]">
+                We'll get back to you at <strong>{email || 'your email'}</strong> soon.
+              </p>
+              <button onClick={() => setSent(false)} className="mt-4 text-sm text-[var(--color-primary)] hover:underline font-semibold">
+                Send another message
+              </button>
             </motion.div>
           ) : (
             <form className="space-y-4" onSubmit={handleSubmit}>
-              {error && <div className="px-3 py-2 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm">{error}</div>}
+              {error && (
+                <div className="px-3 py-2 rounded-lg bg-[color-mix(in_srgb,var(--color-danger)_6%,transparent)] border border-[color-mix(in_srgb,var(--color-danger)_20%,transparent)] text-[var(--color-danger)] text-sm">
+                  {error}
+                </div>
+              )}
               <div>
-                <label className="block text-xs font-semibold text-[var(--color-text-secondary)] mb-1.5 uppercase tracking-wider">Name</label>
+                <label className="block text-xs font-semibold text-[var(--color-text-secondary)] mb-1.5 uppercase tracking-wider">
+                  Name
+                </label>
                 <input value={name} onChange={e => setName(e.target.value)} required
-                  className="w-full px-4 py-2.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-cream)] text-sm outline-none focus:border-[var(--color-navy)] focus:ring-2 focus:ring-navy/10 transition" placeholder="Your name"/>
+                  className="input" placeholder="Your name" />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-[var(--color-text-secondary)] mb-1.5 uppercase tracking-wider">Email</label>
+                <label className="block text-xs font-semibold text-[var(--color-text-secondary)] mb-1.5 uppercase tracking-wider">
+                  Email
+                </label>
                 <input type="email" value={email} onChange={e => setEmail(e.target.value)} required
-                  className="w-full px-4 py-2.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-cream)] text-sm outline-none focus:border-[var(--color-navy)] focus:ring-2 focus:ring-navy/10 transition" placeholder="you@example.com"/>
+                  className="input" placeholder="you@example.com" />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-[var(--color-text-secondary)] mb-1.5 uppercase tracking-wider">Message</label>
+                <label className="block text-xs font-semibold text-[var(--color-text-secondary)] mb-1.5 uppercase tracking-wider">
+                  Message
+                </label>
                 <textarea value={message} onChange={e => setMessage(e.target.value)} required
-                  className="w-full px-4 py-2.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-cream)] text-sm outline-none focus:border-[var(--color-navy)] focus:ring-2 focus:ring-navy/10 transition resize-none" rows={4} placeholder="Your message..."/>
+                  className="textarea" rows={4} placeholder="Your message..." />
               </div>
               <button type="submit" disabled={sending}
-                className="w-full py-3 rounded-lg bg-[var(--color-navy)] text-white font-semibold text-sm hover:bg-[var(--color-navy)]/90 transition-all shadow-sm disabled:opacity-60 flex items-center justify-center gap-2">
-                {sending ? <><div className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin"/>Sending...</> : 'Send Message'}
+                className="btn-primary w-full py-3 flex items-center justify-center gap-2">
+                {sending ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                    Sending...
+                  </>
+                ) : 'Send Message'}
               </button>
             </form>
           )}

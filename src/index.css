@@ -5,11 +5,12 @@
 
 /* ═══════════════════════════════════════════════════════════════
    ACAEDU — Academic Design System
-   Warm, approachable, wonder-blocks inspired cards, generous radii
-   Presets: Default (Khan Academy/Moodle) | Blue (Coursera) | Crimson (Harvard/MIT) | Institutional (Canvas LMS)
+   Khan Academy Wonder Blocks design language
+   Clean, friendly, approachable — border-first cards, generous whitespace
+   Presets: Default (Khan Academy) | Blue (Coursera) | Crimson (Harvard/MIT) | Institutional (Canvas LMS)
    ═══════════════════════════════════════════════════════════════ */
 
-/* ─── Design Tokens (Default — Khan Academy / Moodle) ──────── */
+/* ─── Design Tokens (Default — Khan Academy) ─────────────── */
 @theme {
   /* Primary — Khan instructive blue */
   --color-primary:        #1865f2;
@@ -27,7 +28,7 @@
   --color-accent:         #9059ff;
   --color-accent-warm:    #14bf96;
 
-  /* Backgrounds — Khan off-white, warm and approachable */
+  /* Backgrounds — Khan off-white */
   --color-bg:             #ffffff;
   --color-bg-secondary:   #f7f8fa;
   --color-bg-tertiary:    #eef0f3;
@@ -67,7 +68,7 @@
 }
 
 :root {
-  /* Gradients — Khan blue → purple language */
+  /* Gradients — Khan navy → blue */
   --gradient-primary:   linear-gradient(135deg, #0b2149 0%, #1865f2 50%, #4d8af2 100%);
   --gradient-warm:      linear-gradient(135deg, #1865f2 0%, #9059ff 60%, #c4a6ff 100%);
   --gradient-mixed:     linear-gradient(135deg, #0b2149 0%, #1865f2 50%, #9059ff 100%);
@@ -77,9 +78,9 @@
   --gradient-gold:      linear-gradient(135deg, #ffb100, #ffe08a, #ffb100);
   --gradient-card:      linear-gradient(145deg, #ffffff 0%, #fafbfc 100%);
   --gradient-aurora:
-    radial-gradient(ellipse at 25% 35%, rgba(24,101,242,0.04) 0%, transparent 55%),
-    radial-gradient(ellipse at 75% 65%, rgba(144,89,255,0.03) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 10%, rgba(11,33,73,0.02) 0%, transparent 45%);
+    radial-gradient(ellipse at 25% 35%, rgba(24,101,242,0.03) 0%, transparent 55%),
+    radial-gradient(ellipse at 75% 65%, rgba(144,89,255,0.02) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 10%, rgba(11,33,73,0.01) 0%, transparent 45%);
 
   /* Institutional accent stripe */
   --stripe-navy: repeating-linear-gradient(
@@ -90,55 +91,55 @@
     transparent 8px
   );
 
-  /* Shadows — soft, approachable */
-  --shadow-xs:  0 1px 2px rgba(0,0,0,0.04);
-  --shadow-sm:  0 1px 4px rgba(0,0,0,0.06);
-  --shadow-md:  0 2px 12px rgba(0,0,0,0.07);
-  --shadow-lg:  0 6px 20px rgba(0,0,0,0.09);
-  --shadow-xl:  0 10px 36px rgba(0,0,0,0.11);
-  --shadow-2xl: 0 16px 48px rgba(0,0,0,0.14);
-  --shadow-card: 0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04);
-  --shadow-card-hover: 0 4px 16px rgba(0,0,0,0.08), 0 8px 28px rgba(0,0,0,0.06);
-  --shadow-glow-navy: 0 0 0 3px var(--color-primary-muted-shadow, rgba(24,101,242,0.10)), 0 4px 16px var(--color-primary-shadow, rgba(24,101,242,0.12));
-  --shadow-glow-gold: 0 0 0 3px rgba(255,177,0,0.10), 0 4px 16px rgba(255,177,0,0.10);
-  --shadow-inner: inset 0 1px 3px rgba(0,0,0,0.04);
-  --shadow-nav: 0 1px 3px rgba(0,0,0,0.06);
+  /* Shadows — very subtle, almost flat. Border-first approach */
+  --shadow-xs:  0 1px 2px rgba(0,0,0,0.03);
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.04);
+  --shadow-md:  0 2px 8px rgba(0,0,0,0.05);
+  --shadow-lg:  0 4px 14px rgba(0,0,0,0.07);
+  --shadow-xl:  0 8px 28px rgba(0,0,0,0.09);
+  --shadow-2xl: 0 12px 40px rgba(0,0,0,0.12);
+  --shadow-card: none;
+  --shadow-card-hover: 0 2px 8px rgba(0,0,0,0.06);
+  --shadow-glow-navy: 0 0 0 3px var(--color-primary-muted-shadow, rgba(24,101,242,0.10));
+  --shadow-glow-gold: 0 0 0 3px rgba(255,177,0,0.12);
+  --shadow-inner: inset 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-nav: 0 1px 0 rgba(0,0,0,0.06);
 
-  /* Radii — softer, generous */
-  --radius-xs:  3px;
+  /* Radii — Khan tokens */
+  --radius-xs:  4px;
   --radius-sm:  6px;
-  --radius-md:  10px;
-  --radius-lg:  14px;
-  --radius-xl:  20px;
-  --radius-2xl: 24px;
-  --radius-3xl: 28px;
+  --radius-md:  8px;
+  --radius-lg:  12px;
+  --radius-xl:  16px;
+  --radius-2xl: 20px;
+  --radius-3xl: 24px;
   --radius-pill: 50px;
 
-  /* Spacing unit */
-  --space-unit: 4px;
+  /* Spacing unit — 8px grid */
+  --space-unit: 8px;
 
-  /* Typography — Source Sans 3 (academic) */
-  --font-display: 'Source Sans 3 Variable', 'Source Sans 3', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  --font-body:    'Source Sans 3 Variable', 'Source Sans 3', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  /* Typography — Lato (Khan Academy) */
+  --font-display: 'Lato', 'Helvetica Neue', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-body:    'Lato', 'Helvetica Neue', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   --font-mono:    'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
   --font-serif:   'Georgia', 'Times New Roman', serif;
 
-  /* Type scale */
+  /* Type scale — clean Khan hierarchy */
   --text-xs:   11px;
   --text-sm:   13px;
-  --text-base: 14px;
-  --text-md:   15px;
-  --text-lg:   17px;
+  --text-base: 15px;
+  --text-md:   16px;
+  --text-lg:   18px;
   --text-xl:   20px;
   --text-2xl:  24px;
   --text-3xl:  30px;
   --text-4xl:  36px;
 
   /* Line heights */
-  --leading-tight:  1.25;
-  --leading-snug:   1.375;
+  --leading-tight:  1.2;
+  --leading-snug:   1.35;
   --leading-normal: 1.5;
-  --leading-relaxed: 1.625;
+  --leading-relaxed: 1.65;
   --leading-loose:  1.8;
 
   /* Transitions */
@@ -151,47 +152,50 @@
   --duration-slower: 500ms;
 }
 
-/* ─── Dark Theme (Default — Khan Academy) ────────────────────── */
+/* ─── Dark Theme (Khan Academy — dark navy) ──────────────────── */
 [data-theme="dark"],
 .dark {
-  --color-bg:             #0a0e14;
-  --color-bg-secondary:   #101620;
-  --color-bg-tertiary:    #16202c;
-  --color-bg-card:        #121a24;
-  --color-bg-hover:       #1a2430;
-  --color-text:           #e8e6e1;
-  --color-text-secondary: #a0a4ac;
-  --color-text-muted:     #5a6068;
-  --color-border:         #1e2a36;
-  --color-border-light:   #162028;
-  --color-border-strong:  #2a3c4a;
+  --color-bg:             #0a1220;
+  --color-bg-secondary:   #0f1a2e;
+  --color-bg-tertiary:    #142236;
+  --color-bg-card:        #0e1828;
+  --color-bg-hover:       #162238;
+  --color-text:           #e8eaed;
+  --color-text-secondary: #a0a8b4;
+  --color-text-muted:     #5a6474;
+  --color-border:         #1c2c42;
+  --color-border-light:   #162438;
+  --color-border-strong:  #2a3e58;
   --color-navy:           #4d8af2;
   --color-navy-mid:       #6d9ff5;
   --color-navy-light:     #90b8f8;
   --color-navy-pale:      #0e1418;
   --color-gold-pale:      #1a1505;
-  --color-cream:          #101620;
+  --color-cream:          #0f1a2e;
   --gradient-aurora:
-    radial-gradient(ellipse at 25% 35%, rgba(24,101,242,0.08) 0%, transparent 55%),
-    radial-gradient(ellipse at 75% 65%, rgba(144,89,255,0.05) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 10%, rgba(8,20,24,0.6) 0%, transparent 45%);
-  --shadow-card: 0 1px 3px rgba(0,0,0,0.3), 0 2px 8px rgba(0,0,0,0.2);
-  --shadow-card-hover: 0 6px 20px rgba(0,0,0,0.35), 0 4px 12px rgba(0,0,0,0.2);
+    radial-gradient(ellipse at 25% 35%, rgba(24,101,242,0.06) 0%, transparent 55%),
+    radial-gradient(ellipse at 75% 65%, rgba(144,89,255,0.04) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 10%, rgba(10,18,32,0.6) 0%, transparent 45%);
+  --shadow-card: none;
+  --shadow-card-hover: 0 2px 8px rgba(0,0,0,0.2);
+  --shadow-sm:  0 1px 3px rgba(0,0,0,0.15);
+  --shadow-md:  0 2px 8px rgba(0,0,0,0.2);
+  --shadow-lg:  0 4px 14px rgba(0,0,0,0.25);
 }
 
-/* ─── Midnight Theme (Default — Khan Academy) ────────────────── */
+/* ─── Midnight Theme (Khan Academy) ──────────────────────── */
 [data-theme="midnight"] {
-  --color-bg:             #060a10;
-  --color-bg-secondary:   #0a1018;
-  --color-bg-tertiary:    #0e1820;
-  --color-bg-card:        #0c141c;
-  --color-bg-hover:       #101c26;
-  --color-text:           #c0c8cc;
-  --color-text-secondary: #7a8a90;
-  --color-text-muted:     #3e5058;
-  --color-border:         #121e28;
-  --color-border-light:   #0e1820;
-  --color-border-strong:  #1a2e3a;
+  --color-bg:             #060c16;
+  --color-bg-secondary:   #0a1220;
+  --color-bg-tertiary:    #0e1828;
+  --color-bg-card:        #0c1420;
+  --color-bg-hover:       #101c2c;
+  --color-text:           #c0c8d0;
+  --color-text-secondary: #7a8a98;
+  --color-text-muted:     #3e5060;
+  --color-border:         #121e2c;
+  --color-border-light:   #0e1824;
+  --color-border-strong:  #1a2e40;
   --color-primary:        #4d8af2;
   --color-primary-hover:  #6d9ff5;
   --color-primary-light:  #90b8f8;
@@ -207,32 +211,22 @@
   --color-gold-light:     #e0c080;
   --color-gold-bright:    #f0d090;
   --color-gold-pale:      #120e04;
-  --color-cream:          #0a1018;
+  --color-cream:          #0a1220;
   --gradient-aurora:
-    radial-gradient(ellipse at 20% 30%, rgba(77,138,242,0.08) 0%, transparent 55%),
-    radial-gradient(ellipse at 80% 70%, rgba(144,89,255,0.04) 0%, transparent 50%),
-    radial-gradient(ellipse at 50% 5%,  rgba(6,10,16,0.7) 0%, transparent 45%);
-  --shadow-card: 0 1px 4px rgba(0,0,0,0.5), 0 2px 12px rgba(0,0,0,0.3);
-  --shadow-card-hover: 0 6px 24px rgba(0,0,0,0.5), 0 4px 16px rgba(0,0,0,0.3);
-  --shadow-glow-navy: 0 0 0 3px rgba(77,138,242,0.12), 0 4px 18px rgba(77,138,242,0.15);
+    radial-gradient(ellipse at 20% 30%, rgba(77,138,242,0.06) 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 70%, rgba(144,89,255,0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 5%,  rgba(6,12,22,0.7) 0%, transparent 45%);
+  --shadow-card: none;
+  --shadow-card-hover: 0 2px 10px rgba(0,0,0,0.35);
+  --shadow-glow-navy: 0 0 0 3px rgba(77,138,242,0.12);
 }
 
 /* ═══════════════════════════════════════════════════════════════
    ACADEMIC PRESETS — Switchable institutional themes
-   Fundamentally different color/spacing/radius per preset
    ═══════════════════════════════════════════════════════════════ */
 
-/* ═══════════════════════════════════════════════════════════════
-   ACADEMIC PRESETS — Cloned from real platform design systems
-   ═══════════════════════════════════════════════════════════════ */
-
-/* ─── Blue Academy — Cloned from Coursera ───────────────────────
-   Exact tokens from Coursera's design system:
-   Voltage blue #0056d2, navy callout #002761, Source Sans Pro,
-   8px/50px radius split, five-step neutral gray ladder,
-   border-first cards, capsule filter pills                        */
+/* ─── Blue Academy — Cloned from Coursera ─────────────────── */
 [data-academic="blue"] {
-  /* Coursera exact color tokens */
   --color-primary:        #0056d2;
   --color-primary-hover:  #0048b0;
   --color-primary-light:  #3587fc;
@@ -243,21 +237,17 @@
   --color-secondary-light:#3587fc;
   --color-accent:         #a678f5;
   --color-accent-warm:    #3587fc;
-  /* Coursera five-step neutral ladder */
   --color-bg:             #ffffff;
   --color-bg-secondary:   #f7f8fa;
   --color-bg-tertiary:    #e8eef7;
   --color-bg-card:        #ffffff;
   --color-bg-hover:       #f0f3f8;
-  /* Coursera text hierarchy */
   --color-text:           #0f1114;
   --color-text-secondary: #1e2229;
   --color-text-muted:     #5b6780;
-  /* Coursera hairline borders */
   --color-border:         #dae1ed;
   --color-border-light:   #e8eef7;
   --color-border-strong:  #b0b8c9;
-  /* Coursera navy callout family */
   --color-navy:           #002761;
   --color-navy-mid:       #003b8f;
   --color-navy-light:     #3587fc;
@@ -272,11 +262,9 @@
   --color-warning:        #a32e00;
   --color-success:        #276a1a;
   --color-info:           #0056d2;
-  /* Coursera gradients */
   --gradient-primary:     linear-gradient(135deg, #002761 0%, #0056d2 55%, #3587fc 100%);
   --gradient-hero:        linear-gradient(160deg, #001a4d 0%, #002761 35%, #0056d2 75%, #002761 100%);
   --gradient-warm:        linear-gradient(135deg, #002761 0%, #0056d2 60%, #3587fc 100%);
-  /* Coursera radii: 2px chip, 8px button, 16px card, 50px pill */
   --radius-xs:  2px;
   --radius-sm:  4px;
   --radius-md:  8px;
@@ -285,21 +273,18 @@
   --radius-2xl: 24px;
   --radius-3xl: 24px;
   --radius-pill: 50px;
-  /* Coursera shadows: subtle, border-first cards */
-  --shadow-card: 0 1px 3px rgba(0,0,0,0.03);
+  --shadow-card: none;
   --shadow-card-hover: 0 2px 8px rgba(0,0,0,0.06);
   --shadow-sm:  0 1px 3px rgba(0,0,0,0.04);
   --shadow-md:  0 2px 8px rgba(0,0,0,0.05);
   --shadow-lg:  0 4px 14px rgba(0,0,0,0.06);
   --shadow-xl:  0 6px 20px rgba(0,0,0,0.08);
   --shadow-2xl: 0 8px 28px rgba(0,0,0,0.10);
-  /* Coursera font: Source Sans Pro (already loaded) */
   --font-display: 'Source Sans 3 Variable', 'Source Sans 3', 'Inter', sans-serif;
   --font-body:    'Source Sans 3 Variable', 'Source Sans 3', 'Inter', sans-serif;
   --color-primary-glow:   rgba(0,86,210,0.08);
 }
 
-/* Coursera — border-first card system (no shadows, border-color change on hover) */
 [data-academic="blue"] .card {
   border: 1px solid var(--color-border);
   box-shadow: none;
@@ -330,7 +315,6 @@
   border-color: var(--color-primary);
 }
 [data-academic="blue"] .stat-card::after { display: none; }
-/* Coursera 8px rectangular CTAs */
 [data-academic="blue"] .btn-primary {
   border-radius: 8px;
   height: 36px;
@@ -340,14 +324,12 @@
 }
 [data-academic="blue"] .btn-secondary { border-radius: 8px; height: 36px; }
 [data-academic="blue"] .btn-gold { border-radius: 8px; }
-/* Coursera 50px capsule pills */
 [data-academic="blue"] .discipline-pill { border-radius: 50px; }
 [data-academic="blue"] .badge { border-radius: 50px; }
 [data-academic="blue"] .input,
 [data-academic="blue"] .select,
 [data-academic="blue"] .textarea { border-radius: 8px; }
 [data-academic="blue"] .modal { border-radius: 16px; }
-/* Coursera typography: Source Sans Pro weight 600 for display */
 [data-academic="blue"] .section-title { font-weight: 600; letter-spacing: -0.006em; }
 [data-academic="blue"] .text-display-xl,
 [data-academic="blue"] .text-display-lg,
@@ -377,12 +359,8 @@
   --color-navy-pale:      #0c1824;
 }
 
-/* ─── Crimson Prestige — Cloned from Harvard/MIT ─────────────────
-   Exact tokens from HarvardSites Design System + MIT Brand Guide:
-   Crimson #A51C30, gold #B8860B, Baskerville/Georgia serif display,
-   deep warm shadows, generous academic whitespace, classical feel    */
+/* ─── Crimson Prestige — Cloned from Harvard/MIT ───────────── */
 [data-academic="crimson"] {
-  /* Harvard/MIT exact color tokens */
   --color-primary:        #A51C30;
   --color-primary-hover:  #8C1728;
   --color-primary-light:  #C4324A;
@@ -391,24 +369,19 @@
   --color-secondary:      #1E1E1E;
   --color-secondary-hover:#2D2D2D;
   --color-secondary-light:#A51C30;
-  /* Harvard gold accent */
   --color-accent:         #B8860B;
   --color-accent-warm:    #D4A017;
-  /* Warm ivory surfaces (Harvard academic warmth) */
   --color-bg:             #FFFFFF;
   --color-bg-secondary:   #F9F6F3;
   --color-bg-tertiary:    #F0EBE5;
   --color-bg-card:        #FFFFFF;
   --color-bg-hover:       #F5F0EA;
-  /* Text hierarchy */
   --color-text:           #1A1A1A;
   --color-text-secondary: #414141;
   --color-text-muted:     #6C6C6C;
-  /* Borders — warm grays */
   --color-border:         #C8C4BC;
   --color-border-light:   #E0DDD8;
   --color-border-strong:  #9A9590;
-  /* Academic crimson navy */
   --color-navy:           #A51C30;
   --color-navy-mid:       #8C1728;
   --color-navy-light:     #C4324A;
@@ -422,11 +395,9 @@
   --color-warning:        #B8860B;
   --color-success:        #2E7D32;
   --color-info:           #1565C0;
-  /* Harvard deep warm gradients */
   --gradient-primary:     linear-gradient(135deg, #6B1020 0%, #A51C30 55%, #C4324A 100%);
   --gradient-hero:        linear-gradient(160deg, #1A0A10 0%, #3D0F1C 35%, #A51C30 75%, #6B1020 100%);
   --gradient-warm:        linear-gradient(135deg, #B8860B 0%, #D4A017 50%, #B8860B 100%);
-  /* Harvard: sharp scholarly radii — minimal rounding */
   --radius-xs:  2px;
   --radius-sm:  3px;
   --radius-md:  4px;
@@ -435,25 +406,22 @@
   --radius-2xl: 10px;
   --radius-3xl: 12px;
   --radius-pill: 50px;
-  /* Harvard: deep warm multi-layer shadows */
-  --shadow-card: 0 2px 8px rgba(105,16,32,0.06), 0 1px 3px rgba(0,0,0,0.04);
-  --shadow-card-hover: 0 6px 20px rgba(105,16,32,0.10), 0 2px 6px rgba(0,0,0,0.06);
+  --shadow-card: none;
+  --shadow-card-hover: 0 4px 16px rgba(105,16,32,0.08);
   --shadow-sm:  0 1px 4px rgba(105,16,32,0.06);
   --shadow-md:  0 3px 12px rgba(105,16,32,0.08);
   --shadow-lg:  0 8px 24px rgba(105,16,32,0.10);
   --shadow-xl:  0 12px 36px rgba(105,16,32,0.12);
   --shadow-2xl: 0 16px 48px rgba(105,16,32,0.14);
-  /* Harvard: Baskerville/Georgia serif for display (HarvardSites option) */
   --font-display: 'Georgia', 'Cambria', 'Times New Roman', serif;
   --font-body:    'Source Sans 3 Variable', 'Source Sans 3', -apple-system, sans-serif;
   --color-primary-glow:   rgba(165,28,48,0.08);
 }
 
-/* Harvard — deep warm shadow cards, serif headings, gold accent bar */
 [data-academic="crimson"] .card {
   border: 1px solid var(--color-border-light);
   border-radius: 6px;
-  box-shadow: 0 2px 8px rgba(105,16,32,0.06), 0 1px 3px rgba(0,0,0,0.04);
+  box-shadow: none;
 }
 [data-academic="crimson"] .card:hover {
   box-shadow: 0 6px 20px rgba(105,16,32,0.10), 0 2px 6px rgba(0,0,0,0.06);
@@ -462,7 +430,7 @@
 [data-academic="crimson"] .card-academic {
   border: 1px solid var(--color-border-light);
   border-radius: 6px;
-  box-shadow: 0 2px 8px rgba(105,16,32,0.06), 0 1px 3px rgba(0,0,0,0.04);
+  box-shadow: none;
 }
 [data-academic="crimson"] .card-academic:hover {
   box-shadow: 0 6px 20px rgba(105,16,32,0.10), 0 2px 6px rgba(0,0,0,0.06);
@@ -471,13 +439,12 @@
 [data-academic="crimson"] .stat-card {
   border: 1px solid var(--color-border-light);
   border-radius: 6px;
-  box-shadow: 0 2px 8px rgba(105,16,32,0.06), 0 1px 3px rgba(0,0,0,0.04);
+  box-shadow: none;
 }
 [data-academic="crimson"] .stat-card:hover {
   box-shadow: 0 6px 20px rgba(105,16,32,0.10), 0 2px 6px rgba(0,0,0,0.06);
 }
 [data-academic="crimson"] .stat-card::after { display: none; }
-/* Harvard: sharp scholarly radii */
 [data-academic="crimson"] .btn-primary { border-radius: 4px; font-weight: 700; }
 [data-academic="crimson"] .btn-secondary { border-radius: 4px; }
 [data-academic="crimson"] .btn-gold { border-radius: 4px; }
@@ -487,7 +454,6 @@
 [data-academic="crimson"] .select,
 [data-academic="crimson"] .textarea { border-radius: 4px; }
 [data-academic="crimson"] .modal { border-radius: 8px; }
-/* Harvard: serif display headings (Baskerville/Georgia) */
 [data-academic="crimson"] .section-title,
 [data-academic="crimson"] .text-display-xl,
 [data-academic="crimson"] .text-display-lg,
@@ -497,7 +463,6 @@
   font-weight: 700;
   letter-spacing: -0.01em;
 }
-/* Harvard: generous academic spacing */
 [data-academic="crimson"] .section-label {
   letter-spacing: 0.16em;
 }
@@ -528,13 +493,8 @@
   --color-border:         #2A0F18;
 }
 
-/* ─── Institutional — Cloned from Canvas LMS / Workday ───────────
-   Exact tokens from Canvas Kit + Workday Canvas Tokens Web:
-   Neutral gray scale, flat depth levels, t-shirt sizing,
-   system font (Roboto → system stack), functional density,
-   strong borders, minimal shadows, data-dense layout               */
+/* ─── Institutional — Cloned from Canvas LMS / Workday ────── */
 [data-academic="institutional"] {
-  /* Canvas LMS / Workday exact color tokens */
   --color-primary:        #0070E0;
   --color-primary-hover:  #005CB8;
   --color-primary-light:  #4DA3FF;
@@ -545,21 +505,17 @@
   --color-secondary-light:#5B7A8A;
   --color-accent:         #49C9A8;
   --color-accent-warm:    #FF8C00;
-  /* Canvas neutral gray ladder (Workday soap/pepper scale) */
   --color-bg:             #FFFFFF;
   --color-bg-secondary:   #F5F6F7;
   --color-bg-tertiary:    #E8EAED;
   --color-bg-card:        #FFFFFF;
   --color-bg-hover:       #EEF0F2;
-  /* Canvas text hierarchy (Workday blackPepper) */
   --color-text:           #1E2A38;
   --color-text-secondary: #3D4F5F;
   --color-text-muted:     #607890;
-  /* Canvas borders (Workday soap200-400) */
   --color-border:         #C5CED6;
   --color-border-light:   #DEE3E8;
   --color-border-strong:  #8C9EAF;
-  /* Canvas navy/teal */
   --color-navy:           #1A3E5C;
   --color-navy-mid:       #2D5F8A;
   --color-navy-light:     #4DA3FF;
@@ -574,11 +530,9 @@
   --color-warning:        #E6A817;
   --color-success:        #247D2B;
   --color-info:           #0070E0;
-  /* Canvas functional gradients (minimal, neutral) */
   --gradient-primary:     linear-gradient(135deg, #1A3E5C 0%, #0070E0 55%, #4DA3FF 100%);
   --gradient-hero:        linear-gradient(160deg, #0D1F2D 0%, #1A3E5C 35%, #2D5F8A 75%, #1A3E5C 100%);
   --gradient-warm:        linear-gradient(135deg, #0070E0 0%, #49C9A8 60%, #0070E0 100%);
-  /* Canvas Kit radii: t-shirt sizing, consistent 6-10px */
   --radius-xs:  2px;
   --radius-sm:  4px;
   --radius-md:  6px;
@@ -587,21 +541,18 @@
   --radius-2xl: 12px;
   --radius-3xl: 16px;
   --radius-pill: 50px;
-  /* Canvas Kit depth: flat, minimal shadows (Workday depth scale) */
-  --shadow-card: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-card: none;
   --shadow-card-hover: 0 2px 6px rgba(0,0,0,0.06);
   --shadow-sm:  0 1px 2px rgba(0,0,0,0.04);
   --shadow-md:  0 1px 4px rgba(0,0,0,0.05);
   --shadow-lg:  0 2px 8px rgba(0,0,0,0.06);
   --shadow-xl:  0 4px 12px rgba(0,0,0,0.08);
   --shadow-2xl: 0 6px 18px rgba(0,0,0,0.10);
-  /* Canvas/Workday: system font (Roboto → system stack) */
   --font-display: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
   --font-body:    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
   --color-primary-glow:   rgba(0,112,224,0.08);
 }
 
-/* Canvas LMS — flat cards with strong borders, functional density */
 [data-academic="institutional"] .card {
   border: 1.5px solid var(--color-border);
   box-shadow: none;
@@ -632,7 +583,6 @@
   border-color: var(--color-primary);
 }
 [data-academic="institutional"] .stat-card::after { display: none; }
-/* Canvas Kit button radii (6px default) */
 [data-academic="institutional"] .btn-primary { border-radius: 6px; font-weight: 600; }
 [data-academic="institutional"] .btn-secondary { border-radius: 6px; }
 [data-academic="institutional"] .btn-gold { border-radius: 6px; }
@@ -642,7 +592,6 @@
 [data-academic="institutional"] .select,
 [data-academic="institutional"] .textarea { border-radius: 6px; }
 [data-academic="institutional"] .modal { border-radius: 10px; }
-/* Canvas/Workday typography: system font, weight 700 for headings */
 [data-academic="institutional"] .section-title,
 [data-academic="institutional"] .text-display-xl,
 [data-academic="institutional"] .text-display-lg,
@@ -676,7 +625,7 @@
   --color-navy-pale:      #0A1218;
 }
 
-/* ─── Base Reset ─────────────────────────────────────────────── */
+/* ─── Base Reset ──────────────────────────────────────────── */
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
@@ -703,7 +652,7 @@ body {
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+  background: color-mix(in srgb, var(--color-primary) 12%, transparent);
   color: var(--color-text);
 }
 
@@ -726,37 +675,37 @@ button { cursor: pointer; border: none; background: none; font: inherit; color: 
 img { max-width: 100%; height: auto; display: block; }
 input, select, textarea { font: inherit; color: inherit; }
 
-/* ─── Typography Scale ───────────────────────────────────────── */
+/* ─── Typography Scale ────────────────────────────────────── */
 .text-display-xl {
   font-family: var(--font-display);
-  font-size: clamp(2.8rem, 5.5vw, 5rem);
-  font-weight: 800;
-  letter-spacing: -0.03em;
-  line-height: 0.96;
+  font-size: clamp(2.8rem, 5.5vw, 3rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 1.0;
 }
 .text-display-lg {
   font-family: var(--font-display);
-  font-size: clamp(2rem, 4vw, 3.6rem);
-  font-weight: 800;
-  letter-spacing: -0.025em;
-  line-height: 1.02;
+  font-size: clamp(2rem, 4vw, 2.5rem);
+  font-weight: 900;
+  letter-spacing: -0.015em;
+  line-height: 1.08;
 }
 .text-display-md {
   font-family: var(--font-display);
-  font-size: clamp(1.5rem, 2.8vw, 2.4rem);
+  font-size: clamp(1.5rem, 2.8vw, 1.75rem);
   font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
 }
 .text-display-sm {
   font-family: var(--font-display);
-  font-size: clamp(1.15rem, 1.8vw, 1.6rem);
-  font-weight: 600;
-  letter-spacing: -0.015em;
-  line-height: 1.2;
+  font-size: clamp(1.15rem, 1.8vw, 1.25rem);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
 }
 
-/* ─── Glass / Nav ────────────────────────────────────────────── */
+/* ─── Label Caps ──────────────────────────────────────────── */
 .text-label-caps {
   font-size: 11px;
   font-weight: 700;
@@ -766,50 +715,53 @@ input, select, textarea { font: inherit; color: inherit; }
   font-family: var(--font-body);
 }
 
-/* ─── Glass / Nav ────────────────────────────────────────────── */
+/* ─── Glass / Nav ─────────────────────────────────────────── */
 .glass {
-  background: rgba(255, 255, 255, 0.96);
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  background: rgba(255, 255, 255, 0.97);
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
   border-bottom: 1px solid var(--color-border-light);
   box-shadow: var(--shadow-nav);
 }
 .dark .glass,
 [data-theme="dark"] .glass {
-  background: rgba(10, 18, 20, 0.96);
+  background: rgba(10, 18, 32, 0.97);
   border-bottom: 1px solid var(--color-border);
 }
 
-/* ─── Card — shadow-elevated ──────────────────────────────── */
+/* ─── Card — border-first, minimal shadow ─────────────────── */
 .card {
   background: var(--color-bg-card);
   border: 1px solid var(--color-border-light);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
+  box-shadow: none;
   transition:
     box-shadow var(--duration-base) var(--ease-out),
+    border-color var(--duration-base) var(--ease-out),
     transform var(--duration-base) var(--ease-out);
 }
 .card:hover {
   box-shadow: var(--shadow-card-hover);
+  border-color: var(--color-border-strong);
   transform: translateY(-1px);
 }
 .card-interactive {
   cursor: pointer;
 }
 .card-interactive:hover {
-  box-shadow: var(--shadow-lg);
+  box-shadow: var(--shadow-md);
 }
 
-/* Academic card — soft rounded-square shape ──────────────── */
+/* Academic card — clean left accent ───────────────────────── */
 .card-academic {
   background: var(--color-bg-card);
   border: 1px solid var(--color-border-light);
-  border-radius: 20px;
-  box-shadow: var(--shadow-card);
+  border-radius: var(--radius-lg);
+  box-shadow: none;
   position: relative;
   overflow: hidden;
   transition: box-shadow var(--duration-base) var(--ease-out),
+              border-color var(--duration-base) var(--ease-out),
               transform var(--duration-base) var(--ease-out);
 }
 .card-academic::before {
@@ -817,24 +769,25 @@ input, select, textarea { font: inherit; color: inherit; }
   position: absolute;
   top: 0; left: 0; bottom: 0;
   width: 3px;
-  background: var(--gradient-primary);
+  background: var(--color-primary);
   opacity: 0;
   transition: opacity var(--duration-base) var(--ease-out);
 }
 .card-academic:hover {
   box-shadow: var(--shadow-card-hover);
-  transform: translateY(-2px);
+  border-color: var(--color-border-strong);
+  transform: translateY(-1px);
 }
 .card-academic:hover::before { opacity: 1; }
 
-/* ─── Inputs ─────────────────────────────────────────────────── */
+/* ─── Inputs — clean border, 8px radius, focus ring ──────── */
 .input {
   width: 100%;
   padding: 12px 14px;
   background: var(--color-bg-card);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  font-size: var(--text-sm);
+  font-size: var(--text-base);
   color: var(--color-text);
   outline: none;
   transition:
@@ -846,7 +799,7 @@ input, select, textarea { font: inherit; color: inherit; }
 .input:hover  { border-color: var(--color-border-strong); }
 .input:focus  {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 8%, transparent);
+  box-shadow: 0 0 0 2px var(--color-primary);
 }
 
 .select {
@@ -855,7 +808,7 @@ input, select, textarea { font: inherit; color: inherit; }
   background: var(--color-bg-card);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  font-size: var(--text-sm);
+  font-size: var(--text-base);
   color: var(--color-text);
   outline: none;
   appearance: none;
@@ -868,7 +821,7 @@ input, select, textarea { font: inherit; color: inherit; }
 }
 .select:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(193,39,45,0.06);
+  box-shadow: 0 0 0 2px var(--color-primary);
 }
 
 .textarea {
@@ -877,7 +830,7 @@ input, select, textarea { font: inherit; color: inherit; }
   background: var(--color-bg-card);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  font-size: var(--text-sm);
+  font-size: var(--text-base);
   color: var(--color-text);
   outline: none;
   resize: vertical;
@@ -888,30 +841,30 @@ input, select, textarea { font: inherit; color: inherit; }
 }
 .textarea:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 8%, transparent);
+  box-shadow: 0 0 0 2px var(--color-primary);
 }
 
 .label {
   display: block;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
   color: var(--color-text-secondary);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.02em;
   margin-bottom: 6px;
 }
 
-/* ─── Buttons ────────────────────────────────────────────────── */
+/* ─── Buttons — rounded 8px, solid fills, clean hover ─────── */
 .btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 7px;
   padding: 0 22px;
-  height: 40px;
+  height: 42px;
   background: var(--color-primary);
   color: #fff;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 15px;
+  font-weight: 700;
   letter-spacing: 0.12px;
   border-radius: var(--radius-md);
   transition: all var(--duration-base) var(--ease-out);
@@ -921,9 +874,8 @@ input, select, textarea { font: inherit; color: inherit; }
 }
 .btn-primary:hover {
   background: var(--color-primary-hover);
-  box-shadow: 0 4px 12px color-mix(in srgb, var(--color-primary) 40%, transparent);
 }
-.btn-primary:active { box-shadow: var(--shadow-xs); transform: scale(0.98); }
+.btn-primary:active { transform: scale(0.98); }
 .btn-primary:disabled { opacity: 0.5; pointer-events: none; }
 
 .btn-secondary {
@@ -932,10 +884,10 @@ input, select, textarea { font: inherit; color: inherit; }
   justify-content: center;
   gap: 7px;
   padding: 0 22px;
-  height: 40px;
+  height: 42px;
   background: var(--color-bg-card);
   color: var(--color-text);
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
@@ -944,7 +896,6 @@ input, select, textarea { font: inherit; color: inherit; }
 .btn-secondary:hover {
   border-color: var(--color-primary);
   color: var(--color-primary);
-  box-shadow: var(--shadow-sm);
 }
 
 .btn-ghost {
@@ -953,9 +904,9 @@ input, select, textarea { font: inherit; color: inherit; }
   justify-content: center;
   gap: 6px;
   padding: 0 14px;
-  height: 40px;
+  height: 42px;
   color: var(--color-text-secondary);
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   border-radius: var(--radius-md);
   transition: all var(--duration-fast) var(--ease-out);
@@ -965,7 +916,6 @@ input, select, textarea { font: inherit; color: inherit; }
   color: var(--color-text);
 }
 
-/* Navy CTA — dark action button */
 .btn-gold {
   display: inline-flex;
   align-items: center;
@@ -980,39 +930,36 @@ input, select, textarea { font: inherit; color: inherit; }
   letter-spacing: 0.14px;
   border-radius: var(--radius-md);
   transition: all var(--duration-base) var(--ease-out);
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 .btn-gold:hover {
   background: var(--color-secondary-hover);
-  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-  transform: translateY(-1px);
 }
 
-/* ─── Badge ──────────────────────────────────────────────────── */
+/* ─── Badge — small, rounded pills ────────────────────────── */
 .badge {
   display: inline-flex;
   align-items: center;
   padding: 3px 10px;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-pill);
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 .badge-navy    { background: var(--color-navy-pale);  color: var(--color-primary); }
 .badge-gold    { background: var(--color-gold-pale);  color: var(--color-gold); }
-.badge-success { background: rgba(27,122,66,0.08);    color: var(--color-success); }
+.badge-success { background: rgba(0,166,14,0.08);     color: var(--color-success); }
 .badge-danger  { background: color-mix(in srgb, var(--color-danger) 8%, transparent);  color: var(--color-danger); }
-.badge-warning { background: rgba(196,122,16,0.08);   color: var(--color-warning); }
+.badge-warning { background: rgba(255,177,0,0.10);    color: #8a6200; }
 .badge-neutral { background: var(--color-bg-secondary); color: var(--color-text-muted); }
 
-/* ─── Stat Card ──────────────────────────────────────────────── */
+/* ─── Stat Card ───────────────────────────────────────────── */
 .stat-card {
   background: var(--color-bg-card);
   border: 1px solid var(--color-border-light);
   border-radius: var(--radius-lg);
-  padding: 22px;
-  box-shadow: var(--shadow-card);
+  padding: 24px;
+  box-shadow: none;
   transition: all var(--duration-slow) var(--ease-out);
   position: relative;
   overflow: hidden;
@@ -1028,11 +975,12 @@ input, select, textarea { font: inherit; color: inherit; }
 }
 .stat-card:hover {
   box-shadow: var(--shadow-card-hover);
-  transform: translateY(-2px);
+  border-color: var(--color-border-strong);
+  transform: translateY(-1px);
 }
 .stat-card:hover::after { opacity: 1; }
 
-/* ─── Section Headers ────────────────────────────────────────── */
+/* ─── Section Headers ─────────────────────────────────────── */
 .section-label {
   font-size: 12px;
   font-weight: 700;
@@ -1044,19 +992,19 @@ input, select, textarea { font: inherit; color: inherit; }
 .section-title {
   font-family: var(--font-display);
   font-size: 28px;
-  font-weight: 800;
+  font-weight: 700;
   color: var(--color-text);
-  letter-spacing: -0.02em;
-  line-height: 1.15;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
 }
 
-/* ─── Table ──────────────────────────────────────────────────── */
+/* ─── Table — clean, striped rows, generous padding ───────── */
 .table-container {
   background: var(--color-bg-card);
   border: 1px solid var(--color-border-light);
   border-radius: var(--radius-lg);
   overflow: hidden;
-  box-shadow: var(--shadow-card);
+  box-shadow: none;
 }
 .table { width: 100%; border-collapse: collapse; }
 .table th {
@@ -1071,21 +1019,24 @@ input, select, textarea { font: inherit; color: inherit; }
   border-bottom: 1px solid var(--color-border-light);
 }
 .table td {
-  padding: 12px 16px;
-  font-size: var(--text-sm);
+  padding: 14px 16px;
+  font-size: var(--text-base);
   border-bottom: 1px solid var(--color-border-light);
   color: var(--color-text);
   vertical-align: middle;
 }
+.table tbody tr:nth-child(even) td {
+  background: var(--color-bg-secondary);
+}
 .table tr:last-child td { border-bottom: none; }
 .table tbody tr:hover td { background: var(--color-bg-hover); }
 
-/* ─── Modal ──────────────────────────────────────────────────── */
+/* ─── Modal — clean centered, 16px radius, backdrop blur ──── */
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(6px);
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
   z-index: 50;
   display: flex;
   align-items: center;
@@ -1099,10 +1050,10 @@ input, select, textarea { font: inherit; color: inherit; }
   box-shadow: var(--shadow-2xl);
   max-width: 440px;
   width: 100%;
-  padding: 30px;
+  padding: 32px;
 }
 
-/* ─── Avatar ─────────────────────────────────────────────────── */
+/* ─── Avatar ──────────────────────────────────────────────── */
 .avatar {
   display: flex;
   align-items: center;
@@ -1115,7 +1066,7 @@ input, select, textarea { font: inherit; color: inherit; }
   font-family: var(--font-display);
 }
 
-/* ─── Empty State ────────────────────────────────────────────── */
+/* ─── Empty State ─────────────────────────────────────────── */
 .empty-state {
   display: flex;
   flex-direction: column;
@@ -1136,7 +1087,7 @@ input, select, textarea { font: inherit; color: inherit; }
   color: var(--color-text-muted);
 }
 
-/* ─── Skeleton ───────────────────────────────────────────────── */
+/* ─── Skeleton ────────────────────────────────────────────── */
 .skeleton {
   background: linear-gradient(
     90deg,
@@ -1153,27 +1104,20 @@ input, select, textarea { font: inherit; color: inherit; }
   100% { background-position: -200% 0; }
 }
 
-/* ─── Divider ────────────────────────────────────────────────── */
+/* ─── Divider ─────────────────────────────────────────────── */
 .divider { height: 1px; background: var(--color-border-light); border: none; }
 
-/* ─── Utility text ───────────────────────────────────────────── */
+/* ─── Utility text ────────────────────────────────────────── */
 .metallic-text {
-  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-accent) 40%, var(--color-primary-light) 65%, var(--color-navy-light) 80%, var(--color-primary) 100%);
-  background-size: 280% 280%;
-  animation: gradient-shift 8s ease infinite;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--color-primary);
+  font-weight: 700;
 }
 .gold-text {
-  background: var(--gradient-gold);
-  background-size: 200% 100%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--color-gold);
+  font-weight: 700;
 }
 
-/* ─── Glow utilities ─────────────────────────────────────────── */
+/* ─── Glow utilities ──────────────────────────────────────── */
 .glow-hover {
   transition: all var(--duration-slow) var(--ease-out);
 }
@@ -1187,27 +1131,25 @@ input, select, textarea { font: inherit; color: inherit; }
   box-shadow: var(--shadow-glow-gold);
 }
 
-/* ─── Prismatic border ───────────────────────────────────────── */
+/* ─── Prismatic border — simplified to clean primary accent ── */
 .prismatic-border { position: relative; }
 .prismatic-border::before {
   content: '';
   position: absolute;
   inset: -1px;
   border-radius: inherit;
-  background: linear-gradient(135deg, var(--color-primary), var(--color-accent), var(--color-primary-light), var(--color-navy-light), var(--color-primary));
-  background-size: 280% 280%;
-  animation: gradient-shift 5s ease infinite;
+  border: 2px solid var(--color-primary);
   z-index: -1;
   opacity: 0;
   transition: opacity var(--duration-base) var(--ease-out);
 }
 .prismatic-border:hover::before { opacity: 1; }
 
-/* ─── Backgrounds ────────────────────────────────────────────── */
+/* ─── Backgrounds ─────────────────────────────────────────── */
 .aurora-bg { background: var(--gradient-aurora); }
 .hero-gradient { background: var(--gradient-hero); }
 
-/* ─── Animations ─────────────────────────────────────────────── */
+/* ─── Animations ──────────────────────────────────────────── */
 @keyframes fade-in    { from { opacity: 0; } to { opacity: 1; } }
 @keyframes slide-up   { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes slide-down { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
@@ -1239,8 +1181,7 @@ input, select, textarea { font: inherit; color: inherit; }
 .animate-aurora      { animation: aurora-drift 14s ease-in-out infinite; }
 
 /* ═══════════════════════════════════════════════════════════
-   CENTRE ALIGNMENT — Contextual only (not global)
-   Pages that need centered headers add text-center explicitly
+   CENTRE ALIGNMENT — Contextual only
    ═══════════════════════════════════════════════════════════ */
 
 .auth-heading { text-align: center; }
@@ -1248,11 +1189,10 @@ input, select, textarea { font: inherit; color: inherit; }
 .empty-state { text-align: center; }
 
 /* ═══════════════════════════════════════════════════════════
-   ACADEMIC DESIGN POLISH v4
-   shadow-elevated, warm editorial, generous spacing
+   ACADEMIC DESIGN POLISH
    ═══════════════════════════════════════════════════════════ */
 
-/* ── Institutional rule line ─────────────────────────────── */
+/* ── Institutional rule line ──────────────────────────────── */
 .rule-gold {
   display: block;
   width: 40px;
@@ -1262,7 +1202,7 @@ input, select, textarea { font: inherit; color: inherit; }
   margin: 12px auto 0;
 }
 
-/* ── Academic eyebrow / overline ─────────────────────────── */
+/* ── Academic eyebrow / overline ──────────────────────────── */
 .eyebrow {
   display: inline-block;
   font-size: 11px;
@@ -1273,7 +1213,7 @@ input, select, textarea { font: inherit; color: inherit; }
   margin-bottom: 10px;
 }
 
-/* ── Feature number badge (01, 02 ...) ──────────────────── */
+/* ── Feature number badge (01, 02 ...) ────────────────────── */
 .feature-number {
   font-size: 11px;
   font-weight: 800;
@@ -1282,15 +1222,15 @@ input, select, textarea { font: inherit; color: inherit; }
   text-transform: uppercase;
 }
 
-/* ── Institutional hero rule ─────────────────────────────── */
+/* ── Institutional hero rule ──────────────────────────────── */
 .hero-rule {
   height: 1px;
-  background: linear-gradient(to right, transparent, rgba(0,0,0,0.08), transparent);
+  background: var(--color-border-light);
   border: none;
   margin: 28px 0;
 }
 
-/* ── Data label / value pair ─────────────────────────────── */
+/* ── Data label / value pair ──────────────────────────────── */
 .data-label {
   font-size: 11px;
   font-weight: 700;
@@ -1307,9 +1247,9 @@ input, select, textarea { font: inherit; color: inherit; }
   line-height: 1;
 }
 
-/* ── Academic nav link ───────────────────────────────────── */
+/* ── Academic nav link ────────────────────────────────────── */
 .nav-link {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--color-text-muted);
   position: relative;
@@ -1329,7 +1269,7 @@ input, select, textarea { font: inherit; color: inherit; }
 .nav-link:hover { color: var(--color-navy); }
 .nav-link:hover::after { width: 100%; }
 
-/* ── Credential / trust badge ────────────────────────────── */
+/* ── Credential / trust badge ─────────────────────────────── */
 .trust-badge {
   display: inline-flex;
   align-items: center;
@@ -1343,7 +1283,7 @@ input, select, textarea { font: inherit; color: inherit; }
   color: rgba(255,255,255,0.5);
 }
 
-/* ── Testimonial quote styling ───────────────────────────── */
+/* ── Testimonial quote styling ────────────────────────────── */
 .quote-mark {
   font-size: 48px;
   line-height: 0;
@@ -1353,30 +1293,28 @@ input, select, textarea { font: inherit; color: inherit; }
   margin-right: 4px;
 }
 
-/* ── Discipline pill — rounded rect ──────────────────────── */
+/* ── Discipline pill — rounded rect ───────────────────────── */
 .discipline-pill {
   display: inline-flex;
   align-items: center;
   padding: 10px 22px;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   color: var(--color-text);
   background: var(--color-bg-card);
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-pill);
   cursor: pointer;
   transition: all var(--duration-base) var(--ease-out);
   white-space: nowrap;
-  box-shadow: var(--shadow-xs);
 }
 .discipline-pill:hover {
   background: var(--color-primary-muted);
   color: var(--color-primary);
   border-color: var(--color-primary);
-  box-shadow: var(--shadow-sm);
 }
 
-/* ── Page section wrapper ────────────────────────────────── */
+/* ── Page section wrapper ─────────────────────────────────── */
 .page-section {
   max-width: 1152px;
   margin-left: auto;
@@ -1387,13 +1325,13 @@ input, select, textarea { font: inherit; color: inherit; }
   padding-bottom: 0;
 }
 
-/* ── Consistent vertical spacing for all sections ────────── */
+/* ── Consistent vertical spacing for all sections ─────────── */
 section + section,
 .section + .section {
   margin-top: 0;
 }
 
-/* ── Stat row (landing stats bar) ────────────────────────── */
+/* ── Stat row (landing stats bar) ─────────────────────────── */
 .stat-row-item {
   text-align: center;
 }
@@ -1414,7 +1352,7 @@ section + section,
   color: var(--color-text-muted);
 }
 
-/* ── Role card (register page) ───────────────────────────── */
+/* ── Role card (register page) ────────────────────────────── */
 .role-card {
   width: 100%;
   padding: 18px;
@@ -1427,12 +1365,10 @@ section + section,
   gap: 14px;
   transition: all var(--duration-base) var(--ease-out);
   cursor: pointer;
-  box-shadow: var(--shadow-xs);
 }
 .role-card:hover {
   border-color: var(--color-primary);
   background: var(--color-primary-muted);
-  box-shadow: var(--shadow-sm);
 }
 .role-card.selected {
   border-color: var(--color-primary);
@@ -1440,17 +1376,17 @@ section + section,
   box-shadow: var(--shadow-glow-navy);
 }
 
-/* ── Form group ──────────────────────────────────────────── */
+/* ── Form group ───────────────────────────────────────────── */
 .form-group { display: flex; flex-direction: column; gap: 5px; }
 
-/* ── Auth card container ─────────────────────────────────── */
+/* ── Auth card container ──────────────────────────────────── */
 .auth-card {
   width: 100%;
   max-width: 380px;
   margin: auto;
 }
 
-/* ── Section divider with label ──────────────────────────── */
+/* ── Section divider with label ───────────────────────────── */
 .divider-label {
   display: flex;
   align-items: center;
@@ -1471,7 +1407,7 @@ section + section,
   white-space: nowrap;
 }
 
-/* ── Loading spinner ─────────────────────────────────────── */
+/* ── Loading spinner ──────────────────────────────────────── */
 .spinner {
   width: 14px;
   height: 14px;
@@ -1485,15 +1421,15 @@ section + section,
   border-top-color: var(--color-primary);
 }
 
-/* ── Focus ring override for inputs ──────────────────────── */
+/* ── Focus ring override for inputs ───────────────────────── */
 .input:focus,
 .select:focus,
 .textarea:focus {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 8%, transparent);
+  box-shadow: 0 0 0 2px var(--color-primary);
 }
 
-/* ── Academic preset selector ────────────────────────────── */
+/* ── Academic preset selector ─────────────────────────────── */
 .preset-card {
   border: 2px solid var(--color-border);
   border-radius: var(--radius-lg);
@@ -1501,12 +1437,10 @@ section + section,
   cursor: pointer;
   transition: all var(--duration-base) var(--ease-out);
   text-align: center;
-  box-shadow: var(--shadow-xs);
 }
 .preset-card:hover {
   border-color: var(--color-primary);
   background: var(--color-primary-muted);
-  box-shadow: var(--shadow-sm);
 }
 .preset-card.active {
   border-color: var(--color-primary);
@@ -1514,7 +1448,7 @@ section + section,
   box-shadow: var(--shadow-glow-navy);
 }
 
-/* ── Responsive ──────────────────────────────────────────── */
+/* ── Responsive ───────────────────────────────────────────── */
 @media (max-width: 768px) {
   .stat-row-item,
   .page-header {

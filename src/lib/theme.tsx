@@ -4,10 +4,10 @@ type Theme = 'light' | 'dark' | 'midnight'
 export type AcademicPreset = 'default' | 'blue' | 'crimson' | 'institutional'
 
 const academicPresets: Record<AcademicPreset, { label: string; desc: string; color: string }> = {
-  default:       { label: 'Acaedu',           desc: 'Khan Academy / Moodle — warm, approachable, wonder-blocks inspired',  color: '#1865f2' },
-  blue:          { label: 'Blue Academy',      desc: 'Coursera — voltage blue, border-first cards, 8px/50px radii', color: '#0056d2' },
-  crimson:       { label: 'Crimson Prestige',  desc: 'Harvard / MIT — crimson, Georgia serif, deep warm shadows',  color: '#a51c30' },
-  institutional: { label: 'Institutional',     desc: 'Canvas LMS — Workday neutrals, flat depth, system font',     color: '#0070E0' },
+  default:       { label: 'Acaedu',           desc: 'Clean, accessible learning platform with blue accents and friendly warmth', color: '#1865f2' },
+  blue:          { label: 'Blue Academy',      desc: 'Professional education platform with deep blue palette and border-first design', color: '#0056d2' },
+  crimson:       { label: 'Crimson Prestige',  desc: 'Classic academic institution with crimson tones and serif typography', color: '#a51c30' },
+  institutional: { label: 'Institutional',     desc: 'Enterprise LMS with neutral grays, flat depth, and system-native feel', color: '#0070E0' },
 }
 
 interface ThemeContextValue {
@@ -112,7 +112,7 @@ export function useTheme() {
 }
 
 /* ─── Preset-aware color palettes ──────────────────────────── */
-interface PresetPalette {
+export interface PresetPalette {
   primary: string
   secondary: string
   accent: string
@@ -146,7 +146,7 @@ const palettes: Record<AcademicPreset, Omit<PresetPalette, 'rgba'>> = {
     bg: '#ffffff', card: '#ffffff', text: '#1e1e1e', textMuted: '#6c6c6c', border: '#c0c0c0',
   },
   institutional: {
-    primary: '#e03c31', secondary: '#394b58', accent: '#1d6b9f',
+    primary: '#0070E0', secondary: '#394b58', accent: '#1d6b9f',
     navy: '#394b58', gold: '#c4960c', danger: '#e03c31', success: '#2b7a3e', teal: '#1d6b9f',
     bg: '#ffffff', card: '#ffffff', text: '#2d3b45', textMuted: '#8899a6', border: '#d0d8de',
   },
@@ -202,7 +202,7 @@ export interface PresetTokens {
 }
 
 export const presetTokens: Record<AcademicPreset, PresetTokens> = {
-  /* ─── Default (Acaedu) — Khan Academy / Moodle cloned ───── */
+  /* ─── Default (Acaedu) — Clean, accessible, Khan-inspired ── */
   default: {
     colors: {
       primary: '#1865f2', primaryHover: '#1254c7', primaryLight: '#4d8af2', primaryDark: '#0b2149', primaryMuted: '#e8f0fe',
@@ -239,7 +239,7 @@ export const presetTokens: Record<AcademicPreset, PresetTokens> = {
     },
   },
 
-  /* ─── Blue Academy — Cloned from Coursera ──────────────── */
+  /* ─── Blue Academy — Professional deep blue palette ──────── */
   blue: {
     colors: {
       primary: '#0056d2', primaryHover: '#0048b0', primaryLight: '#3587fc', primaryDark: '#002761', primaryMuted: '#e3eeff',
@@ -263,8 +263,8 @@ export const presetTokens: Record<AcademicPreset, PresetTokens> = {
       glowNavy: '0 0 0 3px rgba(0,86,210,0.10), 0 4px 16px rgba(0,86,210,0.12)',
     },
     typography: {
-      displayFont: "'Source Sans 3', 'Inter', sans-serif",
-      bodyFont: "'Source Sans 3', 'Inter', sans-serif",
+      displayFont: "'Lato', 'Source Sans 3', 'Inter', sans-serif",
+      bodyFont: "'Lato', 'Source Sans 3', 'Inter', sans-serif",
       monoFont: "'JetBrains Mono', monospace",
       displayWeight: 600, bodyWeight: 400, headingWeight: 600,
       displayLetterSpacing: -0.006,
@@ -276,7 +276,7 @@ export const presetTokens: Record<AcademicPreset, PresetTokens> = {
     },
   },
 
-  /* ─── Crimson Prestige — Cloned from Harvard/MIT ────────── */
+  /* ─── Crimson Prestige — Classic academic institution ─────── */
   crimson: {
     colors: {
       primary: '#A51C30', primaryHover: '#8C1728', primaryLight: '#C4324A', primaryDark: '#6B1020', primaryMuted: '#FCE8EB',
@@ -300,8 +300,8 @@ export const presetTokens: Record<AcademicPreset, PresetTokens> = {
       glowNavy: '0 0 0 3px rgba(165,28,48,0.10), 0 4px 16px rgba(165,28,48,0.12)',
     },
     typography: {
-      displayFont: "'Georgia', 'Cambria', 'Times New Roman', serif",
-      bodyFont: "'Source Sans 3', -apple-system, sans-serif",
+      displayFont: "'Lato', 'Source Sans 3', -apple-system, sans-serif",
+      bodyFont: "'Lato', 'Source Sans 3', -apple-system, sans-serif",
       monoFont: "'JetBrains Mono', monospace",
       displayWeight: 700, bodyWeight: 400, headingWeight: 700,
       displayLetterSpacing: -0.01,
@@ -313,7 +313,7 @@ export const presetTokens: Record<AcademicPreset, PresetTokens> = {
     },
   },
 
-  /* ─── Institutional — Cloned from Canvas LMS / Workday ──── */
+  /* ─── Institutional — Enterprise LMS with neutral tones ──── */
   institutional: {
     colors: {
       primary: '#0070E0', primaryHover: '#005CB8', primaryLight: '#4DA3FF', primaryDark: '#004A99', primaryMuted: '#EBF5FF',
@@ -337,8 +337,8 @@ export const presetTokens: Record<AcademicPreset, PresetTokens> = {
       glowNavy: '0 0 0 3px rgba(0,112,224,0.10), 0 4px 16px rgba(0,112,224,0.12)',
     },
     typography: {
-      displayFont: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-      bodyFont: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+      displayFont: "'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+      bodyFont: "'Lato', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
       monoFont: "'SF Mono', 'Consolas', monospace",
       displayWeight: 700, bodyWeight: 400, headingWeight: 700,
       displayLetterSpacing: -0.01,

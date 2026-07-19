@@ -11,7 +11,7 @@ import {
 } from 'lucide-react'
 
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.03 } } }
-const fadeUp = { hidden: { opacity: 0, y: 8 }, show: { opacity: 1, y: 0, transition: { duration: 0.35, ease: [0.22,1,0.36,1] as [number,number,number,number] } } }
+const fadeUp = { hidden: { opacity: 0, y: 8 }, show: { opacity: 1, y: 0, transition: { duration: 0.3, ease: [0.22,1,0.36,1] as [number,number,number,number] } } }
 
 function ConfirmModal({ open, title, message, onConfirm, onCancel }: {
   open: boolean; title: string; message: string; onConfirm: () => void; onCancel: () => void
@@ -91,28 +91,27 @@ function CrudPage({ config }: { config: CrudConfig }) {
 
   return (
     <div className="max-w-5xl mx-auto">
-      {/* Header */}
-      <motion.div initial={{opacity:0,y:-10}} animate={{opacity:1,y:0}} className="text-center mb-8">
+      <motion.div initial={{opacity:0,y:-10}} animate={{opacity:1,y:0}} className="mb-8">
         <span className="section-label">{config.title}</span>
-        <h1 className="section-title mt-2 text-3xl">{config.title}</h1>
+        <h1 className="section-title mt-1">{config.title}</h1>
       </motion.div>
-      <motion.div initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} transition={{delay:0.1}} className="flex justify-center mb-8">
-        <motion.button whileHover={{scale:1.03,y:-1}} whileTap={{scale:0.97}}
+      <motion.div initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} transition={{delay:0.1}} className="mb-6">
+        <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}}
           onClick={() => { resetForm(); setShowForm(!showForm) }} className="btn-primary">
           <Plus size={16}/> Add {config.singular}
         </motion.button>
       </motion.div>
 
-      {/* Form */}
       <AnimatePresence>
         {showForm && (
-          <motion.div initial={{ opacity: 0, y: -12, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -8, scale: 0.98 }} transition={{ duration: 0.35, ease: [0.22,1,0.36,1] }}
-            className="card p-6 mb-6">
-            <h3 className="text-[15px] font-bold text-[var(--color-navy)] mb-5 text-center" style={{ fontFamily: 'var(--font-display)' }}>
+          <motion.div initial={{ opacity: 0, y: -8, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -8, scale: 0.98 }} transition={{ duration: 0.25 }}
+            className="card p-6 mb-6"
+          >
+            <h3 className="text-[15px] font-bold text-[var(--color-navy)] mb-5" style={{ fontFamily: 'var(--font-display)' }}>
               {editId ? `Edit ${config.singular}` : `Create ${config.singular}`}
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5 max-w-2xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
               {config.fields.map(f => (
                 <div key={f.key} className={f.type === 'textarea' ? 'md:col-span-2' : ''}>
                   <label className="label">{f.label}</label>
@@ -141,7 +140,6 @@ function CrudPage({ config }: { config: CrudConfig }) {
         )}
       </AnimatePresence>
 
-      {/* List */}
       {loading ? (
         <div className="space-y-2">
           {Array.from({ length: 4 }).map((_, i) => <motion.div key={i} initial={{opacity:0}} animate={{opacity:1}} transition={{delay:i*0.05}} className="skeleton h-14" />)}
@@ -152,31 +150,42 @@ function CrudPage({ config }: { config: CrudConfig }) {
           <p className="empty-state-text text-[var(--color-text-muted)]">No {config.title.toLowerCase()} yet.</p>
         </motion.div>
       ) : (
-        <motion.div variants={stagger} initial="hidden" animate="show" className="space-y-2">
-          {items.map((item) => (
-            <motion.div key={item.id as string} variants={fadeUp}
-              whileHover={{x:4,boxShadow:'var(--shadow-sm)'}}
-              className="card card-interactive p-4 flex items-center gap-4">
-              <div className="w-1 h-10 rounded-full flex-shrink-0" style={{background:'var(--gradient-primary)'}}/>
-              <div className="flex-1 min-w-0 text-center">
-                <h3 className="text-[13px] font-bold text-[var(--color-navy)] truncate" style={{ fontFamily: 'var(--font-display)' }}>
-                  {String(item[config.displayFields[0]?.key] || 'Untitled')}
-                </h3>
-                <div className="flex flex-wrap justify-center gap-3 mt-1">
-                  {config.displayFields.slice(1).map(df => (
-                    <span key={df.key} className="text-[11px] text-[var(--color-text-muted)]">{String(item[df.key] ?? '-')}</span>
+        <motion.div variants={stagger} initial="hidden" animate="show" className="table-container overflow-hidden">
+          <table className="table">
+            <thead>
+              <tr>
+                {config.displayFields.map(df => (
+                  <th key={df.key}>{df.label}</th>
+                ))}
+                <th style={{width:'80px'}}></th>
+              </tr>
+            </thead>
+            <tbody>
+              {items.map((item) => (
+                <motion.tr key={item.id as string} variants={fadeUp} style={{display:'table-row'}}>
+                  {config.displayFields.map((df, idx) => (
+                    <td key={df.key}>
+                      <div className="flex items-center gap-2">
+                        {idx === 0 && <div className="w-1 h-5 rounded-full flex-shrink-0" style={{background:'var(--gradient-primary)'}}/>}
+                        <span className={idx === 0 ? 'font-bold text-[var(--color-navy)]' : 'text-[13px] text-[var(--color-text-muted)]'}>
+                          {String(item[df.key] ?? '-')}
+                        </span>
+                      </div>
+                    </td>
                   ))}
-                </div>
-              </div>
-              <div className="flex items-center gap-2 flex-shrink-0">
-                {config.badgeField && item[config.badgeField.key] != null && (
-                  <span className="badge badge-navy">{String(item[config.badgeField.key])}</span>
-                )}
-                <motion.button whileHover={{scale:1.15}} whileTap={{scale:0.9}} onClick={() => startEdit(item)} className="btn-ghost p-1.5"><Pencil size={14}/></motion.button>
-                <motion.button whileHover={{scale:1.15}} whileTap={{scale:0.9}} onClick={() => setDeleteId(item.id as string)} className="btn-ghost p-1.5 text-[var(--color-danger)]" style={{color:'var(--color-danger)'}}><Trash2 size={14}/></motion.button>
-              </div>
-            </motion.div>
-          ))}
+                  <td>
+                    <div className="flex items-center gap-1 justify-end">
+                      {config.badgeField && item[config.badgeField.key] != null && (
+                        <span className="badge badge-navy">{String(item[config.badgeField.key])}</span>
+                      )}
+                      <motion.button whileHover={{scale:1.15}} whileTap={{scale:0.9}} onClick={() => startEdit(item)} className="btn-ghost p-1.5" style={{height:'auto',padding:'6px'}}><Pencil size={13}/></motion.button>
+                      <motion.button whileHover={{scale:1.15}} whileTap={{scale:0.9}} onClick={() => setDeleteId(item.id as string)} className="btn-ghost p-1.5" style={{height:'auto',padding:'6px',color:'var(--color-danger)'}}><Trash2 size={13}/></motion.button>
+                    </div>
+                  </td>
+                </motion.tr>
+              ))}
+            </tbody>
+          </table>
         </motion.div>
       )}
       <ConfirmModal open={!!deleteId} title={`Delete ${config.singular}`} message={`Are you sure? This will permanently delete this ${config.singular.toLowerCase()}.`} onConfirm={handleDelete} onCancel={() => setDeleteId(null)} />
@@ -737,10 +746,9 @@ export function SettingsPage() {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <motion.div initial={{opacity:0,y:-10}} animate={{opacity:1,y:0}} className="text-center mb-10">
+      <motion.div initial={{opacity:0,y:-10}} animate={{opacity:1,y:0}} className="mb-8">
         <span className="section-label">Settings</span>
-        <h1 className="section-title mt-2 text-3xl">Settings</h1>
-        <p className="text-[13px] text-[var(--color-text-muted)] mt-1.5">Manage your account preferences and app settings</p>
+        <h1 className="section-title mt-1">Settings</h1>
       </motion.div>
 
       {/* Academic Theme */}
@@ -752,12 +760,12 @@ export function SettingsPage() {
             <motion.button key={key}
               whileHover={{ scale: 1.03, y: -2 }} whileTap={{ scale: 0.97 }}
               onClick={() => setAcademicPreset(key)}
-              className={`preset-card ${academicPreset === key ? 'active' : ''}`}>
+              className={`card p-4 ${academicPreset === key ? 'border-[var(--color-primary)]' : ''}`}>
               <div className="w-9 h-9 rounded-[10px] mx-auto mb-2.5 flex items-center justify-center" style={{ background: preset.color }}>
                 <span className="text-white text-[11px] font-bold" style={{ fontFamily: 'var(--font-display)' }}>{preset.label[0]}</span>
               </div>
-              <div className="text-[13px] font-bold text-[var(--color-navy)]">{preset.label}</div>
-              <div className="text-[11px] text-[var(--color-text-muted)] mt-0.5">{preset.desc}</div>
+              <div className="text-[13px] font-bold text-[var(--color-navy)] text-center">{preset.label}</div>
+              <div className="text-[11px] text-[var(--color-text-muted)] text-center mt-0.5">{preset.desc}</div>
             </motion.button>
           ))}
         </div>
@@ -785,7 +793,7 @@ export function SettingsPage() {
       {settingsGroup('Regional', <>
         {settingRow('Language', 'Select your preferred language',
           <select value={language} onChange={e => setLanguage(e.target.value)} className="select w-auto text-[13px] min-w-[140px]">
-            <option value="en">English</option><option value="fr">Français</option><option value="ha">Hausa</option><option value="yo">Yorùbá</option><option value="ig">Igbo</option>
+            <option value="en">English</option><option value="fr">Fran&ccedil;ais</option><option value="ha">Hausa</option><option value="yo">Yor&ugrave;b&aacute;</option><option value="ig">Igbo</option>
           </select>)}
         {settingRow('Timezone', 'Set your local timezone for schedules',
           <select value={timezone} onChange={e => setTimezone(e.target.value)} className="select w-auto text-[13px] min-w-[180px]">
@@ -851,7 +859,7 @@ export function SettingsPage() {
             <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={handleChangePassword} disabled={modalLoading} className="btn-primary flex-1 py-2">{modalLoading ? 'Saving...' : 'Update'}</motion.button>
           </div>
         </Modal>
-      )}
+        )}
       {modal === 'email' && (
         <Modal title="Update Email">
           <div className="mb-4">
@@ -864,7 +872,7 @@ export function SettingsPage() {
             <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={handleUpdateEmail} disabled={modalLoading} className="btn-primary flex-1 py-2">{modalLoading ? 'Sending...' : 'Send Link'}</motion.button>
           </div>
         </Modal>
-      )}
+        )}
       {modal === '2fa' && (
         <Modal title="Enable Two-Factor Authentication">
           {!modalMsg ? (
@@ -882,7 +890,7 @@ export function SettingsPage() {
             </>
           )}
         </Modal>
-      )}
+        )}
       {modal === 'export' && (
         <Modal title="Download My Data">
           {!modalMsg ? (

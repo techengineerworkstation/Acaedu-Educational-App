@@ -119,7 +119,7 @@ export function AdminDashboard() {
     { label: 'Enrollments', value: stats.enrollments || 0, icon: GraduationCap, color: palette.primary },
     { label: 'Exams', value: stats.exams || 0, icon: BookOpen, color: palette.teal },
     { label: 'Assignments', value: stats.assignments || 0, icon: BookOpen, color: palette.danger },
-    { label: 'Revenue (₦)', value: stats.totalRevenue || 0, icon: CreditCard, color: palette.gold },
+    { label: 'Revenue (N)', value: stats.totalRevenue || 0, icon: CreditCard, color: palette.gold },
   ]
 
   const barColors = [palette.success, palette.accent, palette.danger, palette.navy, palette.gold, palette.teal]
@@ -128,10 +128,9 @@ export function AdminDashboard() {
     <div>
       <div className="mb-6">
         <span className="section-label">Admin</span>
-        <h1 className="section-title mt-2 text-2xl">Admin Dashboard</h1>
+        <h1 className="section-title mt-1">Admin Dashboard</h1>
       </div>
 
-      {/* Stat cards */}
       {loading ? (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           {Array.from({length: 8}).map((_,i) => <div key={i} className="skeleton h-28"/>)}
@@ -139,8 +138,8 @@ export function AdminDashboard() {
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           {cards.map((card, i) => (
-            <motion.div key={i} initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{delay:i*0.05}}
-              className="card p-5">
+            <motion.div key={i} initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} transition={{delay:i*0.03}}
+              className="card p-4">
               <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-3" style={{background: palette.rgba(card.color, 0.1)}}>
                 <card.icon size={20} style={{color:card.color}}/>
               </div>
@@ -153,9 +152,7 @@ export function AdminDashboard() {
         </div>
       )}
 
-      {/* Charts row */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-        {/* Enrollment Trends bar chart */}
         <motion.div initial={{opacity:0,x:-20}} animate={{opacity:1,x:0}} transition={{delay:0.3}}
           className="card p-6">
           <span className="section-label">Enrollment Trends</span>
@@ -176,7 +173,6 @@ export function AdminDashboard() {
           )}
         </motion.div>
 
-        {/* Revenue / Payments pie chart */}
         <motion.div initial={{opacity:0,x:20}} animate={{opacity:1,x:0}} transition={{delay:0.4}}
           className="card p-6 flex flex-col">
           <span className="section-label">Revenue Overview</span>
@@ -188,7 +184,7 @@ export function AdminDashboard() {
                 segments={[
                   { value: stats.completedPayments || 0, color: palette.success, label: 'Completed' },
                   { value: stats.pendingPayments || 0, color: palette.gold, label: 'Pending' },
-                  { value: Math.max((stats.enrollments || 0) - (stats.completedPayments || 0) - (stats.pendingPayments || 0), 0), color: palette.border, label: 'No Payment' },
+                  { value: Math.max((stats.enrollments || 0) - (stats.completedPayments || 0) - (stats.pendingPayments || 0), 0), color: 'var(--color-border)', label: 'No Payment' },
                 ]}
                 size={130}
               />
@@ -197,13 +193,12 @@ export function AdminDashboard() {
           <div className="mt-4 pt-4 border-t border-[var(--color-border)] flex items-center justify-between">
             <span className="text-xs text-[var(--color-text-muted)]">Total Revenue</span>
             <span className="text-sm font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>
-              ₦{(stats.totalRevenue || 0).toLocaleString()}
+              N{(stats.totalRevenue || 0).toLocaleString()}
             </span>
           </div>
         </motion.div>
       </div>
 
-      {/* User role distribution */}
       <motion.div initial={{opacity:0,y:16}} animate={{opacity:1,y:0}} transition={{delay:0.5}}
         className="card p-6">
         <span className="section-label">User Distribution</span>
@@ -259,7 +254,7 @@ export function UserManagementPage() {
       <div className="flex justify-between items-center mb-6">
         <div>
           <span className="section-label">User Management</span>
-          <h1 className="section-title mt-2 text-2xl">Users</h1>
+          <h1 className="section-title mt-1">Users</h1>
         </div>
         <div className="flex gap-3">
           <div className="relative">
@@ -339,7 +334,7 @@ export function PopulationCensusPage() {
       <div className="flex justify-between items-center mb-6">
         <div>
           <span className="section-label">Population Census</span>
-          <h1 className="section-title mt-2 text-2xl">Student & Lecturer Directory</h1>
+          <h1 className="section-title mt-1">Student & Lecturer Directory</h1>
         </div>
         <div className="flex gap-3">
           <div className="relative">
@@ -363,7 +358,7 @@ export function PopulationCensusPage() {
                 <p className="text-sm text-[var(--color-text-muted)]">{selectedUser.email as string}</p>
               </div>
             </div>
-            <button onClick={() => setSelectedUser(null)} className="btn-ghost p-2">✕</button>
+            <button onClick={() => setSelectedUser(null)} className="btn-ghost p-2">X</button>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div><div className="data-label">Role</div><div className="text-sm font-medium capitalize">{selectedUser.role as string}</div></div>

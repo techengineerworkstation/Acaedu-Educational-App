@@ -57,7 +57,7 @@ function makeHeroSlides(p: ReturnType<typeof usePresetPalette>) {
         <circle cx="160" cy="120" r="100" fill="url(#grad1)"/>
         <circle cx="160" cy="120" r="75" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" strokeWidth="1"/>
         <circle cx="160" cy="120" r="110" fill="none" stroke={p.rgba(p.primary, 0.08)} strokeWidth="0.5" strokeDasharray="4 6"/>
-        <rect x="110" y="55" width="100" height="120" rx="12" fill="#00262b" stroke="rgba(255,255,255,0.12)" strokeWidth="1.2"/>
+        <rect x="110" y="55" width="100" height="120" rx="12" fill={p.navy} stroke="rgba(255,255,255,0.12)" strokeWidth="1.2"/>
         <rect x="110" y="55" width="100" height="30" rx="12" fill={p.rgba(p.primary, 0.35)}/>
         <rect x="110" y="73" width="100" height="12" fill={p.rgba(p.primary, 0.35)}/>
         <circle cx="130" cy="70" r="4" fill="rgba(255,255,255,0.25)"/>
@@ -76,7 +76,7 @@ function makeHeroSlides(p: ReturnType<typeof usePresetPalette>) {
             ))}
           </g>
         ))}
-        <circle cx="215" cy="60" r="20" fill="#00262b" stroke={p.rgba(p.primary, 0.35)} strokeWidth="1.2"/>
+        <circle cx="215" cy="60" r="20" fill={p.navy} stroke={p.rgba(p.primary, 0.35)} strokeWidth="1.2"/>
         <circle cx="215" cy="60" r="14" fill={p.rgba(p.primary, 0.12)}/>
         <text x="215" y="65" textAnchor="middle" fill={p.primary} fontSize="13" fontWeight="800" fontFamily="system-ui">AI</text>
         <circle cx="75" cy="85" r="4" fill={p.rgba(p.teal, 0.2)}>
@@ -113,7 +113,7 @@ function makeHeroSlides(p: ReturnType<typeof usePresetPalette>) {
           { cx: 160, cy: 150, color: p.gold, r: 22 },
         ].map((pt, i) => (
           <g key={i}>
-            <circle cx={pt.cx} cy={pt.cy} r={pt.r} fill="#00262b" stroke="rgba(255,255,255,0.1)" strokeWidth="1.2"/>
+            <circle cx={pt.cx} cy={pt.cy} r={pt.r} fill={p.navy} stroke="rgba(255,255,255,0.1)" strokeWidth="1.2"/>
             <circle cx={pt.cx} cy={pt.cy - 5} r="8" fill={pt.color} opacity="0.5"/>
             <rect x={pt.cx - 10} y={pt.cy + 6} width="20" height="10" rx="4" fill={pt.color} opacity="0.2"/>
           </g>
@@ -148,7 +148,7 @@ function makeHeroSlides(p: ReturnType<typeof usePresetPalette>) {
         </defs>
         <circle cx="160" cy="120" r="100" fill="url(#grad3)"/>
         <circle cx="160" cy="120" r="75" fill="none" stroke={p.rgba(p.gold, 0.05)} strokeWidth="0.8"/>
-        <rect x="80" y="55" width="160" height="130" rx="12" fill="#00262b" stroke="rgba(255,255,255,0.1)" strokeWidth="1.2"/>
+        <rect x="80" y="55" width="160" height="130" rx="12" fill={p.navy} stroke="rgba(255,255,255,0.1)" strokeWidth="1.2"/>
         <rect x="80" y="55" width="160" height="28" rx="12" fill="rgba(255,255,255,0.04)"/>
         <rect x="80" y="73" width="160" height="10" fill="rgba(255,255,255,0.04)"/>
         <rect x="95" y="65" width="50" height="5" rx="2" fill="rgba(255,255,255,0.2)"/>
@@ -167,7 +167,7 @@ function makeHeroSlides(p: ReturnType<typeof usePresetPalette>) {
           </rect>
         ))}
         <polyline points="107,150 127,138 147,125 167,132 187,115 207,128" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-        <circle cx="220" cy="110" r="18" fill="#00262b" stroke={p.rgba(p.primary, 0.3)} strokeWidth="1.2"/>
+        <circle cx="220" cy="110" r="18" fill={p.navy} stroke={p.rgba(p.primary, 0.3)} strokeWidth="1.2"/>
         <text x="220" y="115" textAnchor="middle" fill={p.primary} fontSize="13" fontWeight="800" fontFamily="system-ui">A+</text>
         <circle cx="65" cy="90" r="3.5" fill={p.rgba(p.gold, 0.15)}>
           <animate attributeName="cy" values="90;83;90" dur="3.5s" repeatCount="indefinite"/>
@@ -190,7 +190,7 @@ function makeHeroSlides(p: ReturnType<typeof usePresetPalette>) {
         </defs>
         <circle cx="160" cy="120" r="100" fill="url(#grad4)"/>
         <circle cx="160" cy="120" r="75" fill="none" stroke={p.rgba(p.primary, 0.05)} strokeWidth="0.8"/>
-        <rect x="110" y="70" width="100" height="110" rx="8" fill="#00262b" stroke="rgba(255,255,255,0.1)" strokeWidth="1.2"/>
+        <rect x="110" y="70" width="100" height="110" rx="8" fill={p.navy} stroke="rgba(255,255,255,0.1)" strokeWidth="1.2"/>
         <rect x="110" y="70" width="100" height="32" rx="8" fill={p.rgba(p.primary, 0.3)}/>
         <rect x="110" y="92" width="100" height="10" fill={p.rgba(p.primary, 0.3)}/>
         {[0,1,2].map(r => [0,1,2].map(c => (
