@@ -4,10 +4,10 @@ type Theme = 'light' | 'dark' | 'midnight'
 export type AcademicPreset = 'default' | 'blue' | 'crimson' | 'institutional'
 
 const academicPresets: Record<AcademicPreset, { label: string; desc: string; color: string }> = {
-  default:       { label: 'Acaedu',           desc: 'Shadow-elevated cards, 14px radii, warm editorial',             color: '#c1272d' },
-  blue:          { label: 'Blue Academy',      desc: 'Border-first cards, 8px buttons, 50px capsule pills',          color: '#0056d2' },
-  crimson:       { label: 'Crimson Prestige',  desc: 'Sharp 4px scholarly radii, deep shadows, serif headings',     color: '#a51c30' },
-  institutional: { label: 'Institutional',     desc: 'Flat 12px cards, strong borders, compact system font',        color: '#e03c31' },
+  default:       { label: 'Acaedu',           desc: 'Khan Academy / Moodle — warm, approachable, shadow-elevated',  color: '#c1272d' },
+  blue:          { label: 'Blue Academy',      desc: 'Coursera — voltage blue, border-first cards, 8px/50px radii', color: '#0056d2' },
+  crimson:       { label: 'Crimson Prestige',  desc: 'Harvard / MIT — crimson, Georgia serif, deep warm shadows',  color: '#a51c30' },
+  institutional: { label: 'Institutional',     desc: 'Canvas LMS — Workday neutrals, flat depth, system font',     color: '#0070E0' },
 }
 
 interface ThemeContextValue {
@@ -166,4 +166,187 @@ export function usePresetPalette(): PresetPalette {
   const { academicPreset } = useTheme()
   const base = palettes[academicPreset]
   return { ...base, rgba }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   UNIVERSAL PRESET TOKENS — Single source of truth
+   Same values as CSS variables in index.css, exportable for
+   React Native mobile app and any other platform
+   ═══════════════════════════════════════════════════════════════ */
+
+export interface PresetTokens {
+  colors: {
+    primary: string; primaryHover: string; primaryLight: string; primaryDark: string; primaryMuted: string
+    secondary: string; secondaryHover: string; secondaryLight: string
+    accent: string; accentWarm: string
+    bg: string; bgSecondary: string; bgTertiary: string; bgCard: string; bgHover: string
+    text: string; textSecondary: string; textMuted: string; textInverse: string
+    border: string; borderLight: string; borderStrong: string
+    navy: string; navyMid: string; navyLight: string; navyPale: string
+    gold: string; goldMid: string; goldLight: string; goldBright: string; goldPale: string
+    cream: string
+    danger: string; warning: string; success: string; info: string
+  }
+  radii: { xs: number; sm: number; md: number; lg: number; xl: number; xxl: number; xxxl: number; pill: number }
+  spacing: { xs: number; sm: number; md: number; lg: number; xl: number; xxl: number; xxxl: number }
+  shadows: {
+    xs: string; sm: string; md: string; lg: string; xl: string; xxl: string
+    card: string; cardHover: string; glowNavy: string
+  }
+  typography: {
+    displayFont: string; bodyFont: string; monoFont: string
+    displayWeight: number; bodyWeight: number; headingWeight: number
+    displayLetterSpacing: number
+  }
+  gradients: { primary: string; hero: string; warm: string }
+}
+
+export const presetTokens: Record<AcademicPreset, PresetTokens> = {
+  /* ─── Default (Acaedu) — Khan Academy / Moodle inspired ─── */
+  default: {
+    colors: {
+      primary: '#c1272d', primaryHover: '#a82025', primaryLight: '#e8535a', primaryDark: '#8b181c', primaryMuted: '#fdf0f0',
+      secondary: '#00262b', secondaryHover: '#00383f', secondaryLight: '#005e6b',
+      accent: '#025e6b', accentWarm: '#d4724e',
+      bg: '#ffffff', bgSecondary: '#f5f5f0', bgTertiary: '#eae8e1', bgCard: '#ffffff', bgHover: '#f0efe9',
+      text: '#1c1e21', textSecondary: '#3d4047', textMuted: '#6b6e76', textInverse: '#ffffff',
+      border: '#ddd9d0', borderLight: '#e8e5de', borderStrong: '#c4c0b8',
+      navy: '#00262b', navyMid: '#00383f', navyLight: '#005e6b', navyPale: '#e8f4f5',
+      gold: '#b8860b', goldMid: '#d4a017', goldLight: '#f0cc5a', goldBright: '#f5d76e', goldPale: '#fdf6e3',
+      cream: '#f5f5f0',
+      danger: '#c1272d', warning: '#c47a10', success: '#1b7a42', info: '#025e6b',
+    },
+    radii: { xs: 3, sm: 6, md: 10, lg: 14, xl: 20, xxl: 24, xxxl: 28, pill: 50 },
+    spacing: { xs: 4, sm: 8, md: 12, lg: 16, xl: 24, xxl: 32, xxxl: 48 },
+    shadows: {
+      xs: '0 1px 2px rgba(0,0,0,0.04)', sm: '0 1px 4px rgba(0,0,0,0.06)', md: '0 2px 12px rgba(0,0,0,0.07)',
+      lg: '0 6px 20px rgba(0,0,0,0.09)', xl: '0 10px 36px rgba(0,0,0,0.11)', xxl: '0 16px 48px rgba(0,0,0,0.14)',
+      card: '0 1px 3px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.04)',
+      cardHover: '0 4px 16px rgba(0,0,0,0.08), 0 8px 28px rgba(0,0,0,0.06)',
+      glowNavy: '0 0 0 3px rgba(193,39,45,0.10), 0 4px 16px rgba(193,39,45,0.12)',
+    },
+    typography: {
+      displayFont: "'Source Sans 3', 'Inter', sans-serif",
+      bodyFont: "'Source Sans 3', 'Inter', sans-serif",
+      monoFont: "'JetBrains Mono', monospace",
+      displayWeight: 800, bodyWeight: 400, headingWeight: 700,
+      displayLetterSpacing: -0.02,
+    },
+    gradients: {
+      primary: 'linear-gradient(135deg, #8b181c 0%, #c1272d 50%, #e8535a 100%)',
+      hero: 'linear-gradient(160deg, #001214 0%, #00262b 30%, #00383f 65%, #00262b 100%)',
+      warm: 'linear-gradient(135deg, #c1272d 0%, #d4724e 60%, #e8a070 100%)',
+    },
+  },
+
+  /* ─── Blue Academy — Cloned from Coursera ──────────────── */
+  blue: {
+    colors: {
+      primary: '#0056d2', primaryHover: '#0048b0', primaryLight: '#3587fc', primaryDark: '#002761', primaryMuted: '#e3eeff',
+      secondary: '#002761', secondaryHover: '#003b8f', secondaryLight: '#3587fc',
+      accent: '#a678f5', accentWarm: '#3587fc',
+      bg: '#ffffff', bgSecondary: '#f7f8fa', bgTertiary: '#e8eef7', bgCard: '#ffffff', bgHover: '#f0f3f8',
+      text: '#0f1114', textSecondary: '#1e2229', textMuted: '#5b6780', textInverse: '#ffffff',
+      border: '#dae1ed', borderLight: '#e8eef7', borderStrong: '#b0b8c9',
+      navy: '#002761', navyMid: '#003b8f', navyLight: '#3587fc', navyPale: '#e3eeff',
+      gold: '#b8922a', goldMid: '#d4ad4b', goldLight: '#f0cc5a', goldBright: '#f5d76e', goldPale: '#fdf6e3',
+      cream: '#f7f8fa',
+      danger: '#d30a28', warning: '#a32e00', success: '#276a1a', info: '#0056d2',
+    },
+    radii: { xs: 2, sm: 4, md: 8, lg: 16, xl: 16, xxl: 24, xxxl: 24, pill: 50 },
+    spacing: { xs: 4, sm: 8, md: 12, lg: 16, xl: 24, xxl: 32, xxxl: 48 },
+    shadows: {
+      xs: '0 1px 2px rgba(0,0,0,0.02)', sm: '0 1px 3px rgba(0,0,0,0.04)', md: '0 2px 8px rgba(0,0,0,0.05)',
+      lg: '0 4px 14px rgba(0,0,0,0.06)', xl: '0 6px 20px rgba(0,0,0,0.08)', xxl: '0 8px 28px rgba(0,0,0,0.10)',
+      card: '0 1px 3px rgba(0,0,0,0.03)',
+      cardHover: '0 2px 8px rgba(0,0,0,0.06)',
+      glowNavy: '0 0 0 3px rgba(0,86,210,0.10), 0 4px 16px rgba(0,86,210,0.12)',
+    },
+    typography: {
+      displayFont: "'Source Sans 3', 'Inter', sans-serif",
+      bodyFont: "'Source Sans 3', 'Inter', sans-serif",
+      monoFont: "'JetBrains Mono', monospace",
+      displayWeight: 600, bodyWeight: 400, headingWeight: 600,
+      displayLetterSpacing: -0.006,
+    },
+    gradients: {
+      primary: 'linear-gradient(135deg, #002761 0%, #0056d2 55%, #3587fc 100%)',
+      hero: 'linear-gradient(160deg, #001a4d 0%, #002761 35%, #0056d2 75%, #002761 100%)',
+      warm: 'linear-gradient(135deg, #002761 0%, #0056d2 60%, #3587fc 100%)',
+    },
+  },
+
+  /* ─── Crimson Prestige — Cloned from Harvard/MIT ────────── */
+  crimson: {
+    colors: {
+      primary: '#A51C30', primaryHover: '#8C1728', primaryLight: '#C4324A', primaryDark: '#6B1020', primaryMuted: '#FCE8EB',
+      secondary: '#1E1E1E', secondaryHover: '#2D2D2D', secondaryLight: '#A51C30',
+      accent: '#B8860B', accentWarm: '#D4A017',
+      bg: '#ffffff', bgSecondary: '#F9F6F3', bgTertiary: '#F0EBE5', bgCard: '#ffffff', bgHover: '#F5F0EA',
+      text: '#1A1A1A', textSecondary: '#414141', textMuted: '#6C6C6C', textInverse: '#ffffff',
+      border: '#C8C4BC', borderLight: '#E0DDD8', borderStrong: '#9A9590',
+      navy: '#A51C30', navyMid: '#8C1728', navyLight: '#C4324A', navyPale: '#FCE8EB',
+      gold: '#B8860B', goldMid: '#D4A017', goldLight: '#F8C21C', goldBright: '#FFD54F', goldPale: '#FDF6E3',
+      cream: '#F9F6F3',
+      danger: '#C41E3A', warning: '#B8860B', success: '#2E7D32', info: '#1565C0',
+    },
+    radii: { xs: 2, sm: 3, md: 4, lg: 6, xl: 8, xxl: 10, xxxl: 12, pill: 50 },
+    spacing: { xs: 4, sm: 8, md: 16, lg: 24, xl: 32, xxl: 48, xxxl: 64 },
+    shadows: {
+      xs: '0 1px 3px rgba(105,16,32,0.04)', sm: '0 1px 4px rgba(105,16,32,0.06)', md: '0 3px 12px rgba(105,16,32,0.08)',
+      lg: '0 8px 24px rgba(105,16,32,0.10)', xl: '0 12px 36px rgba(105,16,32,0.12)', xxl: '0 16px 48px rgba(105,16,32,0.14)',
+      card: '0 2px 8px rgba(105,16,32,0.06), 0 1px 3px rgba(0,0,0,0.04)',
+      cardHover: '0 6px 20px rgba(105,16,32,0.10), 0 2px 6px rgba(0,0,0,0.06)',
+      glowNavy: '0 0 0 3px rgba(165,28,48,0.10), 0 4px 16px rgba(165,28,48,0.12)',
+    },
+    typography: {
+      displayFont: "'Georgia', 'Cambria', 'Times New Roman', serif",
+      bodyFont: "'Source Sans 3', -apple-system, sans-serif",
+      monoFont: "'JetBrains Mono', monospace",
+      displayWeight: 700, bodyWeight: 400, headingWeight: 700,
+      displayLetterSpacing: -0.01,
+    },
+    gradients: {
+      primary: 'linear-gradient(135deg, #6B1020 0%, #A51C30 55%, #C4324A 100%)',
+      hero: 'linear-gradient(160deg, #1A0A10 0%, #3D0F1C 35%, #A51C30 75%, #6B1020 100%)',
+      warm: 'linear-gradient(135deg, #B8860B 0%, #D4A017 50%, #B8860B 100%)',
+    },
+  },
+
+  /* ─── Institutional — Cloned from Canvas LMS / Workday ──── */
+  institutional: {
+    colors: {
+      primary: '#0070E0', primaryHover: '#005CB8', primaryLight: '#4DA3FF', primaryDark: '#004A99', primaryMuted: '#EBF5FF',
+      secondary: '#394B58', secondaryHover: '#2D3D48', secondaryLight: '#5B7A8A',
+      accent: '#49C9A8', accentWarm: '#FF8C00',
+      bg: '#ffffff', bgSecondary: '#F5F6F7', bgTertiary: '#E8EAED', bgCard: '#ffffff', bgHover: '#EEF0F2',
+      text: '#1E2A38', textSecondary: '#3D4F5F', textMuted: '#607890', textInverse: '#ffffff',
+      border: '#C5CED6', borderLight: '#DEE3E8', borderStrong: '#8C9EAF',
+      navy: '#1A3E5C', navyMid: '#2D5F8A', navyLight: '#4DA3FF', navyPale: '#EBF5FF',
+      gold: '#E6A817', goldMid: '#FFB800', goldLight: '#FFCC33', goldBright: '#FFD633', goldPale: '#FFF8E1',
+      cream: '#F5F6F7',
+      danger: '#D42B2B', warning: '#E6A817', success: '#247D2B', info: '#0070E0',
+    },
+    radii: { xs: 2, sm: 4, md: 6, lg: 8, xl: 10, xxl: 12, xxxl: 16, pill: 50 },
+    spacing: { xs: 4, sm: 8, md: 12, lg: 16, xl: 24, xxl: 32, xxxl: 48 },
+    shadows: {
+      xs: '0 1px 2px rgba(0,0,0,0.03)', sm: '0 1px 2px rgba(0,0,0,0.04)', md: '0 1px 4px rgba(0,0,0,0.05)',
+      lg: '0 2px 8px rgba(0,0,0,0.06)', xl: '0 4px 12px rgba(0,0,0,0.08)', xxl: '0 6px 18px rgba(0,0,0,0.10)',
+      card: '0 1px 2px rgba(0,0,0,0.04)',
+      cardHover: '0 2px 6px rgba(0,0,0,0.06)',
+      glowNavy: '0 0 0 3px rgba(0,112,224,0.10), 0 4px 16px rgba(0,112,224,0.12)',
+    },
+    typography: {
+      displayFont: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+      bodyFont: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+      monoFont: "'SF Mono', 'Consolas', monospace",
+      displayWeight: 700, bodyWeight: 400, headingWeight: 700,
+      displayLetterSpacing: -0.01,
+    },
+    gradients: {
+      primary: 'linear-gradient(135deg, #1A3E5C 0%, #0070E0 55%, #4DA3FF 100%)',
+      hero: 'linear-gradient(160deg, #0D1F2D 0%, #1A3E5C 35%, #2D5F8A 75%, #1A3E5C 100%)',
+      warm: 'linear-gradient(135deg, #0070E0 0%, #49C9A8 60%, #0070E0 100%)',
+    },
+  },
 }

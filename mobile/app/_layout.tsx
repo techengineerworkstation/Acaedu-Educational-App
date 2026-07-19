@@ -3,9 +3,10 @@ import { Stack } from 'expo-router'
 import { StatusBar } from 'expo-status-bar'
 import { View, ActivityIndicator } from 'react-native'
 import { supabase } from '../lib/supabase'
-import { colors } from '../lib/theme'
+import { MobileThemeProvider, useMobileTheme } from '../lib/theme'
 
-export default function RootLayout() {
+function RootLayoutInner() {
+  const { tokens } = useMobileTheme()
   const [loading, setLoading] = useState(true)
   const [user, setUser] = useState<any>(null)
 
@@ -24,8 +25,8 @@ export default function RootLayout() {
 
   if (loading) {
     return (
-      <View style={{ flex: 1, backgroundColor: colors.bg, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color={colors.primary} />
+      <View style={{ flex: 1, backgroundColor: tokens.colors.bg, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color={tokens.colors.primary} />
       </View>
     )
   }
@@ -36,7 +37,7 @@ export default function RootLayout() {
       <Stack
         screenOptions={{
           headerShown: false,
-          contentStyle: { backgroundColor: colors.bg },
+          contentStyle: { backgroundColor: tokens.colors.bg },
           animation: 'slide_from_right',
         }}
       >
@@ -49,5 +50,13 @@ export default function RootLayout() {
         <Stack.Screen name="settings" />
       </Stack>
     </>
+  )
+}
+
+export default function RootLayout() {
+  return (
+    <MobileThemeProvider>
+      <RootLayoutInner />
+    </MobileThemeProvider>
   )
 }

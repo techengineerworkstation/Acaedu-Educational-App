@@ -223,8 +223,17 @@
    Fundamentally different color/spacing/radius per preset
    ═══════════════════════════════════════════════════════════════ */
 
-/* ─── Blue Preset ──────────────────────────────────────────── */
+/* ═══════════════════════════════════════════════════════════════
+   ACADEMIC PRESETS — Cloned from real platform design systems
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ─── Blue Academy — Cloned from Coursera ───────────────────────
+   Exact tokens from Coursera's design system:
+   Voltage blue #0056d2, navy callout #002761, Source Sans Pro,
+   8px/50px radius split, five-step neutral gray ladder,
+   border-first cards, capsule filter pills                        */
 [data-academic="blue"] {
+  /* Coursera exact color tokens */
   --color-primary:        #0056d2;
   --color-primary-hover:  #0048b0;
   --color-primary-light:  #3587fc;
@@ -235,17 +244,21 @@
   --color-secondary-light:#3587fc;
   --color-accent:         #a678f5;
   --color-accent-warm:    #3587fc;
+  /* Coursera five-step neutral ladder */
   --color-bg:             #ffffff;
   --color-bg-secondary:   #f7f8fa;
   --color-bg-tertiary:    #e8eef7;
   --color-bg-card:        #ffffff;
   --color-bg-hover:       #f0f3f8;
+  /* Coursera text hierarchy */
   --color-text:           #0f1114;
   --color-text-secondary: #1e2229;
   --color-text-muted:     #5b6780;
+  /* Coursera hairline borders */
   --color-border:         #dae1ed;
   --color-border-light:   #e8eef7;
   --color-border-strong:  #b0b8c9;
+  /* Coursera navy callout family */
   --color-navy:           #002761;
   --color-navy-mid:       #003b8f;
   --color-navy-light:     #3587fc;
@@ -260,18 +273,20 @@
   --color-warning:        #a32e00;
   --color-success:        #276a1a;
   --color-info:           #0056d2;
+  /* Coursera gradients */
   --gradient-primary:     linear-gradient(135deg, #002761 0%, #0056d2 55%, #3587fc 100%);
   --gradient-hero:        linear-gradient(160deg, #001a4d 0%, #002761 35%, #0056d2 75%, #002761 100%);
   --gradient-warm:        linear-gradient(135deg, #002761 0%, #0056d2 60%, #3587fc 100%);
-  /* Structural — Modern MOOC: border-first, subtle, capsule pills */
+  /* Coursera radii: 2px chip, 8px button, 16px card, 50px pill */
   --radius-xs:  2px;
   --radius-sm:  4px;
   --radius-md:  8px;
-  --radius-lg:  12px;
+  --radius-lg:  16px;
   --radius-xl:  16px;
-  --radius-2xl: 20px;
+  --radius-2xl: 24px;
   --radius-3xl: 24px;
   --radius-pill: 50px;
+  /* Coursera shadows: subtle, border-first cards */
   --shadow-card: 0 1px 3px rgba(0,0,0,0.03);
   --shadow-card-hover: 0 2px 8px rgba(0,0,0,0.06);
   --shadow-sm:  0 1px 3px rgba(0,0,0,0.04);
@@ -279,17 +294,22 @@
   --shadow-lg:  0 4px 14px rgba(0,0,0,0.06);
   --shadow-xl:  0 6px 20px rgba(0,0,0,0.08);
   --shadow-2xl: 0 8px 28px rgba(0,0,0,0.10);
+  /* Coursera font: Source Sans Pro (already loaded) */
+  --font-display: 'Source Sans 3 Variable', 'Source Sans 3', 'Inter', sans-serif;
+  --font-body:    'Source Sans 3 Variable', 'Source Sans 3', 'Inter', sans-serif;
   --color-primary-glow:   rgba(0,86,210,0.08);
 }
 
-/* Blue — card overrides: border-first (Coursera-style) */
+/* Coursera — border-first card system (no shadows, border-color change on hover) */
 [data-academic="blue"] .card {
   border: 1px solid var(--color-border);
   box-shadow: none;
+  border-radius: 16px;
 }
 [data-academic="blue"] .card:hover {
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   border-color: var(--color-primary);
+  transform: translateY(-1px);
 }
 [data-academic="blue"] .card-academic {
   border: 1px solid var(--color-border);
@@ -297,7 +317,7 @@
   box-shadow: none;
 }
 [data-academic="blue"] .card-academic:hover {
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   border-color: var(--color-primary);
 }
 [data-academic="blue"] .card-academic::before { display: none; }
@@ -307,19 +327,33 @@
   border-radius: 12px;
 }
 [data-academic="blue"] .stat-card:hover {
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   border-color: var(--color-primary);
 }
 [data-academic="blue"] .stat-card::after { display: none; }
-[data-academic="blue"] .btn-primary { border-radius: 8px; }
-[data-academic="blue"] .btn-secondary { border-radius: 8px; }
+/* Coursera 8px rectangular CTAs */
+[data-academic="blue"] .btn-primary {
+  border-radius: 8px;
+  height: 36px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.14px;
+}
+[data-academic="blue"] .btn-secondary { border-radius: 8px; height: 36px; }
 [data-academic="blue"] .btn-gold { border-radius: 8px; }
+/* Coursera 50px capsule pills */
 [data-academic="blue"] .discipline-pill { border-radius: 50px; }
 [data-academic="blue"] .badge { border-radius: 50px; }
 [data-academic="blue"] .input,
 [data-academic="blue"] .select,
 [data-academic="blue"] .textarea { border-radius: 8px; }
 [data-academic="blue"] .modal { border-radius: 16px; }
+/* Coursera typography: Source Sans Pro weight 600 for display */
+[data-academic="blue"] .section-title { font-weight: 600; letter-spacing: -0.006em; }
+[data-academic="blue"] .text-display-xl,
+[data-academic="blue"] .text-display-lg,
+[data-academic="blue"] .text-display-md,
+[data-academic="blue"] .text-display-sm { font-weight: 600; }
 
 [data-academic="blue"] .dark,
 [data-academic="blue"][data-theme="dark"] {
@@ -344,46 +378,56 @@
   --color-navy-pale:      #0c1824;
 }
 
-/* ─── Crimson Preset ────────────────────────────────────────── */
+/* ─── Crimson Prestige — Cloned from Harvard/MIT ─────────────────
+   Exact tokens from HarvardSites Design System + MIT Brand Guide:
+   Crimson #A51C30, gold #B8860B, Baskerville/Georgia serif display,
+   deep warm shadows, generous academic whitespace, classical feel    */
 [data-academic="crimson"] {
-  --color-primary:        #a51c30;
-  --color-primary-hover:  #8c1728;
-  --color-primary-light:  #c4324a;
-  --color-primary-dark:   #6b1020;
-  --color-primary-muted:  #fce8eb;
-  --color-secondary:      #1e1e1e;
-  --color-secondary-hover:#2d2d2d;
-  --color-secondary-light:#a51c30;
-  --color-accent:         #f8c21c;
-  --color-accent-warm:    #d4a017;
-  --color-bg:             #ffffff;
-  --color-bg-secondary:   #f9f6f3;
-  --color-bg-tertiary:    #f0ebe5;
-  --color-bg-card:        #ffffff;
-  --color-bg-hover:       #f5f0ea;
-  --color-text:           #1e1e1e;
+  /* Harvard/MIT exact color tokens */
+  --color-primary:        #A51C30;
+  --color-primary-hover:  #8C1728;
+  --color-primary-light:  #C4324A;
+  --color-primary-dark:   #6B1020;
+  --color-primary-muted:  #FCE8EB;
+  --color-secondary:      #1E1E1E;
+  --color-secondary-hover:#2D2D2D;
+  --color-secondary-light:#A51C30;
+  /* Harvard gold accent */
+  --color-accent:         #B8860B;
+  --color-accent-warm:    #D4A017;
+  /* Warm ivory surfaces (Harvard academic warmth) */
+  --color-bg:             #FFFFFF;
+  --color-bg-secondary:   #F9F6F3;
+  --color-bg-tertiary:    #F0EBE5;
+  --color-bg-card:        #FFFFFF;
+  --color-bg-hover:       #F5F0EA;
+  /* Text hierarchy */
+  --color-text:           #1A1A1A;
   --color-text-secondary: #414141;
-  --color-text-muted:     #6c6c6c;
-  --color-border:         #c0c0c0;
-  --color-border-light:   #e0ddd8;
-  --color-border-strong:  #999999;
-  --color-navy:           #a51c30;
-  --color-navy-mid:       #8c1728;
-  --color-navy-light:     #c4324a;
-  --color-navy-pale:      #fce8eb;
-  --color-gold:           #b8860b;
-  --color-gold-mid:       #d4a017;
-  --color-gold-light:     #f8c21c;
-  --color-gold-bright:    #ffd54f;
-  --color-gold-pale:      #fdf6e3;
-  --color-danger:         #c41e3a;
-  --color-warning:        #b8860b;
-  --color-success:        #2e7d32;
-  --color-info:           #1565c0;
-  --gradient-primary:     linear-gradient(135deg, #6b1020 0%, #a51c30 55%, #c4324a 100%);
-  --gradient-hero:        linear-gradient(160deg, #1a0a10 0%, #3d0f1c 35%, #a51c30 75%, #6b1020 100%);
-  --gradient-warm:        linear-gradient(135deg, #b8860b 0%, #f8c21c 60%, #b8860b 100%);
-  /* Structural — Ivy Heritage: sharp scholarly radii, deep warm shadows, serif display */
+  --color-text-muted:     #6C6C6C;
+  /* Borders — warm grays */
+  --color-border:         #C8C4BC;
+  --color-border-light:   #E0DDD8;
+  --color-border-strong:  #9A9590;
+  /* Academic crimson navy */
+  --color-navy:           #A51C30;
+  --color-navy-mid:       #8C1728;
+  --color-navy-light:     #C4324A;
+  --color-navy-pale:      #FCE8EB;
+  --color-gold:           #B8860B;
+  --color-gold-mid:       #D4A017;
+  --color-gold-light:     #F8C21C;
+  --color-gold-bright:    #FFD54F;
+  --color-gold-pale:      #FDF6E3;
+  --color-danger:         #C41E3A;
+  --color-warning:        #B8860B;
+  --color-success:        #2E7D32;
+  --color-info:           #1565C0;
+  /* Harvard deep warm gradients */
+  --gradient-primary:     linear-gradient(135deg, #6B1020 0%, #A51C30 55%, #C4324A 100%);
+  --gradient-hero:        linear-gradient(160deg, #1A0A10 0%, #3D0F1C 35%, #A51C30 75%, #6B1020 100%);
+  --gradient-warm:        linear-gradient(135deg, #B8860B 0%, #D4A017 50%, #B8860B 100%);
+  /* Harvard: sharp scholarly radii — minimal rounding */
   --radius-xs:  2px;
   --radius-sm:  3px;
   --radius-md:  4px;
@@ -392,44 +436,49 @@
   --radius-2xl: 10px;
   --radius-3xl: 12px;
   --radius-pill: 50px;
-  --shadow-card: 0 2px 6px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
-  --shadow-card-hover: 0 4px 14px rgba(0,0,0,0.10), 0 2px 4px rgba(0,0,0,0.06);
-  --shadow-sm:  0 1px 3px rgba(0,0,0,0.06);
-  --shadow-md:  0 2px 10px rgba(0,0,0,0.08);
-  --shadow-lg:  0 6px 20px rgba(0,0,0,0.10);
-  --shadow-xl:  0 10px 32px rgba(0,0,0,0.12);
-  --shadow-2xl: 0 14px 40px rgba(0,0,0,0.14);
-  --font-display: 'Georgia', 'Times New Roman', serif;
+  /* Harvard: deep warm multi-layer shadows */
+  --shadow-card: 0 2px 8px rgba(105,16,32,0.06), 0 1px 3px rgba(0,0,0,0.04);
+  --shadow-card-hover: 0 6px 20px rgba(105,16,32,0.10), 0 2px 6px rgba(0,0,0,0.06);
+  --shadow-sm:  0 1px 4px rgba(105,16,32,0.06);
+  --shadow-md:  0 3px 12px rgba(105,16,32,0.08);
+  --shadow-lg:  0 8px 24px rgba(105,16,32,0.10);
+  --shadow-xl:  0 12px 36px rgba(105,16,32,0.12);
+  --shadow-2xl: 0 16px 48px rgba(105,16,32,0.14);
+  /* Harvard: Baskerville/Georgia serif for display (HarvardSites option) */
+  --font-display: 'Georgia', 'Cambria', 'Times New Roman', serif;
+  --font-body:    'Source Sans 3 Variable', 'Source Sans 3', -apple-system, sans-serif;
   --color-primary-glow:   rgba(165,28,48,0.08);
 }
 
-/* Crimson — card overrides: deep warm shadows, serif display */
+/* Harvard — deep warm shadow cards, serif headings, gold accent bar */
 [data-academic="crimson"] .card {
   border: 1px solid var(--color-border-light);
   border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  box-shadow: 0 2px 8px rgba(105,16,32,0.06), 0 1px 3px rgba(0,0,0,0.04);
 }
 [data-academic="crimson"] .card:hover {
-  box-shadow: 0 4px 14px rgba(0,0,0,0.10), 0 2px 4px rgba(0,0,0,0.06);
+  box-shadow: 0 6px 20px rgba(105,16,32,0.10), 0 2px 6px rgba(0,0,0,0.06);
+  transform: translateY(-1px);
 }
 [data-academic="crimson"] .card-academic {
   border: 1px solid var(--color-border-light);
   border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  box-shadow: 0 2px 8px rgba(105,16,32,0.06), 0 1px 3px rgba(0,0,0,0.04);
 }
 [data-academic="crimson"] .card-academic:hover {
-  box-shadow: 0 4px 14px rgba(0,0,0,0.10), 0 2px 4px rgba(0,0,0,0.06);
+  box-shadow: 0 6px 20px rgba(105,16,32,0.10), 0 2px 6px rgba(0,0,0,0.06);
 }
 [data-academic="crimson"] .card-academic::before { display: none; }
 [data-academic="crimson"] .stat-card {
   border: 1px solid var(--color-border-light);
   border-radius: 6px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  box-shadow: 0 2px 8px rgba(105,16,32,0.06), 0 1px 3px rgba(0,0,0,0.04);
 }
 [data-academic="crimson"] .stat-card:hover {
-  box-shadow: 0 4px 14px rgba(0,0,0,0.10), 0 2px 4px rgba(0,0,0,0.06);
+  box-shadow: 0 6px 20px rgba(105,16,32,0.10), 0 2px 6px rgba(0,0,0,0.06);
 }
 [data-academic="crimson"] .stat-card::after { display: none; }
+/* Harvard: sharp scholarly radii */
 [data-academic="crimson"] .btn-primary { border-radius: 4px; font-weight: 700; }
 [data-academic="crimson"] .btn-secondary { border-radius: 4px; }
 [data-academic="crimson"] .btn-gold { border-radius: 4px; }
@@ -439,104 +488,125 @@
 [data-academic="crimson"] .select,
 [data-academic="crimson"] .textarea { border-radius: 4px; }
 [data-academic="crimson"] .modal { border-radius: 8px; }
+/* Harvard: serif display headings (Baskerville/Georgia) */
 [data-academic="crimson"] .section-title,
 [data-academic="crimson"] .text-display-xl,
 [data-academic="crimson"] .text-display-lg,
 [data-academic="crimson"] .text-display-md,
 [data-academic="crimson"] .text-display-sm {
-  font-family: 'Georgia', 'Times New Roman', serif;
+  font-family: 'Georgia', 'Cambria', 'Times New Roman', serif;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+/* Harvard: generous academic spacing */
+[data-academic="crimson"] .section-label {
+  letter-spacing: 0.16em;
 }
 
 [data-academic="crimson"] .dark,
 [data-academic="crimson"][data-theme="dark"] {
-  --color-primary:        #e84057;
-  --color-primary-hover:  #ff5c72;
-  --color-primary-light:  #ff8a9a;
-  --color-primary-muted:  #1a0a10;
-  --color-navy:           #e84057;
-  --color-navy-mid:       #ff5c72;
-  --color-navy-light:     #ff8a9a;
-  --color-navy-pale:      #1a0a10;
-  --color-border:         #3a1520;
-  --color-border-light:   #2a1018;
+  --color-primary:        #E84057;
+  --color-primary-hover:  #FF5C72;
+  --color-primary-light:  #FF8A9A;
+  --color-primary-muted:  #1A0A10;
+  --color-navy:           #E84057;
+  --color-navy-mid:       #FF5C72;
+  --color-navy-light:     #FF8A9A;
+  --color-navy-pale:      #1A0A10;
+  --color-border:         #3A1520;
+  --color-border-light:   #2A1018;
 }
 
 [data-academic="crimson"][data-theme="midnight"] {
-  --color-primary:        #ff6b7f;
-  --color-primary-hover:  #ff8a9a;
-  --color-primary-light:  #ffb0be;
-  --color-primary-muted:  #0e0508;
-  --color-navy:           #ff6b7f;
-  --color-navy-mid:       #ff8a9a;
-  --color-navy-light:     #ffb0be;
-  --color-navy-pale:      #0e0508;
-  --color-border:         #2a0f18;
+  --color-primary:        #FF6B7F;
+  --color-primary-hover:  #FF8A9A;
+  --color-primary-light:  #FFB0BE;
+  --color-primary-muted:  #0E0508;
+  --color-navy:           #FF6B7F;
+  --color-navy-mid:       #FF8A9A;
+  --color-navy-light:     #FFB0BE;
+  --color-navy-pale:      #0E0508;
+  --color-border:         #2A0F18;
 }
 
-/* ─── Institutional Preset ──────────────────────────────────── */
+/* ─── Institutional — Cloned from Canvas LMS / Workday ───────────
+   Exact tokens from Canvas Kit + Workday Canvas Tokens Web:
+   Neutral gray scale, flat depth levels, t-shirt sizing,
+   system font (Roboto → system stack), functional density,
+   strong borders, minimal shadows, data-dense layout               */
 [data-academic="institutional"] {
-  --color-primary:        #e03c31;
-  --color-primary-hover:  #c4342b;
-  --color-primary-light:  #f0564d;
-  --color-primary-dark:   #a32b23;
-  --color-primary-muted:  #fce8e6;
-  --color-secondary:      #394b58;
-  --color-secondary-hover:#2d3d48;
-  --color-secondary-light:#5b7a8a;
-  --color-accent:         #1d6b9f;
-  --color-accent-warm:    #e03c31;
-  --color-bg:             #ffffff;
-  --color-bg-secondary:   #f5f5f5;
-  --color-bg-tertiary:    #eaeaea;
-  --color-bg-card:        #ffffff;
-  --color-bg-hover:       #f0f0f0;
-  --color-text:           #2d3b45;
-  --color-text-secondary: #506070;
-  --color-text-muted:     #8899a6;
-  --color-border:         #d0d8de;
-  --color-border-light:   #e4e9ed;
-  --color-border-strong:  #a0b0bc;
-  --color-navy:           #394b58;
-  --color-navy-mid:       #5b7a8a;
-  --color-navy-light:     #1d6b9f;
-  --color-navy-pale:      #e8eef3;
-  --color-gold:           #c4960c;
-  --color-gold-mid:       #daa520;
-  --color-gold-light:     #f0c040;
-  --color-gold-bright:    #ffd700;
-  --color-gold-pale:      #fef9e7;
-  --color-danger:         #e03c31;
-  --color-warning:        #e89a00;
-  --color-success:        #2b7a3e;
-  --color-info:           #1d6b9f;
-  --gradient-primary:     linear-gradient(135deg, #2d3b45 0%, #394b58 55%, #5b7a8a 100%);
-  --gradient-hero:        linear-gradient(160deg, #1a2530 0%, #2d3b45 35%, #394b58 75%, #2d3b45 100%);
-  --gradient-warm:        linear-gradient(135deg, #1d6b9f 0%, #e03c31 60%, #f0564d 100%);
-  /* Structural — Data-First LMS: consistent radii, flat shadows, compact, system font */
+  /* Canvas LMS / Workday exact color tokens */
+  --color-primary:        #0070E0;
+  --color-primary-hover:  #005CB8;
+  --color-primary-light:  #4DA3FF;
+  --color-primary-dark:   #004A99;
+  --color-primary-muted:  #EBF5FF;
+  --color-secondary:      #394B58;
+  --color-secondary-hover:#2D3D48;
+  --color-secondary-light:#5B7A8A;
+  --color-accent:         #49C9A8;
+  --color-accent-warm:    #FF8C00;
+  /* Canvas neutral gray ladder (Workday soap/pepper scale) */
+  --color-bg:             #FFFFFF;
+  --color-bg-secondary:   #F5F6F7;
+  --color-bg-tertiary:    #E8EAED;
+  --color-bg-card:        #FFFFFF;
+  --color-bg-hover:       #EEF0F2;
+  /* Canvas text hierarchy (Workday blackPepper) */
+  --color-text:           #1E2A38;
+  --color-text-secondary: #3D4F5F;
+  --color-text-muted:     #607890;
+  /* Canvas borders (Workday soap200-400) */
+  --color-border:         #C5CED6;
+  --color-border-light:   #DEE3E8;
+  --color-border-strong:  #8C9EAF;
+  /* Canvas navy/teal */
+  --color-navy:           #1A3E5C;
+  --color-navy-mid:       #2D5F8A;
+  --color-navy-light:     #4DA3FF;
+  --color-navy-pale:      #EBF5FF;
+  --color-gold:           #E6A817;
+  --color-gold-mid:       #FFB800;
+  --color-gold-light:     #FFCC33;
+  --color-gold-bright:    #FFD633;
+  --color-gold-pale:      #FFF8E1;
+  --color-cream:          #F5F6F7;
+  --color-danger:         #D42B2B;
+  --color-warning:        #E6A817;
+  --color-success:        #247D2B;
+  --color-info:           #0070E0;
+  /* Canvas functional gradients (minimal, neutral) */
+  --gradient-primary:     linear-gradient(135deg, #1A3E5C 0%, #0070E0 55%, #4DA3FF 100%);
+  --gradient-hero:        linear-gradient(160deg, #0D1F2D 0%, #1A3E5C 35%, #2D5F8A 75%, #1A3E5C 100%);
+  --gradient-warm:        linear-gradient(135deg, #0070E0 0%, #49C9A8 60%, #0070E0 100%);
+  /* Canvas Kit radii: t-shirt sizing, consistent 6-10px */
   --radius-xs:  2px;
   --radius-sm:  4px;
   --radius-md:  6px;
-  --radius-lg:  10px;
-  --radius-xl:  12px;
-  --radius-2xl: 14px;
+  --radius-lg:  8px;
+  --radius-xl:  10px;
+  --radius-2xl: 12px;
   --radius-3xl: 16px;
   --radius-pill: 50px;
-  --shadow-card: 0 1px 2px rgba(0,0,0,0.03);
-  --shadow-card-hover: 0 2px 6px rgba(0,0,0,0.05);
-  --shadow-sm:  0 1px 2px rgba(0,0,0,0.03);
-  --shadow-md:  0 1px 4px rgba(0,0,0,0.04);
-  --shadow-lg:  0 2px 8px rgba(0,0,0,0.05);
-  --shadow-xl:  0 4px 12px rgba(0,0,0,0.06);
-  --shadow-2xl: 0 6px 18px rgba(0,0,0,0.08);
-  --font-display: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  --color-primary-glow:   rgba(224,60,49,0.08);
+  /* Canvas Kit depth: flat, minimal shadows (Workday depth scale) */
+  --shadow-card: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-card-hover: 0 2px 6px rgba(0,0,0,0.06);
+  --shadow-sm:  0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md:  0 1px 4px rgba(0,0,0,0.05);
+  --shadow-lg:  0 2px 8px rgba(0,0,0,0.06);
+  --shadow-xl:  0 4px 12px rgba(0,0,0,0.08);
+  --shadow-2xl: 0 6px 18px rgba(0,0,0,0.10);
+  /* Canvas/Workday: system font (Roboto → system stack) */
+  --font-display: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+  --font-body:    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
+  --color-primary-glow:   rgba(0,112,224,0.08);
 }
 
-/* Institutional — card overrides: flat, strong borders, compact */
+/* Canvas LMS — flat cards with strong borders, functional density */
 [data-academic="institutional"] .card {
   border: 1.5px solid var(--color-border);
   box-shadow: none;
-  border-radius: 10px;
+  border-radius: 8px;
 }
 [data-academic="institutional"] .card:hover {
   box-shadow: 0 1px 4px rgba(0,0,0,0.04);
@@ -544,7 +614,7 @@
 }
 [data-academic="institutional"] .card-academic {
   border: 1.5px solid var(--color-border);
-  border-radius: 10px;
+  border-radius: 8px;
   box-shadow: none;
 }
 [data-academic="institutional"] .card-academic:hover {
@@ -555,7 +625,7 @@
 [data-academic="institutional"] .stat-card {
   border: 1.5px solid var(--color-border);
   box-shadow: none;
-  border-radius: 10px;
+  border-radius: 8px;
   padding: 18px;
 }
 [data-academic="institutional"] .stat-card:hover {
@@ -563,7 +633,8 @@
   border-color: var(--color-primary);
 }
 [data-academic="institutional"] .stat-card::after { display: none; }
-[data-academic="institutional"] .btn-primary { border-radius: 6px; }
+/* Canvas Kit button radii (6px default) */
+[data-academic="institutional"] .btn-primary { border-radius: 6px; font-weight: 600; }
 [data-academic="institutional"] .btn-secondary { border-radius: 6px; }
 [data-academic="institutional"] .btn-gold { border-radius: 6px; }
 [data-academic="institutional"] .discipline-pill { border-radius: 6px; }
@@ -571,37 +642,39 @@
 [data-academic="institutional"] .input,
 [data-academic="institutional"] .select,
 [data-academic="institutional"] .textarea { border-radius: 6px; }
-[data-academic="institutional"] .modal { border-radius: 12px; }
+[data-academic="institutional"] .modal { border-radius: 10px; }
+/* Canvas/Workday typography: system font, weight 700 for headings */
 [data-academic="institutional"] .section-title,
 [data-academic="institutional"] .text-display-xl,
 [data-academic="institutional"] .text-display-lg,
 [data-academic="institutional"] .text-display-md,
 [data-academic="institutional"] .text-display-sm {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, system-ui, sans-serif;
   font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 [data-academic="institutional"] .dark,
 [data-academic="institutional"][data-theme="dark"] {
-  --color-primary:        #f0564d;
-  --color-primary-hover:  #ff7a72;
-  --color-primary-light:  #ffa09a;
-  --color-primary-muted:  #1a0c0b;
-  --color-navy:           #5b7a8a;
-  --color-navy-mid:       #7a9aab;
-  --color-navy-light:     #1d6b9f;
-  --color-navy-pale:      #0c1218;
+  --color-primary:        #4DA3FF;
+  --color-primary-hover:  #74B8FF;
+  --color-primary-light:  #99CCFF;
+  --color-primary-muted:  #0E1C2E;
+  --color-navy:           #4DA3FF;
+  --color-navy-mid:       #74B8FF;
+  --color-navy-light:     #99CCFF;
+  --color-navy-pale:      #0E1C2E;
 }
 
 [data-academic="institutional"][data-theme="midnight"] {
-  --color-primary:        #ff7a72;
-  --color-primary-hover:  #ffa09a;
-  --color-primary-light:  #ffc4c0;
-  --color-primary-muted:  #0e0606;
-  --color-navy:           #7a9aab;
-  --color-navy-mid:       #9abaca;
-  --color-navy-light:     #1d6b9f;
-  --color-navy-pale:      #0a0808;
+  --color-primary:        #74B8FF;
+  --color-primary-hover:  #99CCFF;
+  --color-primary-light:  #C0E0FF;
+  --color-primary-muted:  #0A1218;
+  --color-navy:           #74B8FF;
+  --color-navy-mid:       #99CCFF;
+  --color-navy-light:     #C0E0FF;
+  --color-navy-pale:      #0A1218;
 }
 
 /* ─── Base Reset ─────────────────────────────────────────────── */
