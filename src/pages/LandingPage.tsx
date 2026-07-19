@@ -7,6 +7,8 @@ import { CardContainer, CardBody } from '@/components/aceternity/3d-card'
 import { useTheme } from '@/lib/theme'
 
 const SparklesComponent = lazy(() => import('@/components/aceternity/sparkles').then(m => ({ default: m.Sparkles })))
+const FractalTreeComponent = lazy(() => import('@/components/aceternity/fractal-tree').then(m => ({ default: m.FractalTree })))
+const SpriteAnimComponent = lazy(() => import('@/components/aceternity/sprite-animation').then(m => ({ default: m.SpriteAnimation })))
 
 class SilentErrorBoundary extends Component<{ children: ReactNode }, { crashed: boolean }> {
   state = { crashed: false }
@@ -319,8 +321,8 @@ export function LandingPage() {
             <motion.div
               whileHover={{ rotate: [0, -8, 8, 0] }}
               transition={{ duration: 0.5 }}
-              className="w-8 h-8 rounded-[10px] bg-[var(--color-primary)] flex items-center justify-center shadow-sm group-hover:shadow-[var(--shadow-glow-navy)] transition-shadow duration-300">
-              <span className="text-white font-extrabold text-xs" style={{ fontFamily: 'var(--font-display)' }}>A</span>
+              className="w-8 h-8 rounded-[10px] overflow-hidden shadow-sm group-hover:shadow-[var(--shadow-glow-navy)] transition-shadow duration-300">
+              <img src="/favicon.svg" alt="Acaedu" className="w-full h-full object-cover" />
             </motion.div>
             <span className="text-[15px] font-bold text-[var(--color-navy)] tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
               Acaedu
@@ -360,6 +362,30 @@ export function LandingPage() {
             <SilentErrorBoundary>
               <Suspense fallback={null}>
                 <SparklesComponent count={70} speed={0.4} colors={['#c1272d', '#e8535a', '#025e6b', '#4dd0d8', '#ffffff']} />
+              </Suspense>
+            </SilentErrorBoundary>
+          </div>
+
+          {/* Fractal tree background */}
+          <div className="absolute inset-0 z-[1] pointer-events-none opacity-40">
+            <SilentErrorBoundary>
+              <Suspense fallback={null}>
+                <FractalTreeComponent
+                  depth={8}
+                  branchAngle={28}
+                  shrink={0.70}
+                  windSpeed={0.25}
+                  colors={{ trunk: 'rgba(255,255,255,0.06)', leaf: 'rgba(77,208,216,0.25)', glow: 'rgba(193,39,45,0.1)' }}
+                />
+              </Suspense>
+            </SilentErrorBoundary>
+          </div>
+
+          {/* Sprite animation overlay */}
+          <div className="absolute inset-0 z-[1] pointer-events-none opacity-50">
+            <SilentErrorBoundary>
+              <Suspense fallback={null}>
+                <SpriteAnimComponent maxParticles={14} />
               </Suspense>
             </SilentErrorBoundary>
           </div>
@@ -485,8 +511,32 @@ export function LandingPage() {
         </Section>
 
         {/* ── Feature Cards — squircle shape, prominent graphic icons ─── */}
-        <Section id="features" className="py-24">
-          <div className="page-section">
+        <Section id="features" className="py-24 relative overflow-hidden">
+          {/* Fractal + sprite background for features */}
+          <div className="absolute inset-0 pointer-events-none opacity-25">
+            <SilentErrorBoundary>
+              <Suspense fallback={null}>
+                <FractalTreeComponent
+                  depth={7}
+                  branchAngle={22}
+                  shrink={0.68}
+                  windSpeed={0.15}
+                  colors={{ trunk: 'rgba(255,255,255,0.04)', leaf: 'rgba(193,39,45,0.15)', glow: 'rgba(77,208,216,0.08)' }}
+                />
+              </Suspense>
+            </SilentErrorBoundary>
+          </div>
+          <div className="absolute inset-0 pointer-events-none opacity-30">
+            <SilentErrorBoundary>
+              <Suspense fallback={null}>
+                <SpriteAnimComponent maxParticles={8} sprites={[
+                  { name: 'orbit', frames: Array.from({ length: 12 }, () => ({ x: 0, y: 0, w: 6, h: 6 })), fps: 8, loop: true, color: 'rgba(193,39,45,0.2)', size: 4 },
+                  { name: 'book', frames: Array.from({ length: 8 }, () => ({ x: 0, y: 0, w: 10, h: 14 })), fps: 6, loop: true, color: 'rgba(77,208,216,0.2)', size: 8 },
+                ]} />
+              </Suspense>
+            </SilentErrorBoundary>
+          </div>
+          <div className="page-section relative z-10">
             <motion.div variants={fadeUp} className="text-center mb-14">
               <span className="section-label">What You Get</span>
               <span className="rule-gold" />
@@ -650,7 +700,7 @@ export function LandingPage() {
             <motion.h2 variants={fadeUp} className="text-display-lg text-white mb-5">
               Ready to modernise your institution?
             </motion.h2>
-            <motion.p variants={fadeUp} className="text-[15px] text-white/35 mb-10 max-w-lg mx-auto leading-relaxed">
+            <motion.p variants={fadeUp} className="text-[15px] text-white/35 mb-10 max-w-lg mx-auto leading-relaxed text-center">
               Join thousands of students, lecturers, and administrators already streamlining their academic experience.
             </motion.p>
             <motion.div variants={fadeUp} className="flex items-center justify-center gap-4 flex-wrap">
@@ -675,9 +725,8 @@ export function LandingPage() {
           <div className="page-section">
             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-[10px] bg-white/8 flex items-center justify-center">
-                  <span className="text-white font-extrabold text-[11px]"
-                    style={{ fontFamily: 'var(--font-display)' }}>A</span>
+                <div className="w-8 h-8 rounded-[10px] overflow-hidden">
+                  <img src="/favicon.svg" alt="Acaedu" className="w-full h-full object-cover" />
                 </div>
                 <span className="text-[15px] font-bold text-white"
                   style={{ fontFamily: 'var(--font-display)' }}>Acaedu</span>

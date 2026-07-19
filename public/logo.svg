@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="192" y2="192" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#00262b"/>
+      <stop offset="100%" stop-color="#003d44"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#c1272d"/>
+      <stop offset="100%" stop-color="#e8535a"/>
+    </linearGradient>
+    <linearGradient id="teal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#025e6b"/>
+      <stop offset="100%" stop-color="#4dd0d8"/>
+    </linearGradient>
+  </defs>
+  <!-- Rounded square background -->
+  <rect width="192" height="192" rx="42" fill="url(#bg)"/>
+  <!-- Subtle inner border -->
+  <rect x="2" y="2" width="188" height="188" rx="40" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+  <!-- Top accent bar -->
+  <rect x="0" y="0" width="192" height="4" rx="2" fill="url(#accent)" opacity="0.8"/>
+  <!-- "A" letterform — geometric, modern -->
+  <g transform="translate(96,100)">
+    <!-- Left leg -->
+    <path d="M-38,38 L-4,-48" stroke="url(#accent)" stroke-width="10" stroke-linecap="round" fill="none"/>
+    <!-- Right leg -->
+    <path d="M4,-48 L38,38" stroke="url(#teal)" stroke-width="10" stroke-linecap="round" fill="none"/>
+    <!-- Crossbar -->
+    <path d="M-24,14 L24,14" stroke="rgba(255,255,255,0.7)" stroke-width="5" stroke-linecap="round" fill="none"/>
+    <!-- Dot above — graduation cap hint -->
+    <circle cx="0" cy="-58" r="5" fill="url(#accent)" opacity="0.9"/>
+    <!-- Cap brim -->
+    <path d="M-16,-52 L0,-58 L16,-52" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" fill="none"/>
+  </g>
+  <!-- Bottom decorative dots -->
+  <circle cx="60" cy="164" r="2.5" fill="#4dd0d8" opacity="0.4"/>
+  <circle cx="96" cy="168" r="3" fill="#c1272d" opacity="0.5"/>
+  <circle cx="132" cy="164" r="2.5" fill="#4dd0d8" opacity="0.4"/>
+</svg>

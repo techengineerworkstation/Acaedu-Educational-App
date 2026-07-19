@@ -35,3 +35,4 @@ publickey
 
 # Supabase local temp files
 supabase/.temp/
+flush-db.mjs\ntest-auth.mjs
