@@ -1,8 +1,8 @@
 import { Link } from 'react-router-dom'
 import { motion, useInView, useScroll, useTransform, AnimatePresence } from 'framer-motion'
 import { useRef, useState, useEffect, Suspense, lazy, Component, type ReactNode } from 'react'
-import { ArrowRight, Zap, Shield, Users, Brain, BookOpen, Bell, Sparkles, Search, GraduationCap, Globe, LineChart, Video } from 'lucide-react'
-import { NumberTicker, TextReveal } from '@/components/aceternity/text-reveal'
+import { ArrowRight, Zap, Shield, Brain, BookOpen, Bell, Sparkles, Search, GraduationCap, Globe, LineChart, Video } from 'lucide-react'
+import { NumberTicker } from '@/components/aceternity/text-reveal'
 import { CardContainer, CardBody } from '@/components/aceternity/3d-card'
 import { useTheme } from '@/lib/theme'
 
