@@ -545,11 +545,11 @@ input, select, textarea { font: inherit; color: inherit; }
   box-shadow: var(--shadow-lg);
 }
 
-/* Academic card — with left accent stripe (edX editorial) */
+/* Academic card — soft rounded-square shape (edX editorial) */
 .card-academic {
   background: var(--color-bg-card);
   border: 1px solid var(--color-border-light);
-  border-radius: var(--radius-lg);
+  border-radius: 20px;
   box-shadow: var(--shadow-card);
   position: relative;
   overflow: hidden;
@@ -567,7 +567,7 @@ input, select, textarea { font: inherit; color: inherit; }
 }
 .card-academic:hover {
   box-shadow: var(--shadow-card-hover);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
 }
 .card-academic:hover::before { opacity: 1; }
 

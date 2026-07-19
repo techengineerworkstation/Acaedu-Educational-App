@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
-import { motion, useInView, useScroll, useTransform } from 'framer-motion'
-import { useRef, Suspense, lazy, Component, type ReactNode } from 'react'
-import { ArrowRight, Zap, Shield, Users, Brain, BookOpen, Bell, Sparkles, Search } from 'lucide-react'
+import { motion, useInView, useScroll, useTransform, AnimatePresence } from 'framer-motion'
+import { useRef, useState, useEffect, Suspense, lazy, Component, type ReactNode } from 'react'
+import { ArrowRight, Zap, Shield, Users, Brain, BookOpen, Bell, Sparkles, Search, GraduationCap, Globe, LineChart, Video } from 'lucide-react'
 import { NumberTicker, TextReveal } from '@/components/aceternity/text-reveal'
 import { CardContainer, CardBody } from '@/components/aceternity/3d-card'
 import { useTheme } from '@/lib/theme'
@@ -39,14 +39,97 @@ function Section({ children, className = '', id }: { children: React.ReactNode; 
   )
 }
 
+/* ─── Hero SVG illustrations ─────────────────────────────────── */
+const heroSlides = [
+  {
+    label: 'Smart Scheduling',
+    svg: (
+      <svg viewBox="0 0 280 220" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+        <circle cx="140" cy="110" r="90" fill="rgba(193,39,45,0.08)" />
+        <circle cx="140" cy="110" r="65" fill="rgba(193,39,45,0.06)" />
+        <rect x="90" y="55" width="100" height="110" rx="10" fill="#00262b" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5"/>
+        <rect x="100" y="70" width="80" height="10" rx="3" fill="rgba(193,39,45,0.6)"/>
+        <rect x="100" y="88" width="50" height="6" rx="2" fill="rgba(255,255,255,0.2)"/>
+        <rect x="100" y="100" width="65" height="6" rx="2" fill="rgba(255,255,255,0.12)"/>
+        <rect x="100" y="112" width="40" height="6" rx="2" fill="rgba(255,255,255,0.12)"/>
+        <rect x="100" y="124" width="55" height="6" rx="2" fill="rgba(255,255,255,0.12)"/>
+        <rect x="100" y="136" width="45" height="6" rx="2" fill="rgba(255,255,255,0.12)"/>
+        <circle cx="180" cy="55" r="22" fill="#00262b" stroke="rgba(193,39,45,0.4)" strokeWidth="1.5"/>
+        <text x="180" y="60" textAnchor="middle" fill="#e8535a" fontSize="14" fontWeight="800">AI</text>
+        <circle cx="65" cy="80" r="8" fill="rgba(77,208,216,0.2)"/>
+        <circle cx="215" cy="150" r="6" fill="rgba(193,39,45,0.15)"/>
+        <circle cx="55" cy="150" r="5" fill="rgba(240,204,90,0.2)"/>
+      </svg>
+    ),
+  },
+  {
+    label: 'Live Collaboration',
+    svg: (
+      <svg viewBox="0 0 280 220" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+        <circle cx="140" cy="110" r="85" fill="rgba(2,94,107,0.08)"/>
+        <circle cx="110" cy="85" r="20" fill="#00262b" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5"/>
+        <circle cx="110" cy="76" r="7" fill="rgba(77,208,216,0.5)"/>
+        <rect x="98" y="88" width="24" height="14" rx="4" fill="rgba(77,208,216,0.25)"/>
+        <circle cx="170" cy="85" r="20" fill="#00262b" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5"/>
+        <circle cx="170" cy="76" r="7" fill="rgba(193,39,45,0.5)"/>
+        <rect x="158" y="88" width="24" height="14" rx="4" fill="rgba(193,39,45,0.2)"/>
+        <circle cx="140" cy="135" r="20" fill="#00262b" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5"/>
+        <circle cx="140" cy="126" r="7" fill="rgba(240,204,90,0.5)"/>
+        <rect x="128" y="138" width="24" height="14" rx="4" fill="rgba(240,204,90,0.2)"/>
+        <line x1="120" y1="95" x2="130" y2="120" stroke="rgba(255,255,255,0.12)" strokeWidth="1" strokeDasharray="3 3"/>
+        <line x1="160" y1="95" x2="150" y2="120" stroke="rgba(255,255,255,0.12)" strokeWidth="1" strokeDasharray="3 3"/>
+        <path d="M135 60 L140 50 L145 60" fill="none" stroke="rgba(193,39,45,0.4)" strokeWidth="1.5"/>
+      </svg>
+    ),
+  },
+  {
+    label: 'Grade Analytics',
+    svg: (
+      <svg viewBox="0 0 280 220" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+        <circle cx="140" cy="110" r="85" fill="rgba(240,204,90,0.06)"/>
+        <rect x="75" y="60" width="130" height="100" rx="10" fill="#00262b" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5"/>
+        <rect x="85" y="72" width="45" height="6" rx="2" fill="rgba(255,255,255,0.25)"/>
+        <rect x="85" y="84" width="110" height="1" fill="rgba(255,255,255,0.08)"/>
+        <rect x="90" y="130" width="14" height="22" rx="3" fill="rgba(193,39,45,0.6)"/>
+        <rect x="110" y="118" width="14" height="34" rx="3" fill="rgba(77,208,216,0.5)"/>
+        <rect x="130" y="108" width="14" height="44" rx="3" fill="rgba(240,204,90,0.5)"/>
+        <rect x="150" y="115" width="14" height="37" rx="3" fill="rgba(193,39,45,0.5)"/>
+        <rect x="170" y="100" width="14" height="52" rx="3" fill="rgba(77,208,216,0.6)"/>
+        <circle cx="200" cy="65" r="15" fill="#00262b" stroke="rgba(193,39,45,0.3)" strokeWidth="1"/>
+        <text x="200" y="70" textAnchor="middle" fill="#e8535a" fontSize="11" fontWeight="700">A+</text>
+      </svg>
+    ),
+  },
+  {
+    label: 'Campus Events',
+    svg: (
+      <svg viewBox="0 0 280 220" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+        <circle cx="140" cy="110" r="85" fill="rgba(193,39,45,0.06)"/>
+        <rect x="85" y="65" width="110" height="95" rx="8" fill="#00262b" stroke="rgba(255,255,255,0.15)" strokeWidth="1.5"/>
+        <rect x="85" y="65" width="110" height="25" rx="8" fill="rgba(193,39,45,0.3)"/>
+        <rect x="95" y="100" width="42" height="48" rx="5" fill="rgba(77,208,216,0.12)" stroke="rgba(77,208,216,0.25)" strokeWidth="1"/>
+        <rect x="143" y="100" width="42" height="48" rx="5" fill="rgba(240,204,90,0.1)" stroke="rgba(240,204,90,0.2)" strokeWidth="1"/>
+        <rect x="100" y="108" width="32" height="4" rx="1.5" fill="rgba(255,255,255,0.2)"/>
+        <rect x="100" y="116" width="24" height="3" rx="1" fill="rgba(255,255,255,0.1)"/>
+        <rect x="148" y="108" width="32" height="4" rx="1.5" fill="rgba(255,255,255,0.2)"/>
+        <rect x="148" y="116" width="24" height="3" rx="1" fill="rgba(255,255,255,0.1)"/>
+        <circle cx="115" cy="78" r="6" fill="rgba(255,255,255,0.3)"/>
+        <text x="115" y="82" textAnchor="middle" fill="white" fontSize="7" fontWeight="700">15</text>
+        <circle cx="55" cy="90" r="4" fill="rgba(193,39,45,0.15)"/>
+        <circle cx="220" cy="140" r="5" fill="rgba(77,208,216,0.15)"/>
+      </svg>
+    ),
+  },
+]
+
 /* ─── Data ───────────────────────────────────────────────────── */
 const features = [
-  { icon: BookOpen, num: '01', title: 'Subject Management',  desc: 'Organise courses, materials, and timetables in one unified workspace.' },
-  { icon: Zap,      num: '02', title: 'Grade Analytics',     desc: 'Real-time grade tracking with visual performance dashboards.' },
-  { icon: Bell,     num: '03', title: 'Smart Notifications', desc: 'Context-aware alerts for deadlines, exams, and announcements.' },
-  { icon: Users,    num: '04', title: 'Live Collaboration',  desc: 'Integrated video conferencing and shared class recordings.' },
-  { icon: Brain,    num: '05', title: 'AI Assistant',        desc: 'Intelligent lecture summaries, scheduling suggestions, and insights.' },
-  { icon: Shield,   num: '06', title: 'Enterprise Security', desc: 'Bank-grade encryption, RLS policies, and role-based access control.' },
+  { icon: BookOpen,  title: 'Subject Management',  desc: 'Organise courses, materials, and timetables in one unified workspace.', accent: 'rgba(193,39,45,0.08)', iconBg: 'rgba(193,39,45,0.12)', iconColor: '#c1272d' },
+  { icon: LineChart, title: 'Grade Analytics',      desc: 'Real-time grade tracking with visual performance dashboards.', accent: 'rgba(2,94,107,0.08)', iconBg: 'rgba(2,94,107,0.10)', iconColor: '#025e6b' },
+  { icon: Bell,      title: 'Smart Notifications', desc: 'Context-aware alerts for deadlines, exams, and announcements.', accent: 'rgba(240,204,90,0.08)', iconBg: 'rgba(240,204,90,0.12)', iconColor: '#b8860b' },
+  { icon: Video,     title: 'Live Collaboration',  desc: 'Integrated video conferencing and shared class recordings.', accent: 'rgba(77,208,216,0.08)', iconBg: 'rgba(77,208,216,0.10)', iconColor: '#025e6b' },
+  { icon: Brain,     title: 'AI Assistant',        desc: 'Intelligent lecture summaries, scheduling suggestions, and insights.', accent: 'rgba(193,39,45,0.06)', iconBg: 'rgba(193,39,45,0.10)', iconColor: '#c1272d' },
+  { icon: Shield,    title: 'Enterprise Security', desc: 'Bank-grade encryption, RLS policies, and role-based access control.', accent: 'rgba(0,38,43,0.06)', iconBg: 'rgba(0,38,43,0.08)', iconColor: '#00262b' },
 ]
 
 const courseCards = [
@@ -63,14 +146,42 @@ const testimonials = [
 ]
 
 const disciplines = [
-  'Artificial Intelligence', 'Data Science', 'Business Administration',
-  'Healthcare', 'Engineering', 'Computer Science', 'Law', 'Architecture',
+  { name: 'Artificial Intelligence', icon: Brain },
+  { name: 'Data Science', icon: LineChart },
+  { name: 'Business Administration', icon: Globe },
+  { name: 'Healthcare', icon: Shield },
+  { name: 'Engineering', icon: Zap },
+  { name: 'Computer Science', icon: BookOpen },
+  { name: 'Law', icon: Shield },
+  { name: 'Architecture', icon: GraduationCap },
 ]
 
 const themeIcons: Record<string, React.ReactNode> = {
   light: <span className="text-[var(--color-text-muted)]"><Sparkles size={16} /></span>,
   dark: <span className="text-[var(--color-text-muted)]"><Sparkles size={16} /></span>,
   midnight: <span className="text-[var(--color-text-muted)]"><Sparkles size={16} /></span>,
+}
+
+/* ─── Pulsating headline animation ────────────────────────────── */
+function PulsatingHeadline() {
+  return (
+    <motion.h1
+      className="text-[36px] md:text-[52px] font-extrabold text-white leading-[1.04] tracking-tight mb-6"
+      style={{ fontFamily: 'var(--font-display)' }}
+      animate={{
+        textShadow: [
+          '0 0 0px rgba(193,39,45,0)',
+          '0 0 20px rgba(193,39,45,0.15)',
+          '0 0 40px rgba(193,39,45,0.08)',
+          '0 0 20px rgba(193,39,45,0.15)',
+          '0 0 0px rgba(193,39,45,0)',
+        ],
+      }}
+      transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+    >
+      Learn without limits.<br />Advance your career.
+    </motion.h1>
+  )
 }
 
 /* ─── Component ──────────────────────────────────────────────── */
@@ -81,6 +192,12 @@ export function LandingPage() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0])
   const heroScale   = useTransform(scrollYProgress, [0, 1], [1, 1.08])
   const { theme, cycle } = useTheme()
+
+  const [slideIndex, setSlideIndex] = useState(0)
+  useEffect(() => {
+    const timer = setInterval(() => setSlideIndex(i => (i + 1) % heroSlides.length), 4000)
+    return () => clearInterval(timer)
+  }, [])
 
   return (
     <div className="min-h-screen bg-[var(--color-bg)]">
@@ -126,7 +243,7 @@ export function LandingPage() {
 
       <main className="pt-[60px]">
 
-        {/* ── Hero — edX full-width dark with fractal + sparkles ─── */}
+        {/* ── Hero — edX dark with sparkles + animated SVG carousel ─── */}
         <section ref={heroRef} className="relative min-h-[calc(100vh-60px)] flex items-center overflow-hidden bg-[var(--color-secondary)]">
           {/* Sparkles particle overlay */}
           <div className="absolute inset-0 z-[1] pointer-events-none opacity-60">
@@ -145,56 +262,86 @@ export function LandingPage() {
 
           <motion.div style={{ y: heroY, opacity: heroOpacity, scale: heroScale }}
             className="max-w-6xl mx-auto px-6 w-full relative z-10 py-20">
-            <div className="max-w-3xl mx-auto text-center">
+            <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
 
-              {/* Eyebrow */}
-              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2, ease }}>
-                <span className="inline-flex items-center gap-2 px-4 py-1.5 text-[10px] font-bold tracking-[0.15em] uppercase text-white/50 bg-white/6 border border-white/10 rounded-full mb-8">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-primary)] animate-pulse" />
-                  Professional Academic Platform
-                </span>
-              </motion.div>
+              {/* Left — text, centered */}
+              <div className="flex-1 text-center lg:text-center max-w-2xl mx-auto lg:mx-0">
 
-              {/* Headline with text reveal */}
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4, delay: 0.4 }}>
-                <h1 className="text-[36px] md:text-[52px] font-extrabold text-white leading-[1.04] tracking-tight mb-6"
-                  style={{ fontFamily: 'var(--font-display)' }}>
-                  <TextReveal text="Learn without limits. Advance your career." />
-                </h1>
-              </motion.div>
-
-              {/* Sub-headline */}
-              <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.8, ease }}
-                className="text-[16px] text-white/40 max-w-xl mx-auto leading-relaxed mb-10">
-                AI-powered scheduling, real-time notifications, and seamless collaboration for students, lecturers, and administrators.
-              </motion.p>
-
-              {/* Search-style CTA bar */}
-              <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.0, ease }}
-                className="flex items-center gap-3 max-w-lg mx-auto bg-white/8 border border-white/12 rounded-[var(--radius-md)] p-1.5 backdrop-blur-sm">
-                <div className="flex-1 flex items-center gap-2.5 px-3">
-                  <Search size={16} className="text-white/30 flex-shrink-0" />
-                  <input type="text" placeholder="What do you want to learn?"
-                    className="bg-transparent border-none outline-none text-[14px] text-white/80 placeholder:text-white/25 w-full" />
-                </div>
-                <Link to="/register"
-                  className="flex items-center gap-2 px-5 py-2.5 bg-[var(--color-primary)] text-white text-[13px] font-semibold rounded-[8px] hover:bg-[var(--color-primary-hover)] transition-colors shadow-lg shadow-[var(--color-primary)]/20">
-                  Get Started
-                  <ArrowRight size={13} />
-                </Link>
-              </motion.div>
-
-              {/* Trust strip */}
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 1.4 }}
-                className="flex items-center justify-center gap-3 mt-8">
-                {['SOC 2', 'FERPA', 'GDPR'].map(badge => (
-                  <span key={badge}
-                    className="text-[9px] font-bold tracking-[0.1em] uppercase text-white/25 border border-white/8 px-2.5 py-1 rounded-full">
-                    {badge}
+                {/* Eyebrow */}
+                <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2, ease }}>
+                  <span className="inline-flex items-center gap-2 px-4 py-1.5 text-[10px] font-bold tracking-[0.15em] uppercase text-white/50 bg-white/6 border border-white/10 rounded-full mb-8">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-primary)] animate-pulse" />
+                    Professional Academic Platform
                   </span>
-                ))}
-                <span className="text-[10px] text-white/15 ml-1">Certified &amp; Compliant</span>
-              </motion.div>
+                </motion.div>
+
+                {/* Headline with pulsating glow */}
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4, delay: 0.4 }}>
+                  <PulsatingHeadline />
+                </motion.div>
+
+                {/* Sub-headline */}
+                <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.8, ease }}
+                  className="text-[16px] text-white/40 max-w-xl mx-auto leading-relaxed mb-10">
+                  AI-powered scheduling, real-time notifications, and seamless collaboration for students, lecturers, and administrators.
+                </motion.p>
+
+                {/* Search-style CTA bar */}
+                <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.0, ease }}
+                  className="flex items-center gap-3 max-w-lg mx-auto bg-white/8 border border-white/12 rounded-[var(--radius-md)] p-1.5 backdrop-blur-sm">
+                  <div className="flex-1 flex items-center gap-2.5 px-3">
+                    <Search size={16} className="text-white/30 flex-shrink-0" />
+                    <input type="text" placeholder="What do you want to learn?"
+                      className="bg-transparent border-none outline-none text-[14px] text-white/80 placeholder:text-white/25 w-full" />
+                  </div>
+                  <Link to="/register"
+                    className="flex items-center gap-2 px-5 py-2.5 bg-[var(--color-primary)] text-white text-[13px] font-semibold rounded-[8px] hover:bg-[var(--color-primary-hover)] transition-colors shadow-lg shadow-[var(--color-primary)]/20">
+                    Get Started
+                    <ArrowRight size={13} />
+                  </Link>
+                </motion.div>
+
+                {/* Trust strip */}
+                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 1.4 }}
+                  className="flex items-center justify-center gap-3 mt-8">
+                  {['SOC 2', 'FERPA', 'GDPR'].map(badge => (
+                    <span key={badge}
+                      className="text-[9px] font-bold tracking-[0.1em] uppercase text-white/25 border border-white/8 px-2.5 py-1 rounded-full">
+                      {badge}
+                    </span>
+                  ))}
+                  <span className="text-[10px] text-white/15 ml-1">Certified &amp; Compliant</span>
+                </motion.div>
+              </div>
+
+              {/* Right — animated SVG illustration carousel */}
+              <div className="flex-shrink-0 w-[280px] h-[220px] md:w-[340px] md:h-[260px] relative">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={slideIndex}
+                    initial={{ opacity: 0, scale: 0.92, rotateY: -8 }}
+                    animate={{ opacity: 1, scale: 1, rotateY: 0 }}
+                    exit={{ opacity: 0, scale: 0.92, rotateY: 8 }}
+                    transition={{ duration: 0.6, ease }}
+                    className="absolute inset-0"
+                  >
+                    {heroSlides[slideIndex].svg}
+                  </motion.div>
+                </AnimatePresence>
+
+                {/* Carousel dots */}
+                <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2">
+                  {heroSlides.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setSlideIndex(i)}
+                      className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                        i === slideIndex ? 'bg-[var(--color-primary)] w-5' : 'bg-white/20 hover:bg-white/35'
+                      }`}
+                    />
+                  ))}
+                </div>
+              </div>
             </div>
           </motion.div>
 
@@ -229,7 +376,7 @@ export function LandingPage() {
           </div>
         </Section>
 
-        {/* ── Course Cards — 3D tilt (edX image-forward pattern) ─── */}
+        {/* ── Feature Cards — soft rounded-square, icon-forward ─── */}
         <Section id="features" className="py-24">
           <div className="page-section">
             <motion.div variants={fadeUp} className="text-center mb-14">
@@ -243,22 +390,23 @@ export function LandingPage() {
               </p>
             </motion.div>
 
-            {/* Feature cards with left-accent stripe */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {/* Feature cards — soft rounded shape, prominent graphic icons, no numbers */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {features.map((f, i) => (
                 <motion.div key={i} variants={fadeUp}>
                   <CardContainer>
                     <CardBody className="card-academic p-6 h-full flex flex-col cursor-default group">
-                      <div className="flex items-start justify-between mb-4">
-                        <motion.div
-                          whileHover={{ rotate: [0, -10, 10, 0], scale: 1.1 }}
-                          transition={{ duration: 0.4 }}
-                          className="w-11 h-11 rounded-[12px] bg-[var(--color-primary-muted)] flex items-center justify-center">
-                          <f.icon size={20} className="text-[var(--color-primary)]" />
-                        </motion.div>
-                        <span className="feature-number">{f.num}</span>
-                      </div>
-                      <h3 className="text-[14px] font-bold text-[var(--color-navy)] mb-2"
+                      {/* Icon with background accent */}
+                      <motion.div
+                        whileHover={{ rotate: [0, -8, 8, 0], scale: 1.08 }}
+                        transition={{ duration: 0.4 }}
+                        className="w-14 h-14 rounded-[16px] flex items-center justify-center mb-5"
+                        style={{ background: f.iconBg }}
+                      >
+                        <f.icon size={24} style={{ color: f.iconColor }} />
+                      </motion.div>
+
+                      <h3 className="text-[15px] font-bold text-[var(--color-navy)] mb-2"
                         style={{ fontFamily: 'var(--font-display)' }}>{f.title}</h3>
                       <p className="text-[13px] text-[var(--color-text-muted)] leading-relaxed flex-1">{f.desc}</p>
                     </CardBody>
@@ -315,7 +463,10 @@ export function LandingPage() {
                 <motion.div key={i} variants={fadeUp}
                   whileHover={{ scale: 1.04, y: -2 }}
                   whileTap={{ scale: 0.97 }}>
-                  <span className="discipline-pill">{d}</span>
+                  <span className="discipline-pill inline-flex items-center gap-2">
+                    <d.icon size={13} className="opacity-50" />
+                    {d.name}
+                  </span>
                 </motion.div>
               ))}
             </div>
