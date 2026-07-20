@@ -7,11 +7,11 @@ import { sendEmail, announcementEmail } from '../lib/email'
 const stagger = { hidden: {}, show: { transition: { staggerChildren: 0.06 } } }
 const fadeUp = { hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0, transition: { duration: 0.3, ease: [0.22,1,0.36,1] as [number,number,number,number] } } }
 
-const priorityConfig: Record<string, { badge: string; bg: string; iconColor: string; icon: React.ComponentType<{ size?: number; className?: string }> }> = {
-  low:    { badge: 'badge-navy',    bg: 'color-mix(in srgb, var(--color-primary) 8%, transparent)', iconColor: 'var(--color-primary)', icon: Info },
-  normal: { badge: 'badge-success', bg: 'color-mix(in srgb, var(--color-success) 8%, transparent)', iconColor: 'var(--color-success)', icon: Megaphone },
-  high:   { badge: 'badge-warning', bg: 'color-mix(in srgb, var(--color-warning) 8%, transparent)', iconColor: 'var(--color-warning)', icon: AlertTriangle },
-  urgent: { badge: 'badge-danger',  bg: 'color-mix(in srgb, var(--color-danger) 8%, transparent)', iconColor: 'var(--color-danger)', icon: AlertCircle },
+const priorityConfig: Record<string, { badge: string; bg: string; iconClass: string; icon: React.ComponentType<{ size?: number; className?: string }> }> = {
+  low:    { badge: 'badge-navy',    bg: 'color-mix(in srgb, var(--color-primary) 8%, transparent)', iconClass: 'text-[var(--color-primary)]', icon: Info },
+  normal: { badge: 'badge-success', bg: 'color-mix(in srgb, var(--color-success) 8%, transparent)', iconClass: 'text-[var(--color-success)]', icon: Megaphone },
+  high:   { badge: 'badge-warning', bg: 'color-mix(in srgb, var(--color-warning) 8%, transparent)', iconClass: 'text-[var(--color-warning)]', icon: AlertTriangle },
+  urgent: { badge: 'badge-danger',  bg: 'color-mix(in srgb, var(--color-danger) 8%, transparent)', iconClass: 'text-[var(--color-danger)]', icon: AlertCircle },
 }
 
 export function AnnouncementsPage() {
@@ -107,7 +107,7 @@ export function AnnouncementsPage() {
                 className="card p-4">
                 <div className="flex items-start gap-3">
                   <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0" style={{background:config.bg}}>
-                    <Icon size={20} style={{color:config.iconColor}}/>
+                    <Icon size={20} className={config.iconClass}/>
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex justify-between items-start gap-2">

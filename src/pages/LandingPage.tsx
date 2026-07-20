@@ -469,11 +469,11 @@ export function LandingPage() {
             </div>
           </motion.div>
 
-          {/* Scroll indicator */}
+          {/* Move indicator */}
           <motion.div
             initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.2 }}
             className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 z-10">
-            <span className="text-[10px] font-semibold tracking-[0.14em] uppercase text-white/25">Scroll</span>
+            <span className="text-[10px] font-semibold tracking-[0.14em] uppercase text-white/25">Move</span>
             <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
               className="w-px h-8 bg-gradient-to-b from-white/20 to-transparent" />
           </motion.div>
