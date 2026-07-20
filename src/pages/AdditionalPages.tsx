@@ -40,14 +40,14 @@ export function LiveClassesPage() {
       {showForm && (
         <motion.div initial={{opacity:0,y:-8,scale:0.98}} animate={{opacity:1,y:0,scale:1}} transition={{duration:0.25}}
           className="card p-6 mb-6">
-          <h3 className="text-[15px] font-bold text-[var(--color-navy)] mb-5" style={{ fontFamily: 'var(--font-display)' }}>Schedule Live Class</h3>
+          <h3 className="text-[15px] font-bold mb-5" style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>Schedule Live Class</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
             <div><label className="label">Title</label><input value={title} onChange={e => setTitle(e.target.value)} className="input"/></div>
             <div><label className="label">Course ID</label><input value={courseId} onChange={e => setCourseId(e.target.value)} className="input"/></div>
             <div><label className="label">Start Time</label><input type="datetime-local" value={startTime} onChange={e => setStartTime(e.target.value)} className="input"/></div>
             <div><label className="label">Meeting URL</label><input value={roomUrl} onChange={e => setRoomUrl(e.target.value)} className="input" placeholder="https://meet.google.com/..."/></div>
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-3 justify-center">
             <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={handleCreate} className="btn-primary px-6">Schedule</motion.button>
             <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={() => setShowForm(false)} className="btn-secondary px-6">Cancel</motion.button>
           </div>
@@ -59,7 +59,7 @@ export function LiveClassesPage() {
       ) : meetings.length === 0 ? (
         <motion.div initial={{opacity:0,scale:0.95}} animate={{opacity:1,scale:1}} className="empty-state">
           <div className="empty-state-icon"><Video size={28}/></div>
-          <p className="text-[var(--color-text-muted)]">No live classes scheduled.</p>
+          <p style={{ color: 'var(--color-text-muted)' }}>No live classes scheduled.</p>
         </motion.div>
       ) : (
         <motion.div variants={stagger} initial="hidden" animate="show" className="space-y-3">
@@ -67,12 +67,13 @@ export function LiveClassesPage() {
             <motion.div key={m.id as string} variants={fadeUp}
               className="card p-4 flex justify-between items-center">
               <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-xl flex items-center justify-center" style={{background:'color-mix(in srgb, var(--color-primary) 8%, transparent)'}}>
-                  <Video size={20} className="text-[var(--color-primary)]"/>
+                <div className="w-11 h-11 rounded-xl flex items-center justify-center"
+                  style={{ background: 'color-mix(in srgb, var(--color-primary) 8%, transparent)' }}>
+                  <Video size={20} style={{ color: 'var(--color-primary)' }}/>
                 </div>
                 <div>
-                  <h3 className="font-bold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>{m.title as string}</h3>
-                  <p className="text-sm text-[var(--color-text-muted)]">{m.start_time ? new Date(m.start_time as string).toLocaleString() : 'TBD'}</p>
+                  <h3 className="font-bold" style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>{m.title as string}</h3>
+                  <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{m.start_time ? new Date(m.start_time as string).toLocaleString() : 'TBD'}</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
@@ -120,7 +121,7 @@ export function TestsPage() {
       {showForm && (
         <motion.div initial={{opacity:0,y:-8,scale:0.98}} animate={{opacity:1,y:0,scale:1}} transition={{duration:0.25}}
           className="card p-6 mb-6">
-          <h3 className="text-[15px] font-bold text-[var(--color-navy)] mb-5" style={{ fontFamily: 'var(--font-display)' }}>Create Test</h3>
+          <h3 className="text-[15px] font-bold mb-5" style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>Create Test</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
             <div><label className="label">Title</label><input value={title} onChange={e => setTitle(e.target.value)} className="input"/></div>
             <div><label className="label">Course ID</label><input value={courseId} onChange={e => setCourseId(e.target.value)} className="input"/></div>
@@ -131,7 +132,7 @@ export function TestsPage() {
             </div>
             <div><label className="label">Date</label><input type="datetime-local" value={testDate} onChange={e => setTestDate(e.target.value)} className="input"/></div>
           </div>
-          <div className="flex gap-3">
+          <div className="flex gap-3 justify-center">
             <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={handleCreate} className="btn-primary px-6">Create</motion.button>
             <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={() => setShowForm(false)} className="btn-secondary px-6">Cancel</motion.button>
           </div>
@@ -143,7 +144,7 @@ export function TestsPage() {
       ) : tests.length === 0 ? (
         <motion.div initial={{opacity:0,scale:0.95}} animate={{opacity:1,scale:1}} className="empty-state">
           <div className="empty-state-icon"><ClipboardList size={28}/></div>
-          <p className="text-[var(--color-text-muted)]">No tests yet.</p>
+          <p style={{ color: 'var(--color-text-muted)' }}>No tests yet.</p>
         </motion.div>
       ) : (
         <motion.div variants={stagger} initial="hidden" animate="show" className="space-y-3">
@@ -151,12 +152,13 @@ export function TestsPage() {
             <motion.div key={t.id as string} variants={fadeUp}
               className="card p-4 flex justify-between items-center">
               <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-xl flex items-center justify-center" style={{background:'color-mix(in srgb, var(--color-accent) 8%, transparent)'}}>
-                  <ClipboardList size={20} className="text-[var(--color-accent)]"/>
+                <div className="w-11 h-11 rounded-xl flex items-center justify-center"
+                  style={{ background: 'color-mix(in srgb, var(--color-accent) 8%, transparent)' }}>
+                  <ClipboardList size={20} style={{ color: 'var(--color-accent)' }}/>
                 </div>
                 <div>
-                  <h3 className="font-bold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>{t.title as string}</h3>
-                  <p className="text-sm text-[var(--color-text-muted)]">{t.test_type as string} &middot; {t.duration_minutes as number} min &middot; {t.test_date ? new Date(t.test_date as string).toLocaleDateString() : 'TBD'}</p>
+                  <h3 className="font-bold" style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>{t.title as string}</h3>
+                  <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{t.test_type as string} &middot; {t.duration_minutes as number} min &middot; {t.test_date ? new Date(t.test_date as string).toLocaleDateString() : 'TBD'}</p>
                 </div>
               </div>
               <span className="badge badge-navy">{t.test_type as string}</span>
@@ -188,7 +190,7 @@ export function ClassRecordsPage() {
       ) : videos.length === 0 ? (
         <motion.div initial={{opacity:0,scale:0.95}} animate={{opacity:1,scale:1}} className="empty-state">
           <div className="empty-state-icon"><Video size={28}/></div>
-          <p className="text-[var(--color-text-muted)]">No class records yet.</p>
+          <p style={{ color: 'var(--color-text-muted)' }}>No class records yet.</p>
         </motion.div>
       ) : (
         <motion.div variants={stagger} initial="hidden" animate="show" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -196,15 +198,17 @@ export function ClassRecordsPage() {
             <motion.div key={v.id as string} variants={fadeUp}
               whileHover={{y:-2}}
               className="card overflow-hidden">
-              <div className="aspect-video bg-[var(--color-bg-secondary)] flex items-center justify-center">
-                <div className="w-14 h-14 rounded-full flex items-center justify-center" style={{background:'color-mix(in srgb, var(--color-primary) 10%, transparent)'}}>
-                  <Video size={24} className="text-[var(--color-primary)]"/>
+              <div className="aspect-video flex items-center justify-center"
+                style={{ background: 'var(--color-bg-secondary)' }}>
+                <div className="w-14 h-14 rounded-full flex items-center justify-center"
+                  style={{ background: 'color-mix(in srgb, var(--color-primary) 10%, transparent)' }}>
+                  <Video size={24} style={{ color: 'var(--color-primary)' }}/>
                 </div>
               </div>
               <div className="p-4">
-                <h3 className="font-bold text-[var(--color-navy)] mb-1" style={{ fontFamily: 'var(--font-display)' }}>{v.title as string}</h3>
-                <p className="text-xs text-[var(--color-text-muted)]">{v.description as string}</p>
-                <div className="flex items-center gap-2 mt-2 text-xs text-[var(--color-text-muted)]">
+                <h3 className="font-bold mb-1" style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>{v.title as string}</h3>
+                <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{v.description as string}</p>
+                <div className="flex items-center gap-2 mt-2 text-xs" style={{ color: 'var(--color-text-muted)' }}>
                   <Clock size={12}/> {v.duration_seconds ? `${Math.floor((v.duration_seconds as number)/60)}:${String((v.duration_seconds as number)%60).padStart(2,'0')}` : 'N/A'}
                 </div>
               </div>
@@ -274,8 +278,9 @@ export function ProfilePage({ user }: { user: User }) {
           <input type={type} value={form[key]} onChange={e => setForm({ ...form, [key]: e.target.value })} className="input"/>
         )
       ) : (
-        <div className="px-3 py-2 rounded-lg bg-[var(--color-cream)] text-sm text-[var(--color-navy)] font-medium min-h-[36px]">
-          {form[key] || <span className="text-[var(--color-text-muted)] italic">Not set</span>}
+        <div className="px-3 py-2 rounded-lg text-sm font-medium min-h-[36px]"
+          style={{ background: 'var(--color-cream)', color: 'var(--color-navy)' }}>
+          {form[key] || <span className="italic" style={{ color: 'var(--color-text-muted)' }}>Not set</span>}
         </div>
       )}
     </div>
@@ -326,9 +331,9 @@ export function ProfilePage({ user }: { user: User }) {
                 <input value={form.full_name} onChange={e => setForm({ ...form, full_name: e.target.value })}
                   className="input text-xl font-extrabold w-full" style={{ fontFamily: 'var(--font-display)' }}/>
               ) : (
-                <h2 className="text-xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>{form.full_name || user.full_name}</h2>
+                <h2 className="text-xl font-extrabold" style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>{form.full_name || user.full_name}</h2>
               )}
-              <p className="text-sm text-[var(--color-text-muted)] mt-0.5">{user.email}</p>
+              <p className="text-sm mt-0.5" style={{ color: 'var(--color-text-muted)' }}>{user.email}</p>
               <span className="badge badge-navy capitalize mt-1 inline-block">{user.role}</span>
             </div>
           </div>
@@ -346,15 +351,17 @@ export function ProfilePage({ user }: { user: User }) {
               <textarea value={form.bio} onChange={e => setForm({ ...form, bio: e.target.value })} rows={3}
                 className="textarea" placeholder="Tell us a bit about yourself..." />
             ) : (
-              <div className="px-3 py-2 rounded-lg bg-[var(--color-cream)] text-sm text-[var(--color-navy)] min-h-[60px]">
-                {form.bio || <span className="text-[var(--color-text-muted)] italic">No bio yet.</span>}
+              <div className="px-3 py-2 rounded-lg text-sm min-h-[60px]"
+                style={{ background: 'var(--color-cream)', color: 'var(--color-navy)' }}>
+                {form.bio || <span className="italic" style={{ color: 'var(--color-text-muted)' }}>No bio yet.</span>}
               </div>
             )}
           </div>
         </div>
 
         <motion.div initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} transition={{delay:0.2}} className="card p-5">
-          <h3 className="text-xs font-bold text-[var(--color-navy)] uppercase tracking-wider mb-3" style={{ fontFamily: 'var(--font-display)' }}>Account Info</h3>
+          <h3 className="text-xs font-bold uppercase tracking-wider mb-3"
+            style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>Account Info</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {[
               { icon: Mail, label: 'Email', value: user.email },
@@ -362,10 +369,11 @@ export function ProfilePage({ user }: { user: User }) {
               { icon: BookOpen, label: 'Member Since', value: user.created_at ? new Date(user.created_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }) : 'N/A' },
               { icon: Phone, label: 'User ID', value: user.id, mono: true },
             ].map((item, i) => (
-              <motion.div key={i} whileHover={{scale:1.01}} className="flex items-center gap-3 p-3 rounded-lg bg-[var(--color-cream)]">
-                <item.icon size={16} className="text-[var(--color-navy)] flex-shrink-0"/>
+              <motion.div key={i} whileHover={{scale:1.01}} className="flex items-center gap-3 p-3 rounded-lg"
+                style={{ background: 'var(--color-cream)' }}>
+                <item.icon size={16} style={{ color: 'var(--color-navy)', flexShrink: 0 }}/>
                 <div>
-                  <div className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider">{item.label}</div>
+                  <div className="text-[10px] uppercase tracking-wider" style={{ color: 'var(--color-text-muted)' }}>{item.label}</div>
                   <div className={`font-medium text-sm capitalize ${item.mono ? 'font-mono truncate' : ''}`}>{item.value}</div>
                 </div>
               </motion.div>

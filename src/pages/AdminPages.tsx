@@ -12,10 +12,10 @@ function AdminBarChart({ data, colors }: { data: { label: string; value: number 
     <div ref={ref} className="flex items-end gap-2 h-36 px-1">
       {data.map((d, i) => (
         <div key={i} className="flex-1 flex flex-col items-center gap-1">
-          <span className="text-[10px] font-bold text-[var(--color-navy)]">{d.value}</span>
+          <span className="text-[10px] font-bold" style={{ color: 'var(--color-navy)' }}>{d.value}</span>
           <div className="w-full rounded-t-[4px] overflow-hidden"
             style={{ height: isInView ? `${(d.value / max) * 100}%` : '0%', background: colors[i % colors.length], transition: `height 1s cubic-bezier(0.22,1,0.36,1) ${i * 0.08}s` }} />
-          <span className="text-[9px] text-[var(--color-text-muted)] text-center leading-tight">{d.label}</span>
+          <span className="text-[9px] text-center leading-tight" style={{ color: 'var(--color-text-muted)' }}>{d.label}</span>
         </div>
       ))}
     </div>
@@ -34,16 +34,16 @@ function AdminPieChart({ segments, size = 120 }: { segments: { value: number; co
   return (
     <div className="flex flex-col items-center gap-2">
       <div className="rounded-full relative" style={{ width: size, height: size, background: `conic-gradient(${gradients.join(', ')})` }}>
-        <div className="absolute rounded-full bg-[var(--color-bg-card)] flex items-center justify-center"
-          style={{ width: size * 0.55, height: size * 0.55, top: '50%', left: '50%', transform: 'translate(-50%,-50%)' }}>
-          <span className="text-sm font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>{total}</span>
+        <div className="absolute rounded-full flex items-center justify-center"
+          style={{ width: size * 0.55, height: size * 0.55, top: '50%', left: '50%', transform: 'translate(-50%,-50%)', background: 'var(--color-bg-card)' }}>
+          <span className="text-sm font-extrabold" style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>{total}</span>
         </div>
       </div>
       <div className="flex flex-wrap justify-center gap-2">
         {segments.map((seg, i) => (
           <div key={i} className="flex items-center gap-1">
             <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: seg.color }} />
-            <span className="text-[10px] text-[var(--color-text-muted)]">{seg.label}</span>
+            <span className="text-[10px]" style={{ color: 'var(--color-text-muted)' }}>{seg.label}</span>
           </div>
         ))}
       </div>
@@ -117,12 +117,12 @@ export function AdminDashboard() {
     { label: 'Lecturers', value: stats.lecturers || 0, icon: Users, color: palette.gold },
     { label: 'Active Subjects', value: stats.courses || 0, icon: BookOpen, color: palette.accent },
     { label: 'Enrollments', value: stats.enrollments || 0, icon: GraduationCap, color: palette.primary },
-    { label: 'Exams', value: stats.exams || 0, icon: BookOpen, color: palette.teal },
+    { label: 'Exams', value: stats.exams || 0, icon: BookOpen, color: palette.success },
     { label: 'Assignments', value: stats.assignments || 0, icon: BookOpen, color: palette.danger },
     { label: 'Revenue (N)', value: stats.totalRevenue || 0, icon: CreditCard, color: palette.gold },
   ]
 
-  const barColors = [palette.success, palette.accent, palette.danger, palette.navy, palette.gold, palette.teal]
+  const barColors = [palette.success, palette.accent, palette.danger, palette.navy, palette.gold, palette.success]
 
   return (
     <div>
@@ -140,13 +140,14 @@ export function AdminDashboard() {
           {cards.map((card, i) => (
             <motion.div key={i} initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} transition={{delay:i*0.03}}
               className="card p-4">
-              <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-3" style={{background: palette.rgba(card.color, 0.1)}}>
+              <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-3"
+                style={{ background: palette.rgba(card.color, 0.1) }}>
                 <card.icon size={20} style={{color:card.color}}/>
               </div>
-              <div className="text-2xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>
+              <div className="text-2xl font-extrabold" style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>
                 <AnimatedStat value={card.value} />
               </div>
-              <div className="text-xs text-[var(--color-text-muted)] mt-1 uppercase tracking-wider font-medium">{card.label}</div>
+              <div className="text-xs mt-1 uppercase tracking-wider font-medium" style={{ color: 'var(--color-text-muted)' }}>{card.label}</div>
             </motion.div>
           ))}
         </div>
@@ -156,8 +157,8 @@ export function AdminDashboard() {
         <motion.div initial={{opacity:0,x:-20}} animate={{opacity:1,x:0}} transition={{delay:0.3}}
           className="card p-6">
           <span className="section-label">Enrollment Trends</span>
-          <h2 className="text-lg font-bold text-[var(--color-navy)] mt-1 mb-1" style={{ fontFamily: 'var(--font-display)' }}>Enrollment Trends</h2>
-          <p className="text-xs text-[var(--color-text-muted)] mb-4">Breakdown by status</p>
+          <h2 className="text-lg font-bold mt-1 mb-1" style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>Enrollment Trends</h2>
+          <p className="text-xs mb-4" style={{ color: 'var(--color-text-muted)' }}>Breakdown by status</p>
           {loading ? <div className="skeleton h-36"/> : (
             <AdminBarChart
               data={[
@@ -176,8 +177,8 @@ export function AdminDashboard() {
         <motion.div initial={{opacity:0,x:20}} animate={{opacity:1,x:0}} transition={{delay:0.4}}
           className="card p-6 flex flex-col">
           <span className="section-label">Revenue Overview</span>
-          <h2 className="text-lg font-bold text-[var(--color-navy)] mt-1 mb-1" style={{ fontFamily: 'var(--font-display)' }}>Revenue Overview</h2>
-          <p className="text-xs text-[var(--color-text-muted)] mb-4">Payment status distribution</p>
+          <h2 className="text-lg font-bold mt-1 mb-1" style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>Revenue Overview</h2>
+          <p className="text-xs mb-4" style={{ color: 'var(--color-text-muted)' }}>Payment status distribution</p>
           {loading ? <div className="skeleton h-36"/> : (
             <div className="flex-1 flex items-center justify-center">
               <AdminPieChart
@@ -190,9 +191,9 @@ export function AdminDashboard() {
               />
             </div>
           )}
-          <div className="mt-4 pt-4 border-t border-[var(--color-border)] flex items-center justify-between">
-            <span className="text-xs text-[var(--color-text-muted)]">Total Revenue</span>
-            <span className="text-sm font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>
+          <div className="mt-4 pt-4 flex items-center justify-between" style={{ borderTop: '1px solid var(--color-border)' }}>
+            <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>Total Revenue</span>
+            <span className="text-sm font-extrabold" style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>
               N{(stats.totalRevenue || 0).toLocaleString()}
             </span>
           </div>
@@ -202,8 +203,8 @@ export function AdminDashboard() {
       <motion.div initial={{opacity:0,y:16}} animate={{opacity:1,y:0}} transition={{delay:0.5}}
         className="card p-6">
         <span className="section-label">User Distribution</span>
-        <h2 className="text-lg font-bold text-[var(--color-navy)] mt-1 mb-1" style={{ fontFamily: 'var(--font-display)' }}>User Distribution</h2>
-        <p className="text-xs text-[var(--color-text-muted)] mb-4">Breakdown by role</p>
+        <h2 className="text-lg font-bold mt-1 mb-1" style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>User Distribution</h2>
+        <p className="text-xs mb-4" style={{ color: 'var(--color-text-muted)' }}>Breakdown by role</p>
         {loading ? <div className="skeleton h-36"/> : (
           <div className="flex flex-col md:flex-row items-center gap-8">
             <AdminPieChart
@@ -220,11 +221,11 @@ export function AdminDashboard() {
                 { label: 'Lecturers', value: stats.lecturers || 0, color: palette.gold },
                 { label: 'Admins', value: stats.admins || 0, color: palette.danger },
               ].map((item, i) => (
-                <div key={i} className="p-4 rounded-lg bg-[var(--color-cream)] text-center">
+                <div key={i} className="p-4 rounded-lg text-center" style={{ background: 'var(--color-cream)' }}>
                   <div className="text-2xl font-extrabold" style={{ color: item.color, fontFamily: 'var(--font-display)' }}>
                     <AnimatedStat value={item.value} />
                   </div>
-                  <div className="text-xs text-[var(--color-text-muted)] mt-1">{item.label}</div>
+                  <div className="text-xs mt-1" style={{ color: 'var(--color-text-muted)' }}>{item.label}</div>
                 </div>
               ))}
             </div>
@@ -258,7 +259,7 @@ export function UserManagementPage() {
         </div>
         <div className="flex gap-3">
           <div className="relative">
-            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]"/>
+            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--color-text-muted)' }}/>
             <input value={search} onChange={e => setSearch(e.target.value)} className="input pl-9" placeholder="Search users..."/>
           </div>
           <select value={roleFilter} onChange={e => setRoleFilter(e.target.value)} className="select w-auto">
@@ -286,11 +287,14 @@ export function UserManagementPage() {
                 <tr key={u.id as string}>
                   <td>
                     <div className="flex items-center gap-2">
-                      <div className="w-8 h-8 rounded-full bg-[var(--color-navy)]/10 flex items-center justify-center text-[var(--color-navy)] font-bold text-xs">{(u.full_name as string)?.[0] || '?'}</div>
-                      <span className="font-medium text-sm text-[var(--color-navy)]">{u.full_name as string}</span>
+                      <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs"
+                        style={{ background: 'color-mix(in srgb, var(--color-navy) 10%, transparent)', color: 'var(--color-navy)' }}>
+                        {(u.full_name as string)?.[0] || '?'}
+                      </div>
+                      <span className="font-medium text-sm" style={{ color: 'var(--color-navy)' }}>{u.full_name as string}</span>
                     </div>
                   </td>
-                  <td className="text-[var(--color-text-muted)]">{u.email as string}</td>
+                  <td style={{ color: 'var(--color-text-muted)' }}>{u.email as string}</td>
                   <td>
                     <span className={`badge ${
                       u.role === 'admin' ? 'badge-danger' :
@@ -298,7 +302,7 @@ export function UserManagementPage() {
                       'badge-success'
                     }`}>{u.role as string}</span>
                   </td>
-                  <td className="text-[var(--color-text-muted)]">{u.created_at ? new Date(u.created_at as string).toLocaleDateString() : ''}</td>
+                  <td style={{ color: 'var(--color-text-muted)' }}>{u.created_at ? new Date(u.created_at as string).toLocaleDateString() : ''}</td>
                 </tr>
               ))}
             </tbody>
@@ -338,7 +342,7 @@ export function PopulationCensusPage() {
         </div>
         <div className="flex gap-3">
           <div className="relative">
-            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)]"/>
+            <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--color-text-muted)' }}/>
             <input value={search} onChange={e => setSearch(e.target.value)} className="input pl-9" placeholder="Search name, email, matric..."/>
           </div>
           <select value={department} onChange={e => setDepartment(e.target.value)} className="select w-auto">
@@ -352,10 +356,13 @@ export function PopulationCensusPage() {
         <motion.div initial={{opacity:0}} animate={{opacity:1}} className="card mb-6 p-6">
           <div className="flex justify-between items-start mb-4">
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-full bg-[var(--color-navy)]/10 flex items-center justify-center text-[var(--color-navy)] font-bold text-2xl" style={{ fontFamily: 'var(--font-display)' }}>{(selectedUser.full_name as string)?.[0]}</div>
+              <div className="w-16 h-16 rounded-full flex items-center justify-center font-bold text-2xl"
+                style={{ background: 'color-mix(in srgb, var(--color-navy) 10%, transparent)', color: 'var(--color-navy)', fontFamily: 'var(--font-display)' }}>
+                {(selectedUser.full_name as string)?.[0]}
+              </div>
               <div>
-                <h2 className="text-xl font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>{selectedUser.full_name as string}</h2>
-                <p className="text-sm text-[var(--color-text-muted)]">{selectedUser.email as string}</p>
+                <h2 className="text-xl font-extrabold" style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>{selectedUser.full_name as string}</h2>
+                <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>{selectedUser.email as string}</p>
               </div>
             </div>
             <button onClick={() => setSelectedUser(null)} className="btn-ghost p-2">X</button>
@@ -390,11 +397,14 @@ export function PopulationCensusPage() {
               <tr key={u.id as string} className="cursor-pointer" onClick={() => setSelectedUser(u)}>
                 <td>
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 rounded-full bg-[var(--color-navy)]/10 flex items-center justify-center text-[var(--color-navy)] font-bold text-xs">{(u.full_name as string)?.[0] || '?'}</div>
-                    <span className="font-medium text-sm text-[var(--color-navy)]">{u.full_name as string}</span>
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs"
+                      style={{ background: 'color-mix(in srgb, var(--color-navy) 10%, transparent)', color: 'var(--color-navy)' }}>
+                      {(u.full_name as string)?.[0] || '?'}
+                    </div>
+                    <span className="font-medium text-sm" style={{ color: 'var(--color-navy)' }}>{u.full_name as string}</span>
                   </div>
                 </td>
-                <td className="text-[var(--color-text-muted)]">{u.email as string}</td>
+                <td style={{ color: 'var(--color-text-muted)' }}>{u.email as string}</td>
                 <td>
                   <span className={`badge ${
                     u.role === 'admin' ? 'badge-danger' :
@@ -402,9 +412,9 @@ export function PopulationCensusPage() {
                     'badge-success'
                   }`}>{u.role as string}</span>
                 </td>
-                <td className="text-[var(--color-text-muted)]">{(u.department as string) || '-'}</td>
-                <td className="text-[var(--color-text-muted)]">{(u.gender as string) || '-'}</td>
-                <td className="text-[var(--color-text-muted)] font-mono">{(u.matric_number as string) || '-'}</td>
+                <td style={{ color: 'var(--color-text-muted)' }}>{(u.department as string) || '-'}</td>
+                <td style={{ color: 'var(--color-text-muted)' }}>{(u.gender as string) || '-'}</td>
+                <td className="font-mono" style={{ color: 'var(--color-text-muted)' }}>{(u.matric_number as string) || '-'}</td>
               </tr>
             ))}
           </tbody>

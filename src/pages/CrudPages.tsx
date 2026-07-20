@@ -23,14 +23,16 @@ function ConfirmModal({ open, title, message, onConfirm, onCancel }: {
         <motion.div initial={{ scale: 0.92, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.92, opacity: 0 }}
           transition={{ type: 'spring', damping: 25, stiffness: 300 }}
           className="modal" onClick={e => e.stopPropagation()}>
-          <div className="w-12 h-12 rounded-full mx-auto mb-4 flex items-center justify-center" style={{background:'color-mix(in srgb, var(--color-danger) 10%, transparent)'}}>
-            <Trash2 size={20} className="text-[var(--color-danger)]"/>
+          <div className="w-12 h-12 rounded-full mx-auto mb-4 flex items-center justify-center"
+            style={{ background: 'color-mix(in srgb, var(--color-danger) 10%, transparent)' }}>
+            <Trash2 size={20} style={{ color: 'var(--color-danger)' }}/>
           </div>
-          <h3 className="text-[16px] font-bold text-[var(--color-navy)] mb-2 text-center" style={{ fontFamily: 'var(--font-display)' }}>{title}</h3>
-          <p className="text-[13px] text-[var(--color-text-muted)] mb-6 text-center">{message}</p>
+          <h3 className="text-[16px] font-bold mb-2 text-center"
+            style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>{title}</h3>
+          <p className="text-[13px] mb-6 text-center" style={{ color: 'var(--color-text-muted)' }}>{message}</p>
           <div className="flex gap-3 justify-center">
             <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={onCancel} className="btn-secondary px-6 py-2">Cancel</motion.button>
-            <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={onConfirm} className="btn-primary px-6 py-2" style={{background:'var(--color-danger)'}}>Delete</motion.button>
+            <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={onConfirm} className="btn-primary px-6 py-2" style={{ background: 'var(--color-danger)' }}>Delete</motion.button>
           </div>
         </motion.div>
       </motion.div>
@@ -108,7 +110,8 @@ function CrudPage({ config }: { config: CrudConfig }) {
             exit={{ opacity: 0, y: -8, scale: 0.98 }} transition={{ duration: 0.25 }}
             className="card p-6 mb-6"
           >
-            <h3 className="text-[15px] font-bold text-[var(--color-navy)] mb-5" style={{ fontFamily: 'var(--font-display)' }}>
+            <h3 className="text-[15px] font-bold mb-5"
+              style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>
               {editId ? `Edit ${config.singular}` : `Create ${config.singular}`}
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
@@ -147,7 +150,7 @@ function CrudPage({ config }: { config: CrudConfig }) {
       ) : items.length === 0 ? (
         <motion.div initial={{opacity:0,scale:0.95}} animate={{opacity:1,scale:1}} className="empty-state">
           <div className="empty-state-icon">{config.icon}</div>
-          <p className="empty-state-text text-[var(--color-text-muted)]">No {config.title.toLowerCase()} yet.</p>
+          <p style={{ color: 'var(--color-text-muted)' }}>No {config.title.toLowerCase()} yet.</p>
         </motion.div>
       ) : (
         <motion.div variants={stagger} initial="hidden" animate="show" className="table-container overflow-hidden">
@@ -166,8 +169,9 @@ function CrudPage({ config }: { config: CrudConfig }) {
                   {config.displayFields.map((df, idx) => (
                     <td key={df.key}>
                       <div className="flex items-center gap-2">
-                        {idx === 0 && <div className="w-1 h-5 rounded-full flex-shrink-0" style={{background:'var(--gradient-primary)'}}/>}
-                        <span className={idx === 0 ? 'font-bold text-[var(--color-navy)]' : 'text-[13px] text-[var(--color-text-muted)]'}>
+                        {idx === 0 && <div className="w-1 h-5 rounded-full flex-shrink-0" style={{ background: 'var(--gradient-primary)' }}/>}
+                        <span className={idx === 0 ? 'font-bold' : 'text-[13px]'}
+                          style={{ color: idx === 0 ? 'var(--color-navy)' : 'var(--color-text-muted)' }}>
                           {String(item[df.key] ?? '-')}
                         </span>
                       </div>
@@ -193,7 +197,7 @@ function CrudPage({ config }: { config: CrudConfig }) {
   )
 }
 
-const icon = (Icon: React.ComponentType<{ size?: number; className?: string }>) => <Icon size={40} className="text-[var(--color-text-muted)]"/>
+const icon = (Icon: React.ComponentType<{ size?: number; className?: string }>) => <span style={{ color: 'var(--color-text-muted)' }}><Icon size={40} /></span>
 
 export function CoursesPage() {
   return <CrudPage config={{
@@ -704,8 +708,8 @@ export function SettingsPage() {
   const Toggle = ({ on, onToggle }: { on: boolean; onToggle: () => void }) => (
     <button onClick={onToggle} className="w-12 h-[26px] rounded-full relative transition-colors duration-200 flex-shrink-0"
       style={{ background: on ? 'var(--color-primary)' : 'var(--color-bg-secondary)' }}>
-      <div className="w-5 h-5 rounded-full bg-[var(--color-bg-card)] absolute top-[3px] transition-transform duration-200 shadow-sm"
-        style={{ transform: on ? 'translateX(23px)' : 'translateX(3px)' }} />
+      <div className="w-5 h-5 rounded-full absolute top-[3px] transition-transform duration-200 shadow-sm"
+        style={{ background: 'var(--color-bg-card)', transform: on ? 'translateX(23px)' : 'translateX(3px)' }} />
     </button>
   )
 
@@ -717,7 +721,8 @@ export function SettingsPage() {
           <motion.div initial={{ scale: 0.92, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.92, opacity: 0 }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
             className="modal" onClick={e => e.stopPropagation()}>
-            <h3 className="text-[15px] font-bold text-[var(--color-navy)] mb-4 text-center" style={{ fontFamily: 'var(--font-display)' }}>{title}</h3>
+            <h3 className="text-[15px] font-bold mb-4 text-center"
+              style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>{title}</h3>
             {modalError && <div className="mb-3 badge-danger px-3 py-2 text-[12px] rounded-lg">{modalError}</div>}
             {modalMsg && <div className="mb-3 badge-success px-3 py-2 text-[12px] rounded-lg">{modalMsg}</div>}
             {children}
@@ -729,7 +734,8 @@ export function SettingsPage() {
 
   const settingsGroup = (title: string, items: React.ReactNode) => (
     <motion.div initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} className="mb-8">
-      <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'var(--font-display)' }}>{title}</h2>
+      <h2 className="text-[13px] font-bold uppercase tracking-[0.08em] mb-3"
+        style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>{title}</h2>
       <div className="space-y-2">{items}</div>
     </motion.div>
   )
@@ -737,8 +743,9 @@ export function SettingsPage() {
   const settingRow = (label: string, desc: string, control: React.ReactNode, danger?: boolean) => (
     <motion.div whileHover={{x:2}} className={`card p-4 flex items-center justify-between ${danger ? 'border-[var(--color-danger)]/20' : ''}`}>
       <div>
-        <h3 className={`text-[14px] font-bold ${danger ? 'text-[var(--color-danger)]' : 'text-[var(--color-navy)]'}`} style={{ fontFamily: 'var(--font-display)' }}>{label}</h3>
-        <p className="text-[12px] text-[var(--color-text-muted)]">{desc}</p>
+        <h3 className={`text-[14px] font-bold ${danger ? '' : ''}`}
+          style={{ fontFamily: 'var(--font-display)', color: danger ? 'var(--color-danger)' : 'var(--color-navy)' }}>{label}</h3>
+        <p className="text-[12px]" style={{ color: 'var(--color-text-muted)' }}>{desc}</p>
       </div>
       {control}
     </motion.div>
@@ -753,8 +760,9 @@ export function SettingsPage() {
 
       {/* Academic Theme */}
       <motion.div initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} className="mb-8">
-        <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'var(--font-display)' }}>Academic Theme</h2>
-        <p className="text-[12px] text-[var(--color-text-muted)] mb-3">Choose a design inspired by leading academic platforms</p>
+        <h2 className="text-[13px] font-bold uppercase tracking-[0.08em] mb-3"
+          style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>Academic Theme</h2>
+        <p className="text-[12px] mb-3" style={{ color: 'var(--color-text-muted)' }}>Choose a design inspired by leading academic platforms</p>
         <div className="grid grid-cols-2 gap-3">
           {(Object.entries(availablePresets) as [AcademicPreset, typeof availablePresets[AcademicPreset]][]).map(([key, preset]) => (
             <motion.button key={key}
@@ -764,8 +772,8 @@ export function SettingsPage() {
               <div className="w-9 h-9 rounded-[10px] mx-auto mb-2.5 flex items-center justify-center" style={{ background: preset.color }}>
                 <span className="text-white text-[11px] font-bold" style={{ fontFamily: 'var(--font-display)' }}>{preset.label[0]}</span>
               </div>
-              <div className="text-[13px] font-bold text-[var(--color-navy)] text-center">{preset.label}</div>
-              <div className="text-[11px] text-[var(--color-text-muted)] text-center mt-0.5">{preset.desc}</div>
+              <div className="text-[13px] font-bold text-center" style={{ color: 'var(--color-navy)' }}>{preset.label}</div>
+              <div className="text-[11px] text-center mt-0.5" style={{ color: 'var(--color-text-muted)' }}>{preset.desc}</div>
             </motion.button>
           ))}
         </div>
@@ -813,24 +821,25 @@ export function SettingsPage() {
 
       {/* Billing */}
       <motion.div initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} className="mb-8">
-        <h2 className="text-[13px] font-bold text-[var(--color-navy)] uppercase tracking-[0.08em] mb-3" style={{ fontFamily: 'var(--font-display)' }}>Billing & Subscription</h2>
+        <h2 className="text-[13px] font-bold uppercase tracking-[0.08em] mb-3"
+          style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>Billing & Subscription</h2>
         <div className="card p-5">
           <div className="flex items-center justify-between mb-4">
-            <div><h3 className="text-[14px] font-bold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>Current Plan</h3><p className="text-[12px] text-[var(--color-text-muted)]">Manage your subscription and billing</p></div>
+            <div><h3 className="text-[14px] font-bold" style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>Current Plan</h3><p className="text-[12px]" style={{ color: 'var(--color-text-muted)' }}>Manage your subscription and billing</p></div>
             <span className="badge badge-success">Free</span>
           </div>
           <div className="grid grid-cols-3 gap-3 mb-4">
-            <div className="p-3 rounded-[10px] bg-[var(--color-bg)] text-center border border-[var(--color-bg-secondary)]">
-              <div className="text-[15px] font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>Free</div>
-              <div className="text-[11px] text-[var(--color-text-muted)] mt-0.5">Basic features</div>
+            <div className="p-3 rounded-[10px] text-center" style={{ background: 'var(--color-bg)', border: '1px solid var(--color-bg-secondary)' }}>
+              <div className="text-[15px] font-extrabold" style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>Free</div>
+              <div className="text-[11px] mt-0.5" style={{ color: 'var(--color-text-muted)' }}>Basic features</div>
             </div>
-            <div className="p-3 rounded-[10px] text-center border-2 border-[var(--color-primary)]/30" style={{background:'color-mix(in srgb, var(--color-primary) 3%, transparent)'}}>
-              <div className="text-[15px] font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>Pro</div>
-              <div className="text-[11px] text-[var(--color-text-muted)] mt-0.5">$9.99/month</div>
+            <div className="p-3 rounded-[10px] text-center" style={{ border: '2px solid color-mix(in srgb, var(--color-primary) 30%, transparent)', background: 'color-mix(in srgb, var(--color-primary) 3%, transparent)' }}>
+              <div className="text-[15px] font-extrabold" style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>Pro</div>
+              <div className="text-[11px] mt-0.5" style={{ color: 'var(--color-text-muted)' }}>$9.99/month</div>
             </div>
-            <div className="p-3 rounded-[10px] bg-[var(--color-bg)] text-center border border-[var(--color-bg-secondary)]">
-              <div className="text-[15px] font-extrabold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>Enterprise</div>
-              <div className="text-[11px] text-[var(--color-text-muted)] mt-0.5">Custom pricing</div>
+            <div className="p-3 rounded-[10px] text-center" style={{ background: 'var(--color-bg)', border: '1px solid var(--color-bg-secondary)' }}>
+              <div className="text-[15px] font-extrabold" style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>Enterprise</div>
+              <div className="text-[11px] mt-0.5" style={{ color: 'var(--color-text-muted)' }}>Custom pricing</div>
             </div>
           </div>
           <div className="flex gap-3">
@@ -865,7 +874,7 @@ export function SettingsPage() {
           <div className="mb-4">
             <label className="label">New Email Address</label>
             <input type="email" value={newEmail} onChange={e => setNewEmail(e.target.value)} className="input" placeholder="new@example.com" />
-            <p className="text-[11px] text-[var(--color-text-muted)] mt-1.5">A confirmation link will be sent to the new address.</p>
+            <p className="text-[11px] mt-1.5" style={{ color: 'var(--color-text-muted)' }}>A confirmation link will be sent to the new address.</p>
           </div>
           <div className="flex gap-2">
             <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={closeModal} className="btn-secondary flex-1 py-2">Cancel</motion.button>
@@ -877,7 +886,7 @@ export function SettingsPage() {
         <Modal title="Enable Two-Factor Authentication">
           {!modalMsg ? (
             <>
-              <p className="text-[13px] text-[var(--color-text-muted)] mb-4 text-center">Use an authenticator app like Google Authenticator or Authy to add 2FA to your account.</p>
+              <p className="text-[13px] mb-4 text-center" style={{ color: 'var(--color-text-muted)' }}>Use an authenticator app like Google Authenticator or Authy to add 2FA to your account.</p>
               <div className="flex gap-2">
                 <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={closeModal} className="btn-secondary flex-1 py-2">Cancel</motion.button>
                 <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={handle2FA} disabled={modalLoading} className="btn-primary flex-1 py-2">{modalLoading ? 'Setting up...' : 'Enable 2FA'}</motion.button>
@@ -885,7 +894,8 @@ export function SettingsPage() {
             </>
           ) : (
             <>
-              <pre className="text-[12px] text-[var(--color-text-muted)] mb-4 whitespace-pre-wrap text-center bg-[var(--color-bg-secondary)] p-3 rounded-lg">{modalMsg}</pre>
+              <pre className="text-[12px] mb-4 whitespace-pre-wrap text-center p-3 rounded-lg"
+                style={{ color: 'var(--color-text-muted)', background: 'var(--color-bg-secondary)' }}>{modalMsg}</pre>
               <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={closeModal} className="btn-primary w-full py-2">Done</motion.button>
             </>
           )}
@@ -895,7 +905,7 @@ export function SettingsPage() {
         <Modal title="Download My Data">
           {!modalMsg ? (
             <>
-              <p className="text-[13px] text-[var(--color-text-muted)] mb-4 text-center">Export your profile, grades, enrollments, and attendance data as a JSON file.</p>
+              <p className="text-[13px] mb-4 text-center" style={{ color: 'var(--color-text-muted)' }}>Export your profile, grades, enrollments, and attendance data as a JSON file.</p>
               <div className="flex gap-2">
                 <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={closeModal} className="btn-secondary flex-1 py-2">Cancel</motion.button>
                 <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={handleExportData} disabled={modalLoading} className="btn-primary flex-1 py-2">{modalLoading ? 'Exporting...' : 'Export'}</motion.button>
@@ -903,7 +913,7 @@ export function SettingsPage() {
             </>
           ) : (
             <>
-              <div className="text-center mb-4"><div className="text-[13px] text-[var(--color-success)] font-medium">{modalMsg}</div></div>
+              <div className="text-center mb-4"><div className="text-[13px] font-medium" style={{ color: 'var(--color-success)' }}>{modalMsg}</div></div>
               <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={closeModal} className="btn-primary w-full py-2">Done</motion.button>
             </>
           )}
@@ -911,13 +921,13 @@ export function SettingsPage() {
       )}
       {modal === 'delete' && (
         <Modal title="Delete Account">
-          <p className="text-[13px] text-[var(--color-text-muted)] mb-4 text-center">This action is irreversible. Type <strong>DELETE</strong> to confirm.</p>
+          <p className="text-[13px] mb-4 text-center" style={{ color: 'var(--color-text-muted)' }}>This action is irreversible. Type <strong>DELETE</strong> to confirm.</p>
           <div className="mb-4">
             <input value={deleteConfirm} onChange={e => setDeleteConfirm(e.target.value)} className="input" placeholder='Type "DELETE" to confirm'/>
           </div>
           <div className="flex gap-2">
             <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={closeModal} className="btn-secondary flex-1 py-2">Cancel</motion.button>
-            <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={handleDeleteAccount} disabled={modalLoading} className="btn-primary flex-1 py-2" style={{background:'var(--color-danger)'}}>{modalLoading ? 'Deleting...' : 'Delete Account'}</motion.button>
+            <motion.button whileHover={{scale:1.02}} whileTap={{scale:0.97}} onClick={handleDeleteAccount} disabled={modalLoading} className="btn-primary flex-1 py-2" style={{ background: 'var(--color-danger)' }}>{modalLoading ? 'Deleting...' : 'Delete Account'}</motion.button>
           </div>
         </Modal>
       )}

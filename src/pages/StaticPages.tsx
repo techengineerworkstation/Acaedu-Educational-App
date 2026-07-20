@@ -4,15 +4,17 @@ import { sendEmail } from '../lib/email'
 
 export function TermsPage() {
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-3xl mx-auto px-4">
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
-        <h1 className="text-3xl font-extrabold text-[var(--color-navy)] mb-2" style={{ fontFamily: 'var(--font-display)' }}>
+        <h1 className="text-3xl font-extrabold mb-2 text-center"
+          style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>
           Terms of Service
         </h1>
-        <div className="h-px bg-[var(--color-border-light)] my-6" />
-        <div className="text-[var(--color-text-secondary)] space-y-8">
+        <div className="h-px my-6" style={{ background: 'var(--color-border-light)' }} />
+        <div className="space-y-8" style={{ color: 'var(--color-text-secondary)' }}>
           <section>
-            <h2 className="text-lg font-bold text-[var(--color-navy)] mb-3" style={{ fontFamily: 'var(--font-display)' }}>
+            <h2 className="text-lg font-bold mb-3"
+              style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>
               1. Acceptance of Terms
             </h2>
             <p className="leading-relaxed">
@@ -21,7 +23,8 @@ export function TermsPage() {
             </p>
           </section>
           <section>
-            <h2 className="text-lg font-bold text-[var(--color-navy)] mb-3" style={{ fontFamily: 'var(--font-display)' }}>
+            <h2 className="text-lg font-bold mb-3"
+              style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>
               2. User Accounts
             </h2>
             <p className="leading-relaxed">
@@ -31,7 +34,8 @@ export function TermsPage() {
             </p>
           </section>
           <section>
-            <h2 className="text-lg font-bold text-[var(--color-navy)] mb-3" style={{ fontFamily: 'var(--font-display)' }}>
+            <h2 className="text-lg font-bold mb-3"
+              style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>
               3. Acceptable Use
             </h2>
             <p className="leading-relaxed">You agree to use the Platform only for lawful academic purposes. You shall not:</p>
@@ -43,7 +47,8 @@ export function TermsPage() {
             </ul>
           </section>
           <section>
-            <h2 className="text-lg font-bold text-[var(--color-navy)] mb-3" style={{ fontFamily: 'var(--font-display)' }}>
+            <h2 className="text-lg font-bold mb-3"
+              style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>
               4. Intellectual Property
             </h2>
             <p className="leading-relaxed">
@@ -52,7 +57,8 @@ export function TermsPage() {
             </p>
           </section>
           <section>
-            <h2 className="text-lg font-bold text-[var(--color-navy)] mb-3" style={{ fontFamily: 'var(--font-display)' }}>
+            <h2 className="text-lg font-bold mb-3"
+              style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>
               5. Limitation of Liability
             </h2>
             <p className="leading-relaxed">
@@ -60,7 +66,8 @@ export function TermsPage() {
             </p>
           </section>
           <section>
-            <h2 className="text-lg font-bold text-[var(--color-navy)] mb-3" style={{ fontFamily: 'var(--font-display)' }}>
+            <h2 className="text-lg font-bold mb-3"
+              style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>
               6. Changes to Terms
             </h2>
             <p className="leading-relaxed">
@@ -68,7 +75,7 @@ export function TermsPage() {
               of the modified terms.
             </p>
           </section>
-          <p className="text-[var(--color-text-muted)] text-xs pt-6 border-t border-[var(--color-border-light)]">
+          <p className="text-xs pt-6" style={{ color: 'var(--color-text-muted)', borderTop: '1px solid var(--color-border-light)' }}>
             Last updated: January 2026
           </p>
         </div>
@@ -79,15 +86,17 @@ export function TermsPage() {
 
 export function PrivacyPage() {
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-3xl mx-auto px-4">
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
-        <h1 className="text-3xl font-extrabold text-[var(--color-navy)] mb-2" style={{ fontFamily: 'var(--font-display)' }}>
+        <h1 className="text-3xl font-extrabold mb-2 text-center"
+          style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>
           Privacy Policy
         </h1>
-        <div className="h-px bg-[var(--color-border-light)] my-6" />
-        <div className="text-[var(--color-text-secondary)] space-y-8">
+        <div className="h-px my-6" style={{ background: 'var(--color-border-light)' }} />
+        <div className="space-y-8" style={{ color: 'var(--color-text-secondary)' }}>
           <section>
-            <h2 className="text-lg font-bold text-[var(--color-navy)] mb-3" style={{ fontFamily: 'var(--font-display)' }}>
+            <h2 className="text-lg font-bold mb-3"
+              style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>
               1. Information We Collect
             </h2>
             <p className="leading-relaxed">We collect information you provide directly, including:</p>
@@ -99,7 +108,8 @@ export function PrivacyPage() {
             </ul>
           </section>
           <section>
-            <h2 className="text-lg font-bold text-[var(--color-navy)] mb-3" style={{ fontFamily: 'var(--font-display)' }}>
+            <h2 className="text-lg font-bold mb-3"
+              style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>
               2. How We Use Your Information
             </h2>
             <p className="leading-relaxed">Your information is used to:</p>
@@ -111,7 +121,8 @@ export function PrivacyPage() {
             </ul>
           </section>
           <section>
-            <h2 className="text-lg font-bold text-[var(--color-navy)] mb-3" style={{ fontFamily: 'var(--font-display)' }}>
+            <h2 className="text-lg font-bold mb-3"
+              style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>
               3. Data Security
             </h2>
             <p className="leading-relaxed">
@@ -120,7 +131,8 @@ export function PrivacyPage() {
             </p>
           </section>
           <section>
-            <h2 className="text-lg font-bold text-[var(--color-navy)] mb-3" style={{ fontFamily: 'var(--font-display)' }}>
+            <h2 className="text-lg font-bold mb-3"
+              style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>
               4. Third-Party Services
             </h2>
             <p className="leading-relaxed">
@@ -129,14 +141,15 @@ export function PrivacyPage() {
             </p>
           </section>
           <section>
-            <h2 className="text-lg font-bold text-[var(--color-navy)] mb-3" style={{ fontFamily: 'var(--font-display)' }}>
+            <h2 className="text-lg font-bold mb-3"
+              style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>
               5. Your Rights
             </h2>
             <p className="leading-relaxed">
               You have the right to access, correct, or delete your personal data. Contact us to exercise these rights.
             </p>
           </section>
-          <p className="text-[var(--color-text-muted)] text-xs pt-6 border-t border-[var(--color-border-light)]">
+          <p className="text-xs pt-6" style={{ color: 'var(--color-text-muted)', borderTop: '1px solid var(--color-border-light)' }}>
             Last updated: January 2026
           </p>
         </div>
@@ -180,78 +193,81 @@ export function ContactPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto">
+    <div className="max-w-2xl mx-auto px-4">
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
-        <h1 className="text-3xl font-extrabold text-[var(--color-navy)] mb-2" style={{ fontFamily: 'var(--font-display)' }}>
+        <h1 className="text-3xl font-extrabold mb-2 text-center"
+          style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>
           Contact Us
         </h1>
-        <div className="h-px bg-[var(--color-border-light)] my-6" />
+        <div className="h-px my-6" style={{ background: 'var(--color-border-light)' }} />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-          <div className="card p-5">
-            <h3 className="font-bold text-[var(--color-navy)] mb-1.5 text-sm" style={{ fontFamily: 'var(--font-display)' }}>Email</h3>
-            <a href="mailto:support@acaedu.sbs" className="text-sm text-[var(--color-primary)] hover:underline">support@acaedu.sbs</a>
-          </div>
-          <div className="card p-5">
-            <h3 className="font-bold text-[var(--color-navy)] mb-1.5 text-sm" style={{ fontFamily: 'var(--font-display)' }}>Phone</h3>
-            <a href="tel:+2349115899245" className="text-sm text-[var(--color-primary)] hover:underline">+234 911 589 9245</a>
-          </div>
-          <div className="card p-5">
-            <h3 className="font-bold text-[var(--color-navy)] mb-1.5 text-sm" style={{ fontFamily: 'var(--font-display)' }}>WhatsApp</h3>
-            <a href="https://wa.me/2349115899245" target="_blank" rel="noopener noreferrer" className="text-sm text-[var(--color-primary)] hover:underline">
-              Chat on WhatsApp
-            </a>
-          </div>
-          <div className="card p-5">
-            <h3 className="font-bold text-[var(--color-navy)] mb-1.5 text-sm" style={{ fontFamily: 'var(--font-display)' }}>Location</h3>
-            <p className="text-sm text-[var(--color-text-muted)]">Nigeria</p>
-          </div>
+          {[
+            { label: 'Email', children: <a href="mailto:support@acaedu.sbs" className="text-sm hover:underline" style={{ color: 'var(--color-primary)' }}>support@acaedu.sbs</a> },
+            { label: 'Phone', children: <a href="tel:+2349115899245" className="text-sm hover:underline" style={{ color: 'var(--color-primary)' }}>+234 911 589 9245</a> },
+            { label: 'WhatsApp', children: <a href="https://wa.me/2349115899245" target="_blank" rel="noopener noreferrer" className="text-sm hover:underline" style={{ color: 'var(--color-primary)' }}>Chat on WhatsApp</a> },
+            { label: 'Location', children: <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>Nigeria</p> },
+          ].map(item => (
+            <div key={item.label} className="card p-5">
+              <h3 className="font-bold mb-1.5 text-sm" style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>{item.label}</h3>
+              {item.children}
+            </div>
+          ))}
         </div>
 
         <div className="card p-6">
-          <h3 className="font-bold text-[var(--color-navy)] mb-4 text-sm" style={{ fontFamily: 'var(--font-display)' }}>
+          <h3 className="font-bold mb-4 text-sm" style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>
             Send us a message
           </h3>
 
           {sent ? (
             <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
               className="py-10 text-center">
-              <div className="w-12 h-12 rounded-full bg-[var(--color-bg-tertiary)] flex items-center justify-center mx-auto mb-3">
+              <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3"
+                style={{ background: 'var(--color-bg-tertiary)' }}>
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-success)" strokeWidth="2.5">
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
               </div>
-              <p className="font-bold text-[var(--color-navy)] mb-1" style={{ fontFamily: 'var(--font-display)' }}>Message sent!</p>
-              <p className="text-sm text-[var(--color-text-muted)]">
+              <p className="font-bold mb-1" style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>Message sent!</p>
+              <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
                 We'll get back to you at <strong>{email || 'your email'}</strong> soon.
               </p>
-              <button onClick={() => setSent(false)} className="mt-4 text-sm text-[var(--color-primary)] hover:underline font-semibold">
+              <button onClick={() => setSent(false)} className="mt-4 text-sm font-semibold hover:underline" style={{ color: 'var(--color-primary)' }}>
                 Send another message
               </button>
             </motion.div>
           ) : (
             <form className="space-y-4" onSubmit={handleSubmit}>
               {error && (
-                <div className="px-3 py-2 rounded-lg bg-[color-mix(in_srgb,var(--color-danger)_6%,transparent)] border border-[color-mix(in_srgb,var(--color-danger)_20%,transparent)] text-[var(--color-danger)] text-sm">
+                <div className="px-3 py-2 rounded-lg text-sm"
+                  style={{
+                    background: 'color-mix(in srgb, var(--color-danger) 6%, transparent)',
+                    border: '1px solid color-mix(in srgb, var(--color-danger) 20%, transparent)',
+                    color: 'var(--color-danger)',
+                  }}>
                   {error}
                 </div>
               )}
               <div>
-                <label className="block text-xs font-semibold text-[var(--color-text-secondary)] mb-1.5 uppercase tracking-wider">
+                <label className="block text-xs font-semibold mb-1.5 uppercase tracking-wider"
+                  style={{ color: 'var(--color-text-secondary)' }}>
                   Name
                 </label>
                 <input value={name} onChange={e => setName(e.target.value)} required
                   className="input" placeholder="Your name" />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-[var(--color-text-secondary)] mb-1.5 uppercase tracking-wider">
+                <label className="block text-xs font-semibold mb-1.5 uppercase tracking-wider"
+                  style={{ color: 'var(--color-text-secondary)' }}>
                   Email
                 </label>
                 <input type="email" value={email} onChange={e => setEmail(e.target.value)} required
                   className="input" placeholder="you@example.com" />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-[var(--color-text-secondary)] mb-1.5 uppercase tracking-wider">
+                <label className="block text-xs font-semibold mb-1.5 uppercase tracking-wider"
+                  style={{ color: 'var(--color-text-secondary)' }}>
                   Message
                 </label>
                 <textarea value={message} onChange={e => setMessage(e.target.value)} required

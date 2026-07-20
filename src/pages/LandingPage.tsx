@@ -1,34 +1,20 @@
 import { Link } from 'react-router-dom'
-import { motion, useInView, useScroll, useTransform, AnimatePresence } from 'framer-motion'
-import { useRef, useState, useEffect, Suspense, lazy, Component, type ReactNode } from 'react'
-import { ArrowRight, Zap, Shield, Brain, BookOpen, Bell, Sparkles, Search, GraduationCap, Globe, LineChart, Video } from 'lucide-react'
-import { NumberTicker } from '@/components/aceternity/text-reveal'
-import { CardContainer, CardBody } from '@/components/aceternity/3d-card'
-import { useTheme, usePresetPalette } from '@/lib/theme'
+import { motion, useInView, useScroll, useTransform } from 'framer-motion'
+import { useRef } from 'react'
+import { ArrowRight, Shield, Brain, BookOpen, Bell, Search, GraduationCap, Globe, LineChart, Video, Zap } from 'lucide-react'
+import { useTheme } from '@/lib/theme'
+import { Moon, Sun, Star } from 'lucide-react'
 
-const SparklesComponent = lazy(() => import('@/components/aceternity/sparkles').then(m => ({ default: m.Sparkles })))
-const FractalTreeComponent = lazy(() => import('@/components/aceternity/fractal-tree').then(m => ({ default: m.FractalTree })))
-const SpriteAnimComponent = lazy(() => import('@/components/aceternity/sprite-animation').then(m => ({ default: m.SpriteAnimation })))
-
-class SilentErrorBoundary extends Component<{ children: ReactNode }, { crashed: boolean }> {
-  state = { crashed: false }
-  static getDerivedStateFromError() { return { crashed: true } }
-  render() { return this.state.crashed ? null : this.props.children }
-}
-
-/* ─── Animation variants ─────────────────────────────────────── */
 const ease = [0.22, 1, 0.36, 1] as [number, number, number, number]
+
 const fadeUp = {
   hidden:  { opacity: 0, y: 24 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease } },
 }
+
 const stagger = {
   hidden:  { opacity: 0 },
   visible: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.08 } },
-}
-const scaleFade = {
-  hidden:  { opacity: 0, scale: 0.92 },
-  visible: { opacity: 1, scale: 1, transition: { duration: 0.6, ease } },
 }
 
 function Section({ children, className = '', id }: { children: React.ReactNode; className?: string; id?: string }) {
@@ -41,192 +27,14 @@ function Section({ children, className = '', id }: { children: React.ReactNode; 
   )
 }
 
-/* ─── Hero SVG illustrations — rich vector clipart style ─────── */
-function makeHeroSlides(p: ReturnType<typeof usePresetPalette>) {
-  return [
-  {
-    label: 'Smart Scheduling',
-    svg: (
-      <svg viewBox="0 0 320 240" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-        <defs>
-          <linearGradient id="grad1" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor={p.primary} stopOpacity="0.15"/>
-            <stop offset="100%" stopColor={p.teal} stopOpacity="0.05"/>
-          </linearGradient>
-        </defs>
-        <circle cx="160" cy="120" r="100" fill="url(#grad1)"/>
-        <circle cx="160" cy="120" r="75" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" strokeWidth="1"/>
-        <circle cx="160" cy="120" r="110" fill="none" stroke={p.rgba(p.primary, 0.08)} strokeWidth="0.5" strokeDasharray="4 6"/>
-        <rect x="110" y="55" width="100" height="120" rx="12" fill={p.navy} stroke="rgba(255,255,255,0.12)" strokeWidth="1.2"/>
-        <rect x="110" y="55" width="100" height="30" rx="12" fill={p.rgba(p.primary, 0.35)}/>
-        <rect x="110" y="73" width="100" height="12" fill={p.rgba(p.primary, 0.35)}/>
-        <circle cx="130" cy="70" r="4" fill="rgba(255,255,255,0.25)"/>
-        <circle cx="150" cy="70" r="4" fill="rgba(255,255,255,0.25)"/>
-        <circle cx="170" cy="70" r="4" fill="rgba(255,255,255,0.25)"/>
-        <circle cx="190" cy="70" r="4" fill="rgba(255,255,255,0.25)"/>
-        {[0,1,2,3].map(r => (
-          <g key={r}>
-            <rect x="120" y={95 + r * 16} width="80" height="1" fill="rgba(255,255,255,0.06)"/>
-            {[0,1,2,3,4].map(c => (
-              <rect key={c} x={122 + c * 16} y={98 + r * 16} width="10" height="6" rx="1.5" fill={
-                (r === 1 && c === 2) ? p.rgba(p.primary, 0.6) :
-                (r === 2 && c === 4) ? p.rgba(p.teal, 0.4) :
-                'rgba(255,255,255,0.06)'
-              }/>
-            ))}
-          </g>
-        ))}
-        <circle cx="215" cy="60" r="20" fill={p.navy} stroke={p.rgba(p.primary, 0.35)} strokeWidth="1.2"/>
-        <circle cx="215" cy="60" r="14" fill={p.rgba(p.primary, 0.12)}/>
-        <text x="215" y="65" textAnchor="middle" fill={p.primary} fontSize="13" fontWeight="800" fontFamily="system-ui">AI</text>
-        <circle cx="75" cy="85" r="4" fill={p.rgba(p.teal, 0.2)}>
-          <animate attributeName="cy" values="85;78;85" dur="3s" repeatCount="indefinite"/>
-        </circle>
-        <circle cx="250" cy="170" r="3" fill={p.rgba(p.gold, 0.2)}>
-          <animate attributeName="cy" values="170;163;170" dur="4s" repeatCount="indefinite"/>
-        </circle>
-        <circle cx="60" cy="160" r="5" fill={p.rgba(p.primary, 0.1)}>
-          <animate attributeName="cy" values="160;153;160" dur="3.5s" repeatCount="indefinite"/>
-        </circle>
-        <line x1="210" y1="80" x2="195" y2="95" stroke={p.rgba(p.primary, 0.12)} strokeWidth="0.8" strokeDasharray="3 3">
-          <animate attributeName="stroke-opacity" values="0.12;0.25;0.12" dur="2s" repeatCount="indefinite"/>
-        </line>
-      </svg>
-    ),
-  },
-  {
-    label: 'Live Collaboration',
-    svg: (
-      <svg viewBox="0 0 320 240" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-        <defs>
-          <linearGradient id="grad2" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor={p.teal} stopOpacity="0.12"/>
-            <stop offset="100%" stopColor={p.primary} stopOpacity="0.04"/>
-          </linearGradient>
-        </defs>
-        <circle cx="160" cy="120" r="100" fill="url(#grad2)"/>
-        <circle cx="160" cy="120" r="75" fill="none" stroke={p.rgba(p.teal, 0.06)} strokeWidth="0.8"/>
-        <circle cx="160" cy="120" r="110" fill="none" stroke={p.rgba(p.teal, 0.05)} strokeWidth="0.5" strokeDasharray="3 5"/>
-        {[
-          { cx: 120, cy: 90, color: p.primary, r: 22 },
-          { cx: 200, cy: 90, color: p.teal, r: 22 },
-          { cx: 160, cy: 150, color: p.gold, r: 22 },
-        ].map((pt, i) => (
-          <g key={i}>
-            <circle cx={pt.cx} cy={pt.cy} r={pt.r} fill={p.navy} stroke="rgba(255,255,255,0.1)" strokeWidth="1.2"/>
-            <circle cx={pt.cx} cy={pt.cy - 5} r="8" fill={pt.color} opacity="0.5"/>
-            <rect x={pt.cx - 10} y={pt.cy + 6} width="20" height="10" rx="4" fill={pt.color} opacity="0.2"/>
-          </g>
-        ))}
-        <line x1="137" y1="100" x2="145" y2="135" stroke="rgba(255,255,255,0.08)" strokeWidth="1" strokeDasharray="3 3">
-          <animate attributeName="stroke-opacity" values="0.08;0.2;0.08" dur="2.5s" repeatCount="indefinite"/>
-        </line>
-        <line x1="183" y1="100" x2="175" y2="135" stroke="rgba(255,255,255,0.08)" strokeWidth="1" strokeDasharray="3 3">
-          <animate attributeName="stroke-opacity" values="0.08;0.2;0.08" dur="2.5s" repeatCount="indefinite" begin="0.5s"/>
-        </line>
-        <line x1="140" y1="90" x2="180" y2="90" stroke="rgba(255,255,255,0.06)" strokeWidth="1" strokeDasharray="2 4"/>
-        <path d="M155 58 Q160 48 165 58" fill="none" stroke={p.rgba(p.primary, 0.25)} strokeWidth="1.2"/>
-        <path d="M152 52 Q160 40 168 52" fill="none" stroke={p.rgba(p.primary, 0.15)} strokeWidth="1"/>
-        <circle cx="80" cy="75" r="3" fill={p.rgba(p.teal, 0.15)}>
-          <animate attributeName="cy" values="75;68;75" dur="3s" repeatCount="indefinite"/>
-        </circle>
-        <circle cx="240" cy="155" r="4" fill={p.rgba(p.gold, 0.12)}>
-          <animate attributeName="cy" values="155;148;155" dur="4s" repeatCount="indefinite"/>
-        </circle>
-      </svg>
-    ),
-  },
-  {
-    label: 'Grade Analytics',
-    svg: (
-      <svg viewBox="0 0 320 240" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-        <defs>
-          <linearGradient id="grad3" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor={p.gold} stopOpacity="0.1"/>
-            <stop offset="100%" stopColor={p.teal} stopOpacity="0.04"/>
-          </linearGradient>
-        </defs>
-        <circle cx="160" cy="120" r="100" fill="url(#grad3)"/>
-        <circle cx="160" cy="120" r="75" fill="none" stroke={p.rgba(p.gold, 0.05)} strokeWidth="0.8"/>
-        <rect x="80" y="55" width="160" height="130" rx="12" fill={p.navy} stroke="rgba(255,255,255,0.1)" strokeWidth="1.2"/>
-        <rect x="80" y="55" width="160" height="28" rx="12" fill="rgba(255,255,255,0.04)"/>
-        <rect x="80" y="73" width="160" height="10" fill="rgba(255,255,255,0.04)"/>
-        <rect x="95" y="65" width="50" height="5" rx="2" fill="rgba(255,255,255,0.2)"/>
-        <circle cx="225" cy="69" r="5" fill={p.rgba(p.teal, 0.3)}/>
-        {[
-          { x: 100, h: 30, fill: p.rgba(p.primary, 0.55) },
-          { x: 120, h: 45, fill: p.rgba(p.teal, 0.45) },
-          { x: 140, h: 60, fill: p.rgba(p.gold, 0.5) },
-          { x: 160, h: 48, fill: p.rgba(p.primary, 0.45) },
-          { x: 180, h: 72, fill: p.rgba(p.teal, 0.55) },
-          { x: 200, h: 55, fill: p.rgba(p.gold, 0.4) },
-        ].map((b, i) => (
-          <rect key={i} x={b.x} y={175 - b.h} width="14" height={b.h} rx="3" fill={b.fill}>
-            <animate attributeName="height" values={`0;${b.h}`} dur="0.8s" begin={`${i * 0.1}s`} fill="freeze"/>
-            <animate attributeName="y" values={`175;${175 - b.h}`} dur="0.8s" begin={`${i * 0.1}s`} fill="freeze"/>
-          </rect>
-        ))}
-        <polyline points="107,150 127,138 147,125 167,132 187,115 207,128" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-        <circle cx="220" cy="110" r="18" fill={p.navy} stroke={p.rgba(p.primary, 0.3)} strokeWidth="1.2"/>
-        <text x="220" y="115" textAnchor="middle" fill={p.primary} fontSize="13" fontWeight="800" fontFamily="system-ui">A+</text>
-        <circle cx="65" cy="90" r="3.5" fill={p.rgba(p.gold, 0.15)}>
-          <animate attributeName="cy" values="90;83;90" dur="3.5s" repeatCount="indefinite"/>
-        </circle>
-        <circle cx="255" cy="165" r="3" fill={p.rgba(p.primary, 0.1)}>
-          <animate attributeName="cy" values="165;158;165" dur="4s" repeatCount="indefinite"/>
-        </circle>
-      </svg>
-    ),
-  },
-  {
-    label: 'Campus Life',
-    svg: (
-      <svg viewBox="0 0 320 240" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-        <defs>
-          <linearGradient id="grad4" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor={p.primary} stopOpacity="0.08"/>
-            <stop offset="100%" stopColor={p.teal} stopOpacity="0.06"/>
-          </linearGradient>
-        </defs>
-        <circle cx="160" cy="120" r="100" fill="url(#grad4)"/>
-        <circle cx="160" cy="120" r="75" fill="none" stroke={p.rgba(p.primary, 0.05)} strokeWidth="0.8"/>
-        <rect x="110" y="70" width="100" height="110" rx="8" fill={p.navy} stroke="rgba(255,255,255,0.1)" strokeWidth="1.2"/>
-        <rect x="110" y="70" width="100" height="32" rx="8" fill={p.rgba(p.primary, 0.3)}/>
-        <rect x="110" y="92" width="100" height="10" fill={p.rgba(p.primary, 0.3)}/>
-        {[0,1,2].map(r => [0,1,2].map(c => (
-          <rect key={`${r}${c}`} x={124 + c * 28} y={112 + r * 20} width="18" height="12" rx="2"
-            fill={(r === 1 && c === 1) ? p.rgba(p.gold, 0.25) : p.rgba(p.teal, 0.08)}
-            stroke="rgba(255,255,255,0.06)" strokeWidth="0.5"/>
-        )))}
-        <rect x="148" y="155" width="24" height="25" rx="3" fill={p.rgba(p.primary, 0.2)} stroke="rgba(255,255,255,0.08)" strokeWidth="0.8"/>
-        <circle cx="160" cy="82" r="8" fill="rgba(255,255,255,0.08)" stroke="rgba(255,255,255,0.15)" strokeWidth="0.8"/>
-        <line x1="160" y1="82" x2="160" y2="77" stroke="rgba(255,255,255,0.3)" strokeWidth="0.8" strokeLinecap="round"/>
-        <line x1="160" y1="82" x2="164" y2="82" stroke="rgba(255,255,255,0.3)" strokeWidth="0.8" strokeLinecap="round"/>
-        <rect x="60" y="100" width="35" height="50" rx="6" fill={p.rgba(p.teal, 0.08)} stroke={p.rgba(p.teal, 0.15)} strokeWidth="0.8"/>
-        <rect x="225" y="110" width="35" height="45" rx="6" fill={p.rgba(p.gold, 0.06)} stroke={p.rgba(p.gold, 0.12)} strokeWidth="0.8"/>
-        <circle cx="75" cy="80" r="3" fill={p.rgba(p.primary, 0.12)}>
-          <animate attributeName="cy" values="80;73;80" dur="3s" repeatCount="indefinite"/>
-        </circle>
-        <circle cx="250" cy="75" r="4" fill={p.rgba(p.teal, 0.1)}>
-          <animate attributeName="cy" values="75;68;75" dur="4s" repeatCount="indefinite"/>
-        </circle>
-      </svg>
-    ),
-  },
-  ]
-}
-
-/* ─── Data ───────────────────────────────────────────────────── */
-function makeFeatures(p: ReturnType<typeof usePresetPalette>) {
-  return [
-    { icon: BookOpen,  title: 'Subject Management',  desc: 'Organise subjects, materials, and timetables in one unified workspace.', gradient: `linear-gradient(135deg, ${p.rgba(p.primary, 0.08)} 0%, ${p.rgba(p.primary, 0.02)} 100%)`, iconBg: p.rgba(p.primary, 0.10), iconColor: p.primary },
-    { icon: LineChart, title: 'Grade Analytics',      desc: 'Real-time grade tracking with visual performance dashboards.', gradient: `linear-gradient(135deg, ${p.rgba(p.teal, 0.08)} 0%, ${p.rgba(p.teal, 0.02)} 100%)`, iconBg: p.rgba(p.teal, 0.08), iconColor: p.teal },
-    { icon: Bell,      title: 'Smart Notifications', desc: 'Context-aware alerts for deadlines, exams, and announcements.', gradient: `linear-gradient(135deg, ${p.rgba(p.gold, 0.08)} 0%, ${p.rgba(p.gold, 0.02)} 100%)`, iconBg: p.rgba(p.gold, 0.10), iconColor: p.gold },
-    { icon: Video,     title: 'Live Collaboration',  desc: 'Integrated video conferencing and shared class recordings.', gradient: `linear-gradient(135deg, ${p.rgba(p.teal, 0.08)} 0%, ${p.rgba(p.teal, 0.02)} 100%)`, iconBg: p.rgba(p.teal, 0.08), iconColor: p.teal },
-    { icon: Brain,     title: 'AI Assistant',        desc: 'Intelligent lecture summaries, scheduling suggestions, and insights.', gradient: `linear-gradient(135deg, ${p.rgba(p.primary, 0.06)} 0%, ${p.rgba(p.teal, 0.04)} 100%)`, iconBg: p.rgba(p.primary, 0.08), iconColor: p.primary },
-    { icon: Shield,    title: 'Enterprise Security', desc: 'Bank-grade encryption, RLS policies, and role-based access control.', gradient: `linear-gradient(135deg, ${p.rgba(p.navy, 0.06)} 0%, ${p.rgba(p.navy, 0.02)} 100%)`, iconBg: p.rgba(p.navy, 0.07), iconColor: p.navy },
-  ]
-}
+const features = [
+  { icon: BookOpen,  title: 'Subject Management',  desc: 'Organise subjects, materials, and timetables in one unified workspace.' },
+  { icon: LineChart, title: 'Grade Analytics',      desc: 'Real-time grade tracking with visual performance dashboards.' },
+  { icon: Bell,      title: 'Smart Notifications', desc: 'Context-aware alerts for deadlines, exams, and announcements.' },
+  { icon: Video,     title: 'Live Collaboration',  desc: 'Integrated video conferencing and shared class recordings.' },
+  { icon: Brain,     title: 'AI Assistant',        desc: 'Intelligent lecture summaries, scheduling suggestions, and insights.' },
+  { icon: Shield,    title: 'Enterprise Security', desc: 'Bank-grade encryption, RLS policies, and role-based access control.' },
+]
 
 const courseCards = [
   { img: '/images/hero-graduation.jpg', title: 'Smart Academic Scheduling', meta: 'AI-Powered', tag: 'New', institution: 'Acaedu Institute' },
@@ -252,68 +60,24 @@ const disciplines = [
   { name: 'Architecture', icon: GraduationCap },
 ]
 
-const themeIcons: Record<string, React.ReactNode> = {
-  light: <span className="text-[var(--color-text-muted)]"><Sparkles size={16} /></span>,
-  dark: <span className="text-[var(--color-text-muted)]"><Sparkles size={16} /></span>,
-  midnight: <span className="text-[var(--color-text-muted)]"><Sparkles size={16} /></span>,
-}
-
-/* ─── Pulsating headline animation ────────────────────────────── */
-function PulsatingHeadline({ accent }: { accent: string }) {
-  const r = parseInt(accent.slice(1, 3), 16)
-  const g = parseInt(accent.slice(3, 5), 16)
-  const b = parseInt(accent.slice(5, 7), 16)
-  return (
-    <motion.h1
-      className="text-[36px] md:text-[52px] font-extrabold text-white leading-[1.08] tracking-tight mb-6"
-      style={{ fontFamily: 'var(--font-display)' }}
-      animate={{
-        textShadow: [
-          `0 0 0px rgba(${r},${g},${b},0)`,
-          `0 0 30px rgba(${r},${g},${b},0.12)`,
-          `0 0 50px rgba(${r},${g},${b},0.06)`,
-          `0 0 30px rgba(${r},${g},${b},0.12)`,
-          `0 0 0px rgba(${r},${g},${b},0)`,
-        ],
-      }}
-      transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-    >
-      Learn without limits.<br />Advance your career.
-    </motion.h1>
-  )
-}
-
-/* ─── Component ──────────────────────────────────────────────── */
 export function LandingPage() {
   const heroRef = useRef(null)
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] })
-  const heroY       = useTransform(scrollYProgress, [0, 1], ['0%', '22%'])
+  const heroY = useTransform(scrollYProgress, [0, 1], ['0%', '22%'])
   const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0])
-  const heroScale   = useTransform(scrollYProgress, [0, 1], [1, 1.08])
+  const heroScale = useTransform(scrollYProgress, [0, 1], [1, 1.08])
   const { theme, cycle } = useTheme()
-  const palette = usePresetPalette()
-  const heroSlides = makeHeroSlides(palette)
-  const features = makeFeatures(palette)
-
-  const [slideIndex, setSlideIndex] = useState(0)
-  useEffect(() => {
-    const timer = setInterval(() => setSlideIndex(i => (i + 1) % heroSlides.length), 4000)
-    return () => clearInterval(timer)
-  }, [])
 
   return (
     <div className="min-h-screen bg-[var(--color-bg)]">
 
-      {/* ── Navbar ─────────────────────────────────────────────── */}
+      {/* Navbar */}
       <nav className="fixed top-0 inset-x-0 z-50 glass">
         <div className="max-w-6xl mx-auto px-6 flex items-center justify-between" style={{ height: '60px' }}>
-          <Link to="/" className="flex items-center gap-2.5 group">
-            <motion.div
-              whileHover={{ rotate: [0, -8, 8, 0] }}
-              transition={{ duration: 0.5 }}
-              className="w-8 h-8 rounded-[10px] overflow-hidden shadow-sm group-hover:shadow-[var(--shadow-glow-navy)] transition-shadow duration-300">
+          <Link to="/" className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-[10px] overflow-hidden shadow-sm">
               <img src="/favicon.svg" alt="Acaedu" className="w-full h-full object-cover" />
-            </motion.div>
+            </div>
             <span className="text-[15px] font-bold text-[var(--color-navy)] tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>
               Acaedu
             </span>
@@ -321,22 +85,23 @@ export function LandingPage() {
 
           <div className="hidden md:flex items-center gap-7">
             {['Features', 'Disciplines', 'Testimonials'].map(item => (
-              <motion.a key={item} href={`#${item.toLowerCase()}`}
-                whileHover={{ y: -1 }}
+              <a key={item} href={`#${item.toLowerCase()}`}
                 className="text-[13px] font-medium text-[var(--color-text-muted)] hover:text-[var(--color-navy)] transition-colors duration-200 relative group">
                 {item}
                 <span className="absolute -bottom-0.5 left-0 w-0 h-0.5 bg-[var(--color-primary)] transition-all duration-300 group-hover:w-full rounded-full" />
-              </motion.a>
+              </a>
             ))}
           </div>
 
           <div className="flex items-center gap-2.5">
-            <motion.button whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}
-              onClick={cycle}
+            <button onClick={cycle}
               className="p-2 rounded-lg hover:bg-[var(--color-bg-secondary)] transition-colors"
               aria-label="Toggle theme" title={`Current: ${theme}`}>
-              {themeIcons[theme]}
-            </motion.button>
+              {theme === 'light'
+                ? <Sun size={16} className="text-[var(--color-text-muted)]" />
+                : <Moon size={16} className="text-[var(--color-text-muted)]" />
+              }
+            </button>
             <Link to="/login" className="btn-ghost text-[13px] px-4 py-2">Sign In</Link>
             <Link to="/register" className="btn-primary text-[13px] px-5 py-2">Start Now</Link>
           </div>
@@ -345,71 +110,35 @@ export function LandingPage() {
 
       <main className="pt-[60px]">
 
-        {/* ── Hero — full-width centered with sparkles + floating carousel ─── */}
-        <section ref={heroRef} className="relative min-h-[calc(100vh-60px)] flex items-center justify-center overflow-hidden bg-[var(--color-secondary)]">
-          {/* Sparkles particle overlay */}
-          <div className="absolute inset-0 z-[1] pointer-events-none opacity-60">
-            <SilentErrorBoundary>
-              <Suspense fallback={null}>
-                <SparklesComponent count={70} speed={0.4} colors={[palette.primary, palette.primary, palette.teal, palette.teal, '#ffffff']} />
-              </Suspense>
-            </SilentErrorBoundary>
-          </div>
-
-          {/* Fractal tree background */}
-          <div className="absolute inset-0 z-[1] pointer-events-none opacity-40">
-            <SilentErrorBoundary>
-              <Suspense fallback={null}>
-                <FractalTreeComponent
-                  depth={8}
-                  branchAngle={28}
-                  shrink={0.70}
-                  windSpeed={0.25}
-                  colors={{ trunk: 'rgba(255,255,255,0.06)', leaf: palette.rgba(palette.teal, 0.25), glow: palette.rgba(palette.primary, 0.1) }}
-                />
-              </Suspense>
-            </SilentErrorBoundary>
-          </div>
-
-          {/* Sprite animation overlay */}
-          <div className="absolute inset-0 z-[1] pointer-events-none opacity-50">
-            <SilentErrorBoundary>
-              <Suspense fallback={null}>
-                <SpriteAnimComponent maxParticles={14} />
-              </Suspense>
-            </SilentErrorBoundary>
-          </div>
-
-          {/* Dark overlay gradient */}
+        {/* Hero */}
+        <section ref={heroRef} className="relative min-h-[calc(100vh-60px)] flex items-center justify-center overflow-hidden" style={{ background: 'var(--color-navy)' }}>
           <div className="absolute inset-0 z-[2]"
             style={{
-              background: 'linear-gradient(160deg, rgba(0,18,20,0.88) 0%, rgba(0,38,43,0.72) 40%, rgba(0,56,63,0.65) 70%, rgba(0,38,43,0.85) 100%)',
+              background: 'linear-gradient(160deg, rgba(11,33,73,0.95) 0%, rgba(18,59,117,0.85) 40%, rgba(11,33,73,0.90) 70%, rgba(10,18,32,0.98) 100%)',
             }} />
 
           <motion.div style={{ y: heroY, opacity: heroOpacity, scale: heroScale }}
             className="max-w-5xl mx-auto px-6 w-full relative z-10 py-20">
             <div className="flex flex-col items-center text-center">
 
-              {/* Eyebrow */}
               <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2, ease }}>
                 <span className="inline-flex items-center gap-2 px-4 py-1.5 text-[10px] font-bold tracking-[0.15em] uppercase text-white/50 bg-white/6 border border-white/10 rounded-full mb-8">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-primary)] animate-pulse" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-primary)]" />
                   Professional Academic Platform
                 </span>
               </motion.div>
 
-              {/* Headline with pulsating glow */}
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.4, delay: 0.4 }}>
-                <PulsatingHeadline accent={palette.primary} />
-              </motion.div>
+              <motion.h1 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 0.4 }}
+                className="text-[36px] md:text-[52px] font-extrabold text-white leading-[1.08] tracking-tight mb-6"
+                style={{ fontFamily: 'var(--font-display)' }}>
+                Learn without limits.<br />Advance your career.
+              </motion.h1>
 
-              {/* Sub-headline */}
               <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.8, ease }}
                 className="text-[16px] text-white/40 max-w-xl mx-auto leading-relaxed mb-10">
                 AI-powered scheduling, real-time notifications, and seamless collaboration for students, lecturers, and administrators.
               </motion.p>
 
-              {/* Search-style CTA bar */}
               <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.0, ease }}
                 className="flex items-center gap-3 w-full max-w-lg mx-auto bg-white/8 border border-white/12 rounded-[var(--radius-md)] p-1.5 backdrop-blur-sm">
                 <div className="flex-1 flex items-center gap-2.5 px-3">
@@ -424,7 +153,6 @@ export function LandingPage() {
                 </Link>
               </motion.div>
 
-              {/* Trust strip */}
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 1.4 }}
                 className="flex items-center justify-center gap-3 mt-8">
                 {['SOC 2', 'FERPA', 'GDPR'].map(badge => (
@@ -436,169 +164,85 @@ export function LandingPage() {
                 <span className="text-[10px] text-white/15 ml-1">Certified &amp; Compliant</span>
               </motion.div>
 
-              {/* Floating SVG carousel — visual accent below text */}
-              <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 1.6, ease }}
-                className="mt-14 w-[260px] h-[195px] md:w-[320px] md:h-[240px] relative">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={slideIndex}
-                    initial={{ opacity: 0, scale: 0.9, filter: 'blur(4px)' }}
-                    animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-                    exit={{ opacity: 0, scale: 0.9, filter: 'blur(4px)' }}
-                    transition={{ duration: 0.6, ease }}
-                    className="absolute inset-0"
-                  >
-                    {heroSlides[slideIndex].svg}
-                  </motion.div>
-                </AnimatePresence>
-
-                {/* Carousel dots */}
-                <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-2">
-                  {heroSlides.map((slide, i) => (
-                    <button
-                      key={i}
-                      onClick={() => setSlideIndex(i)}
-                      aria-label={slide.label}
-                      className={`h-1.5 rounded-full transition-all duration-300 ${
-                        i === slideIndex ? 'bg-[var(--color-primary)] w-6' : 'bg-white/20 hover:bg-white/35 w-1.5'
-                      }`}
-                    />
-                  ))}
-                </div>
-              </motion.div>
             </div>
-          </motion.div>
-
-          {/* Move indicator */}
-          <motion.div
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 2.2 }}
-            className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1.5 z-10">
-            <span className="text-[10px] font-semibold tracking-[0.14em] uppercase text-white/25">Move</span>
-            <motion.div animate={{ y: [0, 6, 0] }} transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-              className="w-px h-8 bg-gradient-to-b from-white/20 to-transparent" />
           </motion.div>
         </section>
 
-        {/* ── Stats bar ──────────────────────────────────────────── */}
+        {/* Stats bar */}
         <Section className="py-14 border-y border-[var(--color-border-light)] bg-[var(--color-bg-secondary)]">
           <div className="page-section">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               {[
-                { num: 10000, suffix: '+', label: 'Students Enrolled' },
-                { num: 500,   suffix: '+', label: 'Active Subjects' },
-                { num: 50,    suffix: '+', label: 'Institutions' },
-                { num: 99.9,  suffix: '%', label: 'Uptime SLA' },
+                { num: '10,000+', label: 'Students Enrolled' },
+                { num: '500+',   label: 'Active Subjects' },
+                { num: '50+',    label: 'Institutions' },
+                { num: '99.9%',  label: 'Uptime SLA' },
               ].map((s, i) => (
-                <motion.div key={i} variants={fadeUp} className="stat-row-item">
-                  <div className="stat-row-value">
-                    <NumberTicker value={s.num} />{s.suffix}
+                <motion.div key={i} variants={fadeUp} className="text-center">
+                  <div className="font-[var(--font-display)] text-[clamp(1.6rem,3vw,2.4rem)] font-[800] text-[var(--color-navy)] tracking-tight leading-none mb-1.5"
+                    style={{ fontFamily: 'var(--font-display)' }}>
+                    {s.num}
                   </div>
-                  <div className="stat-row-label">{s.label}</div>
+                  <div className="text-[12px] font-[600] uppercase tracking-[0.08em] text-[var(--color-text-muted)]">
+                    {s.label}
+                  </div>
                 </motion.div>
               ))}
             </div>
           </div>
         </Section>
 
-        {/* ── Feature Cards — squircle shape, prominent graphic icons ─── */}
-        <Section id="features" className="py-24 relative overflow-hidden">
-          {/* Fractal + sprite background for features */}
-          <div className="absolute inset-0 pointer-events-none opacity-25">
-            <SilentErrorBoundary>
-              <Suspense fallback={null}>
-                <FractalTreeComponent
-                  depth={7}
-                  branchAngle={22}
-                  shrink={0.68}
-                  windSpeed={0.15}
-                  colors={{ trunk: 'rgba(255,255,255,0.04)', leaf: palette.rgba(palette.primary, 0.15), glow: palette.rgba(palette.teal, 0.08) }}
-                />
-              </Suspense>
-            </SilentErrorBoundary>
-          </div>
-          <div className="absolute inset-0 pointer-events-none opacity-30">
-            <SilentErrorBoundary>
-              <Suspense fallback={null}>
-                <SpriteAnimComponent maxParticles={8} sprites={[
-                  { name: 'orbit', frames: Array.from({ length: 12 }, () => ({ x: 0, y: 0, w: 6, h: 6 })), fps: 8, loop: true, color: palette.rgba(palette.primary, 0.2), size: 4 },
-                  { name: 'book', frames: Array.from({ length: 8 }, () => ({ x: 0, y: 0, w: 10, h: 14 })), fps: 6, loop: true, color: palette.rgba(palette.teal, 0.2), size: 8 },
-                ]} />
-              </Suspense>
-            </SilentErrorBoundary>
-          </div>
-          <div className="page-section relative z-10">
+        {/* Features */}
+        <Section id="features" className="py-24">
+          <div className="page-section">
             <motion.div variants={fadeUp} className="text-center mb-14">
               <span className="section-label">What You Get</span>
-              <span className="rule-gold" />
-              <h2 className="section-title mt-4 text-3xl md:text-4xl mb-3">
+              <h2 className="section-heading mt-3">
                 Everything your institution needs
               </h2>
-              <p className="text-[14px] text-[var(--color-text-muted)] max-w-md mx-auto leading-relaxed">
+              <p className="section-subtext mt-3">
                 One platform for every academic workflow, from enrollment to graduation.
               </p>
             </motion.div>
 
-            {/* Feature cards — squircle, gradient bg, prominent icon */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {features.map((f, i) => (
                 <motion.div key={i} variants={fadeUp}>
-                  <CardContainer>
-                    <CardBody
-                      className="h-full flex flex-col cursor-default group rounded-[22px] border border-[var(--color-border-light)] bg-[var(--color-bg-card)] shadow-[var(--shadow-card)] transition-all duration-300 hover:shadow-[var(--shadow-card-hover)] hover:-translate-y-0.5 overflow-hidden"
-                      style={{ background: f.gradient }}
-                    >
-                      <div className="p-6 flex flex-col h-full">
-                        {/* Icon — large, with subtle glow ring */}
-                        <motion.div
-                          whileHover={{ rotate: [0, -6, 6, 0], scale: 1.06 }}
-                          transition={{ duration: 0.4 }}
-                          className="w-16 h-16 rounded-[18px] flex items-center justify-center mb-5 relative"
-                          style={{ background: f.iconBg }}
-                        >
-                          <f.icon size={26} style={{ color: f.iconColor }} />
-                          {/* Soft glow ring */}
-                          <div className="absolute inset-0 rounded-[18px] opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                            style={{ boxShadow: `0 0 20px ${f.iconBg}` }} />
-                        </motion.div>
-
-                        <h3 className="text-[15px] font-bold text-[var(--color-navy)] mb-2"
-                          style={{ fontFamily: 'var(--font-display)' }}>{f.title}</h3>
-                        <p className="text-[13px] text-[var(--color-text-muted)] leading-relaxed flex-1">{f.desc}</p>
-                      </div>
-                    </CardBody>
-                  </CardContainer>
+                  <div className="card p-6 h-full flex flex-col">
+                    <div className="w-10 h-10 rounded-[10px] flex items-center justify-center mb-4 bg-[var(--color-primary-muted)]">
+                      <f.icon size={20} className="text-[var(--color-primary)]" />
+                    </div>
+                    <h3 className="text-[15px] font-bold text-[var(--color-navy)] mb-2"
+                      style={{ fontFamily: 'var(--font-display)' }}>{f.title}</h3>
+                    <p className="text-[13px] text-[var(--color-text-muted)] leading-relaxed flex-1">{f.desc}</p>
+                  </div>
                 </motion.div>
               ))}
             </div>
 
-            {/* Course image cards */}
+            {/* Course cards */}
             <div className="mt-14">
               <motion.div variants={fadeUp} className="text-center mb-10">
                 <span className="section-label">Explore Programs</span>
-                <span className="rule-gold" />
-                <h2 className="section-title mt-4 text-2xl md:text-3xl">Popular Subjects</h2>
+                <h2 className="section-heading mt-3">Popular Subjects</h2>
               </motion.div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 {courseCards.map((course, i) => (
-                  <motion.div key={i} variants={scaleFade}>
-                    <CardContainer>
-                      <CardBody className="relative overflow-hidden rounded-[20px] border border-[var(--color-border-light)] bg-[var(--color-bg-card)] shadow-[var(--shadow-card)] group cursor-pointer hover:shadow-[var(--shadow-card-hover)] transition-shadow">
-                        <div className="relative h-44 overflow-hidden">
-                          <motion.img src={course.img} alt={course.title}
-                            className="w-full h-full object-cover"
-                            whileHover={{ scale: 1.05 }}
-                            transition={{ duration: 0.4 }} />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-                          <span className="absolute top-3 right-3 badge badge-navy text-[9px] bg-[var(--color-primary)] text-white border-none">{course.tag}</span>
-                        </div>
-                        <div className="p-5">
-                          <div className="text-[10px] font-bold text-[var(--color-primary)] uppercase tracking-wider mb-1.5">{course.institution}</div>
-                          <h3 className="text-[15px] font-bold text-[var(--color-text)] group-hover:text-[var(--color-primary)] transition-colors mb-1"
-                            style={{ fontFamily: 'var(--font-display)' }}>{course.title}</h3>
-                          <p className="text-[12px] text-[var(--color-text-muted)]">{course.meta}</p>
-                        </div>
-                      </CardBody>
-                    </CardContainer>
+                  <motion.div key={i} variants={fadeUp}>
+                    <div className="card overflow-hidden group cursor-pointer">
+                      <div className="relative h-44 overflow-hidden">
+                        <img src={course.img} alt={course.title}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-400" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                        <span className="absolute top-3 right-3 badge badge-navy text-[9px] bg-[var(--color-primary)] text-white border-none">{course.tag}</span>
+                      </div>
+                      <div className="p-5">
+                        <div className="text-[10px] font-bold text-[var(--color-primary)] uppercase tracking-wider mb-1.5">{course.institution}</div>
+                        <h3 className="text-[15px] font-bold text-[var(--color-text)] group-hover:text-[var(--color-primary)] transition-colors mb-1"
+                          style={{ fontFamily: 'var(--font-display)' }}>{course.title}</h3>
+                        <p className="text-[12px] text-[var(--color-text-muted)]">{course.meta}</p>
+                      </div>
+                    </div>
                   </motion.div>
                 ))}
               </div>
@@ -606,20 +250,17 @@ export function LandingPage() {
           </div>
         </Section>
 
-        {/* ── Disciplines ────────────────────────────────────────── */}
+        {/* Disciplines */}
         <Section id="disciplines" className="py-20 bg-[var(--color-bg-secondary)] border-y border-[var(--color-border-light)]">
           <div className="page-section">
             <motion.div variants={fadeUp} className="text-center mb-12">
               <span className="section-label">Explore</span>
-              <span className="rule-gold" />
-              <h2 className="section-title mt-4 text-3xl md:text-4xl">Popular Disciplines</h2>
+              <h2 className="section-heading mt-3">Popular Disciplines</h2>
             </motion.div>
             <div className="flex flex-wrap justify-center gap-3">
               {disciplines.map((d, i) => (
-                <motion.div key={i} variants={fadeUp}
-                  whileHover={{ scale: 1.04, y: -2 }}
-                  whileTap={{ scale: 0.97 }}>
-                  <span className="discipline-pill inline-flex items-center gap-2">
+                <motion.div key={i} variants={fadeUp}>
+                  <span className="inline-flex items-center gap-2 px-5 py-2.5 text-[15px] font-[600] text-[var(--color-text)] bg-[var(--color-bg-card)] border border-[var(--color-border)] rounded-[var(--radius-pill)] cursor-pointer transition-all duration-200 hover:bg-[var(--color-primary-muted)] hover:text-[var(--color-primary)] hover:border-[var(--color-primary)]">
                     <d.icon size={13} className="opacity-50" />
                     {d.name}
                   </span>
@@ -629,13 +270,12 @@ export function LandingPage() {
           </div>
         </Section>
 
-        {/* ── Testimonials ───────────────────────────────────────── */}
+        {/* Testimonials */}
         <Section id="testimonials" className="py-24">
           <div className="page-section">
             <motion.div variants={fadeUp} className="text-center mb-14">
               <span className="section-label">Testimonials</span>
-              <span className="rule-gold" />
-              <h2 className="section-title mt-4 text-3xl md:text-4xl">
+              <h2 className="section-heading mt-3">
                 Trusted by educators worldwide
               </h2>
             </motion.div>
@@ -645,20 +285,17 @@ export function LandingPage() {
                   <div className="card p-6 flex flex-col h-full">
                     <div className="flex gap-0.5 mb-4">
                       {[1,2,3,4,5].map(s => (
-                        <motion.svg key={s} width="14" height="14" viewBox="0 0 24 24"
-                          fill="var(--color-gold-bright)" stroke="none"
-                          initial={{ opacity: 0, scale: 0 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          transition={{ delay: 0.3 + s * 0.08, duration: 0.3 }}>
-                          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                        </motion.svg>
+                        <Star key={s} size={14} fill="var(--color-gold-bright)" stroke="none" />
                       ))}
                     </div>
                     <p className="text-[13px] text-[var(--color-text-secondary)] leading-relaxed mb-5 flex-1 italic">
-                      "{t.quote}"
+                      &ldquo;{t.quote}&rdquo;
                     </p>
                     <div className="flex items-center gap-3 pt-4 border-t border-[var(--color-border-light)]">
-                      <div className="avatar w-9 h-9 text-[12px]">{t.name[0]}</div>
+                      <div className="w-9 h-9 rounded-full flex items-center justify-center text-[12px] font-[700] text-white flex-shrink-0"
+                        style={{ background: 'var(--gradient-primary)' }}>
+                        {t.name[0]}
+                      </div>
                       <div>
                         <div className="text-[13px] font-bold text-[var(--color-navy)]">{t.name}</div>
                         <div className="text-[11px] text-[var(--color-text-muted)]">{t.role}</div>
@@ -671,65 +308,60 @@ export function LandingPage() {
           </div>
         </Section>
 
-        {/* ── CTA — dark editorial ────────────────────────────── */}
+        {/* CTA */}
         <Section className="py-24 relative overflow-hidden">
-          <div className="absolute inset-0 bg-[var(--color-secondary)]" />
-          <div className="absolute inset-0 opacity-[0.08]">
-            <img src="/images/campus.jpg" alt="" className="w-full h-full object-cover" />
-          </div>
           <div className="absolute inset-0" style={{
-            background: `radial-gradient(ellipse at 30% 50%, ${palette.rgba(palette.primary, 0.12)} 0%, transparent 60%), radial-gradient(ellipse at 70% 50%, ${palette.rgba(palette.teal, 0.08)} 0%, transparent 50%)`,
+            background: 'linear-gradient(160deg, rgba(11,33,73,0.98) 0%, rgba(18,59,117,0.95) 50%, rgba(10,18,32,0.98) 100%)',
           }} />
           <div className="page-section text-center relative z-10">
             <motion.div variants={fadeUp}>
-              <span className="trust-badge mb-8 inline-flex gap-1.5">
+              <span className="inline-flex items-center gap-1.5 px-4 py-1.5 text-[10px] font-bold tracking-[0.12em] uppercase text-white/50 bg-white/6 border border-white/10 rounded-full mb-8">
                 <Zap size={10} className="text-[var(--color-primary-light)]" />
                 Start Today — Free Forever
               </span>
             </motion.div>
-            <motion.h2 variants={fadeUp} className="text-display-lg text-white mb-5">
+            <motion.h2 variants={fadeUp} className="section-heading text-white mb-5">
               Ready to modernise your institution?
             </motion.h2>
             <motion.p variants={fadeUp} className="text-[15px] text-white/35 mb-10 max-w-lg mx-auto leading-relaxed text-center">
               Join thousands of students, lecturers, and administrators already streamlining their academic experience.
             </motion.p>
             <motion.div variants={fadeUp} className="flex items-center justify-center gap-4 flex-wrap">
-              <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-                <Link to="/register" className="btn-primary group flex items-center gap-2 text-[14px] h-[44px] px-8">
-                  Create Free Account
-                  <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
-                </Link>
-              </motion.div>
-              <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
-                <Link to="/contact"
-                  className="inline-flex items-center gap-2 px-7 py-3 text-[14px] font-semibold text-white/45 border border-white/10 rounded-[var(--radius-md)] hover:border-white/25 hover:text-white/75 transition-all duration-200">
-                  Contact Sales
-                </Link>
-              </motion.div>
+              <Link to="/register" className="btn-primary group flex items-center gap-2 text-[14px] h-[44px] px-8">
+                Create Free Account
+                <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
+              </Link>
+              <Link to="/contact"
+                className="inline-flex items-center gap-2 px-7 py-3 text-[14px] font-semibold text-white/45 border border-white/10 rounded-[var(--radius-md)] hover:border-white/25 hover:text-white/75 transition-all duration-200">
+                Contact Sales
+              </Link>
             </motion.div>
           </div>
         </Section>
 
-        {/* ── Footer ─────────────────────────────────────────────── */}
-        <footer className="py-12 bg-[var(--color-secondary)] border-t border-white/5">
-          <div className="page-section">
-            <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-              <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-[10px] overflow-hidden">
-                  <img src="/favicon.svg" alt="Acaedu" className="w-full h-full object-cover" />
-                </div>
-                <span className="text-[15px] font-bold text-white"
-                  style={{ fontFamily: 'var(--font-display)' }}>Acaedu</span>
-                <span className="text-white/15 text-[11px] ml-2">&copy; 2026. All rights reserved.</span>
+        {/* Footer */}
+        <footer className="py-12 bg-[var(--color-navy)] border-t border-white/5">
+          <div className="page-section text-center">
+            <div className="flex items-center justify-center gap-2.5 mb-4">
+              <div className="w-8 h-8 rounded-[10px] overflow-hidden">
+                <img src="/favicon.svg" alt="Acaedu" className="w-full h-full object-cover" />
               </div>
-              <div className="flex items-center gap-6">
-                {['Terms', 'Privacy', 'Contact'].map(item => (
-                  <motion.div key={item} whileHover={{ y: -1 }}>
-                    <Link to={`/${item.toLowerCase()}`}
-                      className="text-[12px] text-white/25 hover:text-white/55 transition-colors">{item}</Link>
-                  </motion.div>
-                ))}
-              </div>
+              <span className="text-[15px] font-bold text-white"
+                style={{ fontFamily: 'var(--font-display)' }}>Acaedu</span>
+            </div>
+            <p className="text-white/20 text-[12px] mb-5">&copy; 2026 Acaedu. All rights reserved.</p>
+            <div className="flex items-center justify-center gap-6 mb-5">
+              {['Terms', 'Privacy', 'Contact'].map(item => (
+                <Link key={item} to={`/${item.toLowerCase()}`}
+                  className="text-[12px] text-white/30 hover:text-white/60 transition-colors">{item}</Link>
+              ))}
+            </div>
+            <div className="flex items-center justify-center gap-4">
+              {['Twitter', 'LinkedIn', 'GitHub'].map(social => (
+                <span key={social} className="text-[11px] text-white/20 hover:text-white/40 cursor-pointer transition-colors">
+                  {social}
+                </span>
+              ))}
             </div>
           </div>
         </footer>

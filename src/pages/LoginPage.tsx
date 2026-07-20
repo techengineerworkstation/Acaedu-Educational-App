@@ -37,31 +37,38 @@ export function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[var(--color-bg)] px-4 py-12">
+    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12"
+      style={{ background: 'var(--color-bg)' }}>
 
-      {/* ── Card ──────────────────────────────────────────────── */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease }}
-        className="w-full max-w-[420px] bg-[var(--color-bg-card)] rounded-2xl shadow-[var(--shadow-lg)] border border-[var(--color-border-light)] p-8 sm:p-10"
+        className="w-full max-w-[420px] p-8 sm:p-10"
+        style={{
+          background: 'var(--color-bg-card)',
+          borderRadius: 'var(--radius-xl)',
+          border: '1px solid var(--color-border-light)',
+          boxShadow: 'var(--shadow-md)',
+        }}
       >
 
         {/* Logo */}
         <div className="flex items-center justify-center gap-2.5 mb-8">
-          <div className="w-10 h-10 rounded-xl bg-[var(--color-primary)] flex items-center justify-center">
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center"
+            style={{ background: 'var(--color-primary)' }}>
             <span className="text-white font-extrabold text-base" style={{ fontFamily: 'var(--font-display)' }}>A</span>
           </div>
-          <span className="text-xl font-bold text-[var(--color-navy)]" style={{ fontFamily: 'var(--font-display)' }}>Acaedu</span>
+          <span className="text-xl font-bold" style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>Acaedu</span>
         </div>
 
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-[22px] font-bold text-[var(--color-navy)] tracking-tight mb-1"
-            style={{ fontFamily: 'var(--font-display)' }}>
+          <h1 className="text-[22px] font-bold tracking-tight mb-1"
+            style={{ fontFamily: 'var(--font-display)', color: 'var(--color-navy)' }}>
             Welcome back
           </h1>
-          <p className="text-[13px] text-[var(--color-text-muted)]">
+          <p className="text-[13px]" style={{ color: 'var(--color-text-muted)' }}>
             Sign in to your Acaedu account
           </p>
         </div>
@@ -69,7 +76,12 @@ export function LoginPage() {
         {/* Error */}
         {error && (
           <motion.div initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }}
-            className="mb-5 p-3 rounded-lg bg-[var(--color-danger)]/8 border border-[var(--color-danger)]/15 text-[var(--color-danger)] text-[13px] font-medium text-center">
+            className="mb-5 p-3 rounded-lg text-[13px] font-medium text-center"
+            style={{
+              background: 'color-mix(in srgb, var(--color-danger) 8%, transparent)',
+              border: '1px solid color-mix(in srgb, var(--color-danger) 15%, transparent)',
+              color: 'var(--color-danger)',
+            }}>
             {error}
           </motion.div>
         )}
@@ -86,7 +98,7 @@ export function LoginPage() {
             <div className="flex items-center justify-between mb-[6px]">
               <label className="label mb-0">Password</label>
               <Link to="/forgot-password"
-                className="text-[12px] font-semibold text-[var(--color-primary)] hover:underline">
+                className="text-[12px] font-semibold hover:underline" style={{ color: 'var(--color-primary)' }}>
                 Forgot password?
               </Link>
             </div>
@@ -94,7 +106,8 @@ export function LoginPage() {
               <input type={showPass ? 'text' : 'password'} value={password} onChange={e => setPassword(e.target.value)}
                 className="input pr-10" placeholder="Enter your password" required autoComplete="current-password" />
               <button type="button" onClick={() => setShowPass(!showPass)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-[var(--color-text-muted)] hover:text-[var(--color-navy)] transition-colors"
+                className="absolute right-3 top-1/2 -translate-y-1/2 hover:opacity-70 transition-opacity"
+                style={{ color: 'var(--color-text-muted)' }}
                 aria-label={showPass ? 'Hide password' : 'Show password'}>
                 {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
               </button>
@@ -139,16 +152,16 @@ export function LoginPage() {
         </div>
 
         {/* Footer link */}
-        <p className="text-center text-[13px] text-[var(--color-text-muted)] mt-8">
+        <p className="text-center text-[13px] mt-8" style={{ color: 'var(--color-text-muted)' }}>
           Don't have an account?{' '}
-          <Link to="/register" className="font-semibold text-[var(--color-primary)] hover:underline">
+          <Link to="/register" className="font-semibold hover:underline" style={{ color: 'var(--color-primary)' }}>
             Create one
           </Link>
         </p>
       </motion.div>
 
-      {/* ── Page footer ───────────────────────────────────────── */}
-      <div className="mt-8 text-center text-[11px] text-[var(--color-text-muted)] space-x-4">
+      {/* Page footer */}
+      <div className="mt-8 text-center text-[11px] space-x-4" style={{ color: 'var(--color-text-muted)' }}>
         <Link to="/terms" className="hover:underline">Terms</Link>
         <Link to="/privacy" className="hover:underline">Privacy</Link>
         <Link to="/help" className="hover:underline">Help</Link>

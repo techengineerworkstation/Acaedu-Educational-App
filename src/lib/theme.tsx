@@ -120,7 +120,6 @@ export interface PresetPalette {
   gold: string
   danger: string
   success: string
-  teal: string
   bg: string
   card: string
   text: string
@@ -132,22 +131,22 @@ export interface PresetPalette {
 const palettes: Record<AcademicPreset, Omit<PresetPalette, 'rgba'>> = {
   default: {
     primary: '#1865f2', secondary: '#21242c', accent: '#9059ff',
-    navy: '#0b2149', gold: '#ffb100', danger: '#d92916', success: '#00a60e', teal: '#14bf96',
+    navy: '#0b2149', gold: '#ffb100', danger: '#d92916', success: '#00a60e',
     bg: '#ffffff', card: '#ffffff', text: '#21242c', textMuted: '#6b7080', border: '#c9ccd1',
   },
   blue: {
     primary: '#0056d2', secondary: '#002761', accent: '#a678f5',
-    navy: '#002761', gold: '#b8922a', danger: '#d30a28', success: '#276a1a', teal: '#3587fc',
+    navy: '#002761', gold: '#b8922a', danger: '#d30a28', success: '#276a1a',
     bg: '#ffffff', card: '#ffffff', text: '#0f1114', textMuted: '#5b6780', border: '#dae1ed',
   },
   crimson: {
     primary: '#a51c30', secondary: '#1e1e1e', accent: '#f8c21c',
-    navy: '#a51c30', gold: '#b8860b', danger: '#c41e3a', success: '#2e7d32', teal: '#1565c0',
+    navy: '#a51c30', gold: '#b8860b', danger: '#c41e3a', success: '#2e7d32',
     bg: '#ffffff', card: '#ffffff', text: '#1e1e1e', textMuted: '#6c6c6c', border: '#c0c0c0',
   },
   institutional: {
     primary: '#0070E0', secondary: '#394b58', accent: '#1d6b9f',
-    navy: '#394b58', gold: '#c4960c', danger: '#e03c31', success: '#2b7a3e', teal: '#1d6b9f',
+    navy: '#394b58', gold: '#c4960c', danger: '#e03c31', success: '#2b7a3e',
     bg: '#ffffff', card: '#ffffff', text: '#2d3b45', textMuted: '#8899a6', border: '#d0d8de',
   },
 }
@@ -202,7 +201,7 @@ export interface PresetTokens {
 }
 
 export const presetTokens: Record<AcademicPreset, PresetTokens> = {
-  /* ─── Default (Acaedu) — Clean, accessible, Khan-inspired ── */
+  /* ─── Default (Acaedu) — Clean, accessible, blue-accented ── */
   default: {
     colors: {
       primary: '#1865f2', primaryHover: '#1254c7', primaryLight: '#4d8af2', primaryDark: '#0b2149', primaryMuted: '#e8f0fe',
