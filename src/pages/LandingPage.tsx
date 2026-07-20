@@ -71,7 +71,7 @@ const floatingCards = [
   { icon: Calendar,  label: 'Smart Schedule',    color: 'var(--color-primary)',   delay: 0,   x: '72%', y: '18%' },
   { icon: BarChart3, label: 'Live Analytics',    color: 'var(--color-purple)',    delay: 1.2, x: '80%', y: '55%' },
   { icon: Bell,      label: 'Instant Alerts',    color: 'var(--color-warning)',   delay: 2.4, x: '15%', y: '62%' },
-  { icon: Users,     label: 'Collaborate Live',  color: 'var(--color-teal)',      delay: 0.6, x: '10%', y: '25%' },
+  { icon: Users,     label: 'Collaborate Live',  color: 'var(--color-accent-warm)', delay: 0.6, x: '10%', y: '25%' },
   { icon: FileText,  label: 'AI Summaries',      color: 'var(--color-success)',   delay: 1.8, x: '85%', y: '38%' },
 ]
 
@@ -103,7 +103,7 @@ export function LandingPage() {
     <div className="min-h-screen bg-[var(--color-bg)]">
 
       {/* Navbar */}
-      <nav className="fixed top-0 inset-x-0 z-50 glass">
+      <nav className="fixed top-0 inset-x-0 z-50 nav-center glass">
         <div className="relative mx-auto px-6 flex items-center justify-between" style={{ height: '60px', maxWidth: '1152px' }}>
           <Link to="/" className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-[10px] overflow-hidden shadow-sm">
@@ -114,7 +114,7 @@ export function LandingPage() {
             </span>
           </Link>
 
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:flex items-center gap-7">
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:flex items-center gap-7" style={{ textAlign: 'center' }}>
             {['Features', 'Disciplines', 'Testimonials'].map(item => (
               <a key={item} href={`#${item.toLowerCase()}`}
                 className="text-[13px] font-medium text-[var(--color-text-muted)] hover:text-[var(--color-navy)] transition-colors duration-200 relative group">
@@ -241,7 +241,8 @@ export function LandingPage() {
                       {heroSlides[currentSlide].headline}
                     </h1>
                     <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3, duration: 0.5 }}
-                      className="text-[16px] text-white/40 max-w-xl mx-auto leading-relaxed mt-4">
+                      className="text-[16px] text-white/40 max-w-xl mx-auto leading-relaxed mt-4"
+                      style={{ textAlign: 'center' }}>
                       {heroSlides[currentSlide].sub}
                     </motion.p>
                   </motion.div>
@@ -302,7 +303,7 @@ export function LandingPage() {
 
         {/* Stats bar */}
         <Section className="py-14 border-y border-[var(--color-border-light)] bg-[var(--color-bg-secondary)]">
-          <div className="page-section">
+          <div className="page-section text-center" style={{ textAlign: 'center' }}>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               {[
                 { num: '10,000+', label: 'Students Enrolled' },
@@ -326,7 +327,7 @@ export function LandingPage() {
 
         {/* Features */}
         <Section id="features" className="py-24">
-          <div className="page-section">
+          <div className="page-section text-center" style={{ textAlign: 'center' }}>
             <motion.div variants={fadeUp} className="text-center mb-14">
               <span className="section-label">What You Get</span>
               <h2 className="section-heading mt-3">
@@ -384,7 +385,7 @@ export function LandingPage() {
 
         {/* Disciplines */}
         <Section id="disciplines" className="py-20 bg-[var(--color-bg-secondary)] border-y border-[var(--color-border-light)]">
-          <div className="page-section">
+          <div className="page-section text-center" style={{ textAlign: 'center' }}>
             <motion.div variants={fadeUp} className="text-center mb-12">
               <span className="section-label">Explore</span>
               <h2 className="section-heading mt-3">Popular Disciplines</h2>
@@ -404,7 +405,7 @@ export function LandingPage() {
 
         {/* Testimonials */}
         <Section id="testimonials" className="py-24">
-          <div className="page-section">
+          <div className="page-section text-center" style={{ textAlign: 'center' }}>
             <motion.div variants={fadeUp} className="text-center mb-14">
               <span className="section-label">Testimonials</span>
               <h2 className="section-heading mt-3">
@@ -445,7 +446,7 @@ export function LandingPage() {
           <div className="absolute inset-0" style={{
             background: 'linear-gradient(160deg, rgba(11,33,73,0.98) 0%, rgba(18,59,117,0.95) 50%, rgba(10,18,32,0.98) 100%)',
           }} />
-          <div className="page-section text-center relative z-10">
+          <div className="page-section text-center relative z-10" style={{ textAlign: 'center' }}>
             <motion.div variants={fadeUp}>
               <span className="inline-flex items-center gap-1.5 px-4 py-1.5 text-[10px] font-bold tracking-[0.12em] uppercase text-white/50 bg-white/6 border border-white/10 rounded-full mb-8">
                 <Zap size={10} className="text-[var(--color-primary-light)]" />
@@ -455,7 +456,7 @@ export function LandingPage() {
             <motion.h2 variants={fadeUp} className="section-heading text-white mb-5">
               Ready to modernise your institution?
             </motion.h2>
-            <motion.p variants={fadeUp} className="text-[15px] text-white/35 mb-10 max-w-lg mx-auto leading-relaxed text-center">
+            <motion.p variants={fadeUp} className="text-[15px] text-white/35 mb-10 max-w-lg mx-auto leading-relaxed text-center" style={{ textAlign: 'center' }}>
               Join thousands of students, lecturers, and administrators already streamlining their academic experience.
             </motion.p>
             <motion.div variants={fadeUp} className="flex items-center justify-center gap-4 flex-wrap">
@@ -472,8 +473,8 @@ export function LandingPage() {
         </Section>
 
         {/* Footer */}
-        <footer className="py-14 bg-[var(--color-navy)] border-t border-white/5">
-          <div className="page-section text-center">
+        <footer className="footer-center py-14 bg-[var(--color-navy)] border-t border-white/5">
+          <div className="page-section text-center" style={{ textAlign: 'center' }}>
             <div className="mb-6">
               <div className="flex items-center justify-center gap-2.5 mb-3">
                 <div className="w-8 h-8 rounded-[10px] overflow-hidden">
