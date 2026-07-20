@@ -1,7 +1,4 @@
 {
-  "framework": "vite",
-  "buildCommand": "rm -rf dist node_modules/.vite .tsbuildinfo tsconfig.tsbuildinfo && pnpm run build",
-  "outputDirectory": "dist",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ],
