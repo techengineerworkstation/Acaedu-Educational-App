@@ -104,7 +104,7 @@ export function LandingPage() {
 
       {/* Navbar */}
       <nav className="fixed top-0 inset-x-0 z-50 glass">
-        <div className="max-w-6xl mx-auto px-6 flex items-center justify-between" style={{ height: '60px' }}>
+        <div className="relative mx-auto px-6 flex items-center justify-between" style={{ height: '60px', maxWidth: '1152px' }}>
           <Link to="/" className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-[10px] overflow-hidden shadow-sm">
               <img src="/favicon.svg" alt="Acaedu" className="w-full h-full object-cover" />
@@ -114,7 +114,7 @@ export function LandingPage() {
             </span>
           </Link>
 
-          <div className="hidden md:flex items-center gap-7">
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:flex items-center gap-7">
             {['Features', 'Disciplines', 'Testimonials'].map(item => (
               <a key={item} href={`#${item.toLowerCase()}`}
                 className="text-[13px] font-medium text-[var(--color-text-muted)] hover:text-[var(--color-navy)] transition-colors duration-200 relative group">
@@ -472,29 +472,39 @@ export function LandingPage() {
         </Section>
 
         {/* Footer */}
-        <footer className="py-12 bg-[var(--color-navy)] border-t border-white/5">
+        <footer className="py-14 bg-[var(--color-navy)] border-t border-white/5">
           <div className="page-section text-center">
-            <div className="flex items-center justify-center gap-2.5 mb-4">
-              <div className="w-8 h-8 rounded-[10px] overflow-hidden">
-                <img src="/favicon.svg" alt="Acaedu" className="w-full h-full object-cover" />
+            <div className="mb-6">
+              <div className="flex items-center justify-center gap-2.5 mb-3">
+                <div className="w-8 h-8 rounded-[10px] overflow-hidden">
+                  <img src="/favicon.svg" alt="Acaedu" className="w-full h-full object-cover" />
+                </div>
+                <span className="text-[15px] font-bold text-white"
+                  style={{ fontFamily: 'var(--font-display)' }}>Acaedu</span>
               </div>
-              <span className="text-[15px] font-bold text-white"
-                style={{ fontFamily: 'var(--font-display)' }}>Acaedu</span>
+              <p className="text-white/30 text-[13px] leading-relaxed max-w-md mx-auto">
+                Professional academic platform for students, lecturers, and administrators.
+              </p>
             </div>
-            <p className="text-white/20 text-[12px] mb-5">&copy; 2026 Acaedu. All rights reserved.</p>
-            <div className="flex items-center justify-center gap-6 mb-5">
-              {['Terms', 'Privacy', 'Contact'].map(item => (
+
+            <div className="w-full h-px bg-white/8 my-6" />
+
+            <div className="flex items-center justify-center gap-8 mb-6">
+              {['Terms', 'Privacy', 'Contact', 'Help'].map(item => (
                 <Link key={item} to={`/${item.toLowerCase()}`}
                   className="text-[12px] text-white/30 hover:text-white/60 transition-colors">{item}</Link>
               ))}
             </div>
-            <div className="flex items-center justify-center gap-4">
+
+            <div className="flex items-center justify-center gap-6 mb-6">
               {['Twitter', 'LinkedIn', 'GitHub'].map(social => (
-                <span key={social} className="text-[11px] text-white/20 hover:text-white/40 cursor-pointer transition-colors">
+                <span key={social} className="text-[12px] text-white/25 hover:text-white/50 cursor-pointer transition-colors">
                   {social}
                 </span>
               ))}
             </div>
+
+            <p className="text-white/15 text-[11px]">&copy; 2026 Acaedu. All rights reserved.</p>
           </div>
         </footer>
 
