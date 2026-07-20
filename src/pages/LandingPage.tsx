@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
-import { motion, useInView, useScroll, useTransform } from 'framer-motion'
-import { useRef } from 'react'
-import { ArrowRight, Shield, Brain, BookOpen, Bell, Search, GraduationCap, Globe, LineChart, Video, Zap } from 'lucide-react'
+import { motion, useInView, useScroll, useTransform, AnimatePresence } from 'framer-motion'
+import { useRef, useState, useEffect } from 'react'
+import { ArrowRight, Shield, Brain, BookOpen, Bell, Search, GraduationCap, Globe, LineChart, Video, Zap, Calendar, Users, BarChart3, FileText, CheckCircle2 } from 'lucide-react'
 import { useTheme } from '@/lib/theme'
 import { Moon, Sun, Star } from 'lucide-react'
 
@@ -60,6 +60,28 @@ const disciplines = [
   { name: 'Architecture', icon: GraduationCap },
 ]
 
+const heroSlides = [
+  { headline: 'Learn without limits.\nAdvance your career.', sub: 'AI-powered scheduling, real-time notifications, and seamless collaboration for students, lecturers, and administrators.' },
+  { headline: 'Students,\nyour journey starts here.', sub: 'Track grades, manage schedules, and never miss a deadline with smart notifications.' },
+  { headline: 'Lecturers,\nteach with confidence.', sub: 'Auto-generated summaries, attendance tracking, and seamless grade management.' },
+  { headline: 'Administrators,\ndrive institutional excellence.', sub: 'Real-time analytics, department oversight, and data-driven decision making.' },
+]
+
+const floatingCards = [
+  { icon: Calendar,  label: 'Smart Schedule',    color: 'var(--color-primary)',   delay: 0,   x: '72%', y: '18%' },
+  { icon: BarChart3, label: 'Live Analytics',    color: 'var(--color-purple)',    delay: 1.2, x: '80%', y: '55%' },
+  { icon: Bell,      label: 'Instant Alerts',    color: 'var(--color-warning)',   delay: 2.4, x: '15%', y: '62%' },
+  { icon: Users,     label: 'Collaborate Live',  color: 'var(--color-teal)',      delay: 0.6, x: '10%', y: '25%' },
+  { icon: FileText,  label: 'AI Summaries',      color: 'var(--color-success)',   delay: 1.8, x: '85%', y: '38%' },
+]
+
+const featureCards = [
+  { icon: CheckCircle2, text: '500+ Active Subjects',   bg: 'rgba(255,255,255,0.08)' },
+  { icon: CheckCircle2, text: '99.9% Uptime',           bg: 'rgba(255,255,255,0.08)' },
+  { icon: CheckCircle2, text: 'AI-Powered Insights',    bg: 'rgba(255,255,255,0.08)' },
+  { icon: CheckCircle2, text: 'FERPA Compliant',        bg: 'rgba(255,255,255,0.08)' },
+]
+
 export function LandingPage() {
   const heroRef = useRef(null)
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] })
@@ -67,6 +89,15 @@ export function LandingPage() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0])
   const heroScale = useTransform(scrollYProgress, [0, 1], [1, 1.08])
   const { theme, cycle } = useTheme()
+
+  const [currentSlide, setCurrentSlide] = useState(0)
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentSlide(prev => (prev + 1) % heroSlides.length)
+    }, 4000)
+    return () => clearInterval(timer)
+  }, [])
 
   return (
     <div className="min-h-screen bg-[var(--color-bg)]">
@@ -112,10 +143,76 @@ export function LandingPage() {
 
         {/* Hero */}
         <section ref={heroRef} className="relative min-h-[calc(100vh-60px)] flex items-center justify-center overflow-hidden" style={{ background: 'var(--color-navy)' }}>
-          <div className="absolute inset-0 z-[2]"
+
+          {/* Animated gradient overlay */}
+          <div className="absolute inset-0 z-[1]"
             style={{
               background: 'linear-gradient(160deg, rgba(11,33,73,0.95) 0%, rgba(18,59,117,0.85) 40%, rgba(11,33,73,0.90) 70%, rgba(10,18,32,0.98) 100%)',
             }} />
+
+          {/* Floating geometric shapes */}
+          <div className="absolute inset-0 z-[2] overflow-hidden pointer-events-none">
+            {/* Large orb top-right */}
+            <motion.div
+              animate={{ x: [0, 30, -20, 0], y: [0, -25, 15, 0], scale: [1, 1.05, 0.95, 1] }}
+              transition={{ duration: 20, repeat: Infinity, ease: 'easeInOut' }}
+              className="absolute -top-20 -right-20 w-[400px] h-[400px] rounded-full"
+              style={{ background: 'radial-gradient(circle, rgba(24,101,242,0.12) 0%, transparent 70%)' }}
+            />
+            {/* Medium orb bottom-left */}
+            <motion.div
+              animate={{ x: [0, -20, 25, 0], y: [0, 20, -15, 0], scale: [1, 0.95, 1.05, 1] }}
+              transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
+              className="absolute -bottom-16 -left-16 w-[300px] h-[300px] rounded-full"
+              style={{ background: 'radial-gradient(circle, rgba(144,89,255,0.1) 0%, transparent 70%)' }}
+            />
+            {/* Small orb center */}
+            <motion.div
+              animate={{ x: [0, 40, -30, 0], y: [0, -30, 20, 0] }}
+              transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
+              className="absolute top-1/3 left-1/2 w-[200px] h-[200px] rounded-full"
+              style={{ background: 'radial-gradient(circle, rgba(20,191,150,0.08) 0%, transparent 70%)' }}
+            />
+            {/* Grid pattern */}
+            <div className="absolute inset-0 opacity-[0.03]"
+              style={{
+                backgroundImage: 'linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)',
+                backgroundSize: '60px 60px',
+              }}
+            />
+            {/* Diagonal lines */}
+            <motion.div
+              animate={{ opacity: [0.02, 0.05, 0.02] }}
+              transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+              className="absolute inset-0"
+              style={{
+                backgroundImage: 'repeating-linear-gradient(45deg, transparent, transparent 80px, rgba(255,255,255,0.3) 80px, rgba(255,255,255,0.3) 81px)',
+              }}
+            />
+          </div>
+
+          {/* Floating feature cards */}
+          <div className="absolute inset-0 z-[3] pointer-events-none">
+            {floatingCards.map((card, i) => (
+              <motion.div
+                key={i}
+                initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                animate={{ opacity: [0, 1, 1, 0], scale: [0.8, 1, 1, 0.9], y: [20, 0, 0, -10] }}
+                transition={{ duration: 6, repeat: Infinity, delay: card.delay, ease: 'easeInOut' }}
+                className="absolute hidden lg:block"
+                style={{ left: card.x, top: card.y }}
+              >
+                <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-white/8 backdrop-blur-md"
+                  style={{ background: 'rgba(255,255,255,0.04)' }}>
+                  <div className="w-8 h-8 rounded-lg flex items-center justify-center"
+                    style={{ background: `color-mix(in srgb, ${card.color} 15%, transparent)` }}>
+                    <card.icon size={16} style={{ color: card.color }} />
+                  </div>
+                  <span className="text-[12px] font-semibold text-white/70 whitespace-nowrap">{card.label}</span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
 
           <motion.div style={{ y: heroY, opacity: heroOpacity, scale: heroScale }}
             className="max-w-5xl mx-auto px-6 w-full relative z-10 py-20">
@@ -128,16 +225,28 @@ export function LandingPage() {
                 </span>
               </motion.div>
 
-              <motion.h1 initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.6, delay: 0.4 }}
-                className="text-[36px] md:text-[52px] font-extrabold text-white leading-[1.08] tracking-tight mb-6"
-                style={{ fontFamily: 'var(--font-display)' }}>
-                Learn without limits.<br />Advance your career.
-              </motion.h1>
-
-              <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.8, ease }}
-                className="text-[16px] text-white/40 max-w-xl mx-auto leading-relaxed mb-10">
-                AI-powered scheduling, real-time notifications, and seamless collaboration for students, lecturers, and administrators.
-              </motion.p>
+              {/* Text carousel */}
+              <div className="relative h-[140px] md:h-[130px] mb-6 w-full">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={currentSlide}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.5, ease }}
+                    className="absolute inset-0 flex flex-col items-center"
+                  >
+                    <h1 className="text-[36px] md:text-[52px] font-extrabold text-white leading-[1.08] tracking-tight whitespace-pre-line"
+                      style={{ fontFamily: 'var(--font-display)' }}>
+                      {heroSlides[currentSlide].headline}
+                    </h1>
+                    <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3, duration: 0.5 }}
+                      className="text-[16px] text-white/40 max-w-xl mx-auto leading-relaxed mt-4">
+                      {heroSlides[currentSlide].sub}
+                    </motion.p>
+                  </motion.div>
+                </AnimatePresence>
+              </div>
 
               <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.0, ease }}
                 className="flex items-center gap-3 w-full max-w-lg mx-auto bg-white/8 border border-white/12 rounded-[var(--radius-md)] p-1.5 backdrop-blur-sm">
@@ -153,8 +262,31 @@ export function LandingPage() {
                 </Link>
               </motion.div>
 
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 1.4 }}
-                className="flex items-center justify-center gap-3 mt-8">
+              {/* Slide indicators */}
+              <div className="flex items-center gap-2 mt-6">
+                {heroSlides.map((_, i) => (
+                  <button key={i} onClick={() => setCurrentSlide(i)}
+                    className={`h-1.5 rounded-full transition-all duration-400 ${i === currentSlide ? 'w-6 bg-[var(--color-primary)]' : 'w-1.5 bg-white/20 hover:bg-white/35'}`}
+                    aria-label={`Slide ${i + 1}`} />
+                ))}
+              </div>
+
+              {/* Feature cards row */}
+              <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 1.2, ease }}
+                className="flex items-center justify-center gap-3 mt-6 flex-wrap">
+                {featureCards.map((fc, i) => (
+                  <motion.div key={i} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 1.4 + i * 0.1, duration: 0.4 }}
+                    className="flex items-center gap-2 px-3.5 py-2 rounded-full border border-white/8"
+                    style={{ background: fc.bg }}>
+                    <fc.icon size={12} className="text-white/50" />
+                    <span className="text-[11px] font-semibold text-white/55">{fc.text}</span>
+                  </motion.div>
+                ))}
+              </motion.div>
+
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5, delay: 1.8 }}
+                className="flex items-center justify-center gap-3 mt-6">
                 {['SOC 2', 'FERPA', 'GDPR'].map(badge => (
                   <span key={badge}
                     className="text-[9px] font-bold tracking-[0.1em] uppercase text-white/25 border border-white/8 px-2.5 py-1 rounded-full">
