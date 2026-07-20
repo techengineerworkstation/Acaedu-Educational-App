@@ -2,7 +2,6 @@
   "framework": "vite",
   "buildCommand": "rm -rf dist node_modules/.vite .tsbuildinfo tsconfig.tsbuildinfo && pnpm run build",
   "outputDirectory": "dist",
-  "installCommand": "corepack enable && pnpm install --frozen-lockfile",
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ],
