@@ -1,7 +1,4 @@
 {
-  "framework": "vite",
-  "buildCommand": "rm -rf dist node_modules/.vite node_modules/.cache .tsbuildinfo tsconfig.tsbuildinfo && pnpm run build",
-  "outputDirectory": "dist",
   "headers": [
     {
       "source": "/assets/(.*)",
