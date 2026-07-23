@@ -461,7 +461,7 @@ export function LandingPage() {
             </motion.p>
             <motion.div variants={fadeUp} className="flex items-center justify-center gap-4 flex-wrap">
               <Link to="/register" className="btn-primary group flex items-center gap-2 text-[14px] h-[44px] px-8">
-                Create Free Account
+                Create Account
                 <ArrowRight size={14} className="group-hover:translate-x-0.5 transition-transform" />
               </Link>
               <Link to="/contact"
@@ -472,40 +472,65 @@ export function LandingPage() {
           </div>
         </Section>
 
-        {/* Footer */}
-        <footer className="footer-center py-14 bg-[var(--color-navy)] border-t border-white/5">
-          <div className="page-section text-center" style={{ textAlign: 'center' }}>
-            <div className="mb-6">
-              <div className="flex items-center justify-center gap-2.5 mb-3">
-                <div className="w-8 h-8 rounded-[10px] overflow-hidden">
-                  <img src="/favicon.svg" alt="Acaedu" className="w-full h-full object-cover" />
+        {/* ── Footer ─────────────────────────────────────────────── */}
+        <footer className="py-12 bg-[var(--color-secondary)] border-t border-white/5">
+          <div className="page-section">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+              {/* Brand */}
+              <div>
+                <div className="flex items-center gap-2.5 mb-3">
+                  <div className="w-8 h-8 rounded-[10px] bg-white/8 flex items-center justify-center">
+                    <span className="text-white font-extrabold text-[11px]" style={{ fontFamily: 'var(--font-display)' }}>A</span>
+                  </div>
+                  <span className="text-[15px] font-bold text-white" style={{ fontFamily: 'var(--font-display)' }}>Acaedu</span>
                 </div>
-                <span className="text-[15px] font-bold text-white"
-                  style={{ fontFamily: 'var(--font-display)' }}>Acaedu</span>
+                <p className="text-[12px] text-white/30 leading-relaxed">
+                  AI-powered academic platform for modern institutions.
+                </p>
               </div>
-              <p className="text-white/30 text-[13px] leading-relaxed max-w-md mx-auto">
-                Professional academic platform for students, lecturers, and administrators.
-              </p>
+
+              {/* Contact */}
+              <div>
+                <h4 className="text-[11px] font-bold text-white/50 uppercase tracking-wider mb-3">Contact</h4>
+                <div className="space-y-2">
+                  <a href="mailto:DanielEbirim25@gmail.com" className="block text-[12px] text-white/30 hover:text-white/60 transition-colors">DanielEbirim25@gmail.com</a>
+                  <a href="tel:+2349115899245" className="block text-[12px] text-white/30 hover:text-white/60 transition-colors">+234 911 589 9245</a>
+                  <p className="text-[12px] text-white/30">Lekki, Lagos, Nigeria</p>
+                </div>
+              </div>
+
+              {/* Social */}
+              <div>
+                <h4 className="text-[11px] font-bold text-white/50 uppercase tracking-wider mb-3">Connect</h4>
+                <div className="space-y-2">
+                  <a href="https://wa.me/2349115899245" target="_blank" rel="noopener noreferrer" className="block text-[12px] text-white/30 hover:text-[#25D366] transition-colors">WhatsApp</a>
+                  <a href="https://t.me/acaedu" target="_blank" rel="noopener noreferrer" className="block text-[12px] text-white/30 hover:text-[#0088cc] transition-colors">Telegram</a>
+                </div>
+              </div>
+
+              {/* Links */}
+              <div>
+                <h4 className="text-[11px] font-bold text-white/50 uppercase tracking-wider mb-3">Legal</h4>
+                <div className="space-y-2">
+                  {['Terms', 'Privacy', 'About', 'Contact'].map(item => (
+                    <Link key={item} to={`/${item.toLowerCase()}`}
+                      className="block text-[12px] text-white/30 hover:text-white/60 transition-colors">{item}</Link>
+                  ))}
+                </div>
+              </div>
             </div>
 
-            <div className="w-full h-px bg-white/8 my-6" />
-
-            <div className="flex items-center justify-center gap-8 mb-6">
-              {['Terms', 'Privacy', 'Contact', 'Help'].map(item => (
-                <Link key={item} to={`/${item.toLowerCase()}`}
-                  className="text-[12px] text-white/30 hover:text-white/60 transition-colors">{item}</Link>
-              ))}
+            <div className="border-t border-white/5 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
+              <span className="text-white/15 text-[11px]">&copy; 2026 Acaedu. All rights reserved.</span>
+              <div className="flex items-center gap-4">
+                {['Terms', 'Privacy', 'About', 'Contact'].map(item => (
+                  <motion.div key={item} whileHover={{ y: -1 }}>
+                    <Link to={`/${item.toLowerCase()}`}
+                      className="text-[11px] text-white/20 hover:text-white/45 transition-colors">{item}</Link>
+                  </motion.div>
+                ))}
+              </div>
             </div>
-
-            <div className="flex items-center justify-center gap-6 mb-6">
-              {['Twitter', 'LinkedIn', 'GitHub'].map(social => (
-                <span key={social} className="text-[12px] text-white/25 hover:text-white/50 cursor-pointer transition-colors">
-                  {social}
-                </span>
-              ))}
-            </div>
-
-            <p className="text-white/15 text-[11px]">&copy; 2026 Acaedu. All rights reserved.</p>
           </div>
         </footer>
 

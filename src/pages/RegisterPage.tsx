@@ -76,7 +76,7 @@ export function RegisterPage() {
             {step === 1 ? 'Create your account' : 'Complete your profile'}
           </h1>
           <p className="text-[13px]" style={{ color: 'var(--color-text-muted)' }}>
-            {step === 1 ? 'Select your role to get started' : `Registering as ${roles.find(r => r.value === role)?.label}`}
+            {step === 1 ? 'Select your role to start now' : `Registering as ${roles.find(r => r.value === role)?.label}`}
           </p>
         </div>
 

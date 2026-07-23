@@ -24,8 +24,10 @@ import {
   SearchQueriesPage, SettingsPage
 } from './pages/CrudPages'
 import { AdminDashboard, UserManagementPage, PopulationCensusPage } from './pages/AdminPages'
-import { TermsPage, PrivacyPage, ContactPage } from './pages/StaticPages'
+import { TermsPage, PrivacyPage, ContactPage, AboutPage } from './pages/StaticPages'
 import { LiveClassesPage, ClassRecordsPage, ProfilePage } from './pages/AdditionalPages'
+import { AIAdvisorPage } from './pages/AIAdvisorPage'
+import { SupportWidget } from './components/SupportWidget'
 
 // ── Silently swallow any Three.js / WebGL crash so routes still show ──────────
 class ThreeErrorBoundary extends Component<{ children: ReactNode }, { crashed: boolean }> {
@@ -111,6 +113,7 @@ export default function App() {
         <Route path="/register"element={user ? <Navigate to="/dashboard"/> : <RegisterPage/>} />
         <Route path="/terms"   element={<TermsPage/>} />
         <Route path="/privacy" element={<PrivacyPage/>} />
+        <Route path="/about"   element={<AboutPage/>} />
         <Route path="/contact" element={<ContactPage/>} />
 
         <Route path="/dashboard"          element={auth(<DashboardPage user={user!}/>)} />
@@ -137,6 +140,7 @@ export default function App() {
 
         <Route path="/ai-scheduler" element={auth(<AiSchedulerPage/>)} />
         <Route path="/ai-summaries" element={auth(<AiSummariesPage/>)} />
+        <Route path="/ai-advisor"   element={auth(<AIAdvisorPage user={user!}/>)} />
 
         <Route path="/admin"       element={admin(<AdminDashboard/>)} />
         <Route path="/users"       element={admin(<UserManagementPage/>)} />
@@ -157,6 +161,8 @@ export default function App() {
 
         <Route path="*" element={<Navigate to="/"/>} />
       </Routes>
+
+      <SupportWidget />
     </BrowserRouter>
   )
 }

@@ -8,7 +8,7 @@ import {
   ClipboardList, GraduationCap, Upload, MapPin, Bell, User as UserIcon,
   Settings, LogOut, Menu, Moon, Sun, Users, CreditCard,
   Brain, Search, Building2, GitBranch, Shield, Mail, Clock, CalendarOff, X,
-  ChevronRight, Palette,
+  ChevronRight, Palette, Sparkles,
 } from 'lucide-react'
 import { useState } from 'react'
 
@@ -40,7 +40,8 @@ const allNav: NavItem[] = [
   { to: '/live-classes',        icon: Video,         label: 'Live Classes',        group: 'communication' },
   { to: '/class-records',       icon: Video,         label: 'Class Records',       group: 'communication' },
   { to: '/ai-scheduler',        icon: Brain,         label: 'AI Scheduler',        group: 'ai' },
-  { to: '/ai-summaries',        icon: Brain,         label: 'AI Summaries',        group: 'ai' },
+  { to: '/ai-summaries',        icon: Sparkles,      label: 'AI Summaries',        group: 'ai' },
+  { to: '/ai-advisor',          icon: Brain,         label: 'AI Advisor',          group: 'ai' },
   { to: '/users',               icon: Users,         label: 'Users',               group: 'admin' },
   { to: '/departments',         icon: Building2,     label: 'Departments',         group: 'admin' },
   { to: '/faculties',           icon: GitBranch,     label: 'Faculties',           group: 'admin' },
